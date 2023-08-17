@@ -7,4 +7,6 @@ Youmustcreatea“realistic”3Dgraphical representationoftheinsideofamazefroma f
 - Libft
 ## General instructions
 - a map in format *.cub
-- 
+- The management of your window must remain smooth: changing to another window, minimizing, etc.
+- Display different wall textures (the choice is yours) that vary depending on which side the wall is facing (North, South, East, West).
+[cub3d.pdf](https://github.com/xhelp00/cub3d/files/12367418/cub3d.pdf)
