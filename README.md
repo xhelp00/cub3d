@@ -1,5 +1,5 @@
 # cub3d
-Youmustcreatea“realistic”3Dgraphical representationoftheinsideofamazefroma first-personperspective.Youhavetocreatethis representationusingtheRay-Castingprinciples mentionedearlier.
+You must create a “realistic” 3D graphical representation of the inside of a maze from a first-personpers pective. You have to create this representation using the Ray-Casting principles.
 ## Allowed functions
 - open,close,read,write, printf,malloc,free,perror, strerror,exit 
 - All functions of the math library(-lmmanman3math)
