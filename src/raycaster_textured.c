@@ -23,6 +23,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <math.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "../include/so_long.h"
 
@@ -71,6 +72,11 @@ uint32_t buffer[screenHeight][screenWidth];
 
 int main(int /*argc*/, char */*argv*/[])
 {
+
+	mlx_t* mlx;
+	if (!(mlx = mlx_init(screenWidth, screenHeight, "cub3d", 1)))
+		return(EXIT_FAILURE);
+
   double posX = 22.0, posY = 11.5;  //x and y start position
   double dirX = -1.0, dirY = 0.0; //initial direction vector
   double planeX = 0.0, planeY = 0.66; //the 2d raycaster version of camera plane
@@ -225,21 +231,21 @@ int main(int /*argc*/, char */*argv*/[])
     double moveSpeed = frameTime * 5.0; //the constant value is in squares/second
     double rotSpeed = frameTime * 3.0; //the constant value is in radians/second
 
-    readKeys();
+    //readKeys();
     //move forward if no wall in front of you
-    if(keyDown(SDLK_UP))
+    if(mlx_is_key_down(mlx, MLX_KEY_UP))
     {
-      if(worldMap[(int)(posX + dirX * moveSpeed)][(int)(posY)] == false) posX += dirX * moveSpeed;
-      if(worldMap[(int)(posX)][(int)(posY + dirY * moveSpeed)] == false) posY += dirY * moveSpeed;
+      if(worldMap[(int)(posX + dirX * moveSpeed)][(int)(posY)] == 0) posX += dirX * moveSpeed;
+      if(worldMap[(int)(posX)][(int)(posY + dirY * moveSpeed)] == 0) posY += dirY * moveSpeed;
     }
     //move backwards if no wall behind you
-    if(keyDown(SDLK_DOWN))
+    if(mlx_is_key_down(mlx, MLX_KEY_DOWN))
     {
-      if(worldMap[(int)(posX - dirX * moveSpeed)][(int)(posY)] == false) posX -= dirX * moveSpeed;
-      if(worldMap[(int)(posX)][(int)(posY - dirY * moveSpeed)] == false) posY -= dirY * moveSpeed;
+      if(worldMap[(int)(posX - dirX * moveSpeed)][(int)(posY)] == 0) posX -= dirX * moveSpeed;
+      if(worldMap[(int)(posX)][(int)(posY - dirY * moveSpeed)] == 0) posY -= dirY * moveSpeed;
     }
     //rotate to the right
-    if(keyDown(SDLK_RIGHT))
+    if(mlx_is_key_down(mlx, MLX_KEY_RIGHT))
     {
       //both camera direction and camera plane must be rotated
       double oldDirX = dirX;
@@ -250,7 +256,7 @@ int main(int /*argc*/, char */*argv*/[])
       planeY = oldPlaneX * sin(-rotSpeed) + planeY * cos(-rotSpeed);
     }
     //rotate to the left
-    if(keyDown(SDLK_LEFT))
+    if(mlx_is_key_down(mlx, MLX_KEY_LEFT))
     {
       //both camera direction and camera plane must be rotated
       double oldDirX = dirX;
@@ -260,8 +266,9 @@ int main(int /*argc*/, char */*argv*/[])
       planeX = planeX * cos(rotSpeed) - planeY * sin(rotSpeed);
       planeY = oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed);
     }
-    if(keyDown(SDLK_ESCAPE))
+    if(mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
     {
+		mlx_close_window(mlx);
       break;
     }
   }

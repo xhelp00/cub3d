@@ -8,7 +8,7 @@ RED		:= \033[31;1m
 GREEN	:= \033[32;1m
 RESET	:= \033[0m
 
-OBJ = obj/main.o
+OBJ = obj/raycaster_textured.o
 MLX = lib/MLX42/libmlx42.a
 MLX_DIR = lib/MLX42/
 LIBFT = obj/libft/libft.o
