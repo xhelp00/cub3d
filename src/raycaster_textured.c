@@ -68,7 +68,7 @@ int worldMap[mapWidth][mapHeight]=
   {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
-uint32_t buffer[screenHeight][screenWidth];
+mlx_image_t buffer[screenHeight][screenWidth];
 
 int main(int /*argc*/, char */*argv*/[])
 {
@@ -222,10 +222,11 @@ int main(int /*argc*/, char */*argv*/[])
     for(int y = 0; y < screenHeight; y++) for(int x = 0; x < screenWidth; x++) buffer[y][x] = 0; //clear the buffer instead of cls()
     //timing for input and FPS counter
     oldTime = time;
-    time = getTicks();
+    time = mlx_get_time();
     double frameTime = (time - oldTime) / 1000.0; //frametime is the time this frame has taken, in seconds
-    print(1.0 / frameTime); //FPS counter
-    redraw();
+	char *fps = ft_itoa(frameTime);
+    mlx_put_string(mlx, fps, 50, 50); //FPS counter
+    //redraw();
 
     //speed modifiers
     double moveSpeed = frameTime * 5.0; //the constant value is in squares/second
