@@ -68,14 +68,16 @@ int worldMap[mapWidth][mapHeight]=
   {4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
-mlx_image_t buffer[screenHeight][screenWidth];
 
-int main(int /*argc*/, char */*argv*/[])
+int main(void)
 {
 
 	mlx_t* mlx;
 	if (!(mlx = mlx_init(screenWidth, screenHeight, "cub3d", 1)))
 		return(EXIT_FAILURE);
+
+	mlx_image_t *buffer = mlx_new_image(mlx, screenWidth, screenHeight);
+
 
   double posX = 22.0, posY = 11.5;  //x and y start position
   double dirX = -1.0, dirY = 0.0; //initial direction vector
