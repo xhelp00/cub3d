@@ -10,3 +10,10 @@ You must create a “realistic” 3D graphical representation of the inside of a
 - The management of your window must remain smooth: changing to another window, minimizing, etc.
 - Display different wall textures (the choice is yours) that vary depending on which side the wall is facing (North, South, East, West).
 [cub3d.pdf](https://github.com/xhelp00/cub3d/files/12367418/cub3d.pdf)
+
+## Study part / mad notes
+- helpful video (raycaster in C using openGL/Glut) https://www.youtube.com/watch?v=gYRrGTC7GtA&list=LL&index=1&t=36s&ab_channel=3DSage
+- //---------------------------Draw Rays and Walls--------------------------------
+float distance(float ax, float ay, float bx, float by, float ang){ return cos(degToRad(ang))*(bx-ax)-sin(degToRad(ang))*(by-ay);}
+mac compile flags:
+- gcc tutorial.c -framework GLUT -Wno-deprecated-declarations -lglfw -framework Cocoa -framework OpenGL -framework IOKit 
