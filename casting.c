@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/11 17:38:19 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:03:43 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,26 @@ void	cast_floor(t_box *box)
 	while (++y < SCREENHEIGHT)
 	{
 		reset_vals(box);
+		if (y > SCREENHEIGHT / 2 + box->info.pitch)
+			box->info.is_floor = 1;
+		else
+			box->info.is_floor = 0;
 		box->info.ray_dir_x0 = box->info.dir_x - box->info.plane_x;
 		box->info.ray_dir_y0 = box->info.dir_y - box->info.plane_y;
 		box->info.ray_dir_x1 = box->info.dir_x + box->info.plane_x;
 		box->info.ray_dir_y1 = box->info.dir_y + box->info.plane_y;
 
-		box->info.p = y - SCREENHEIGHT / 2;
+		if (box->info.is_floor)
+			box->info.p = y - SCREENHEIGHT / 2 - box->info.pitch;
+		else
+			box->info.p = SCREENHEIGHT / 2 - y + box->info.pitch;
 
-		box->info.pos_z = 0.5 * SCREENHEIGHT;
+		if (box->info.is_floor)
+			box->info.cam_z = 0.5 * SCREENHEIGHT + box->info.pos_z;
+		else
+			box->info.cam_z = 0.5 * SCREENHEIGHT - box->info.pos_z;
 
-		box->info.row_distance = box->info.pos_z / box->info.p;
+		box->info.row_distance = box->info.cam_z / box->info.p;
 
 		box->info.floor_step_x = box->info.row_distance * (box->info.ray_dir_x1 - box->info.ray_dir_x0) / SCREENWIDTH;
 		box->info.floor_step_y = box->info.row_distance * (box->info.ray_dir_y1 - box->info.ray_dir_y0) / SCREENWIDTH;
@@ -59,7 +69,7 @@ void	cast_floor(t_box *box)
 
 			box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.ceiling_texture].line_len * box->info.ty]);
 			box->info.color = (box->info.color >> 1) & 8355711;
-			my_mlx_pyxel_put(&box->image, x, SCREENHEIGHT - y - 1, box->info.color);
+			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 		}
 	}
 }
@@ -121,10 +131,10 @@ void	cast_wall(t_box *box)
 		else
 			box->info.prep_wall_dist = (box->info.side_dist_y - box->info.delta_dist_y);
 		box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
-		box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2;
+		box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
 		if (box->info.draw_start < 0)
 			box->info.draw_start = 0;
-		box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2;
+		box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
 		if (box->info.draw_end >= SCREENHEIGHT)
 			box->info.draw_end = SCREENHEIGHT - 1;
 
@@ -142,7 +152,7 @@ void	cast_wall(t_box *box)
 			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
 
 		box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
-		box->info.tex_pos = (box->info.draw_start - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
+		box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
 
 		box->info.draw = box->info.draw_start;
 		while (box->info.draw++ < box->info.draw_end)
@@ -174,7 +184,7 @@ void	cast_obj(t_box *box)
 		box->info.transform_y = box->info.inv_det * (-box->info.plane_y * box->info.sprite_x + box->info.plane_x * box->info.sprite_y);
 		box->info.sprite_screen_x = (int)((SCREENWIDTH / 2) * (1 + box->info.transform_x / box->info.transform_y));
 
-		box->info.v_move_screen = (int)(VMOVE / box->info.transform_y);
+		box->info.v_move_screen = (int)(VMOVE / box->info.transform_y) + box->info.pitch + box->info.pos_z / box->info.transform_y;
 		box->info.sprite_height = abs((int)(SCREENHEIGHT / (box->info.transform_y))) / VDIV;
 
 		box->info.draw_start_y = (-box->info.sprite_height / 2 + SCREENHEIGHT / 2) + box->info.v_move_screen;
@@ -233,7 +243,7 @@ void	cast_obj(t_box *box)
 						box->info.text_n = 0;
 					if (box->sprites[i].texture == 10)
 					{
-						if (box->info.tex_y < 47 && box->info.tex_y >= 16)
+						if (box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
 							if (box->sprites[i].dist < 2)
 								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[(box->info.tex_x * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 16]);
@@ -245,19 +255,33 @@ void	cast_obj(t_box *box)
 					}
 					else if (box->sprites[i].texture == 11)
 					{
-						if (box->info.tex_x < 32)
-							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
+						if (box->info.tex_x < 48 && box->info.tex_x > 15)
+							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 40) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
 						else
 							box->info.color = 0;
 					}
 					else if (box->sprites[i].texture == 12)
 					{
-						if (box->info.tex_x < 47 && box->info.tex_x >= 16 && box->info.tex_y < 47 && box->info.tex_y >= 16)
+						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
 							if (box->sprites[i].dist < 2)
 								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 16]);
+							else if (box->sprites[i].dist > 5)
+								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 48]);
 							else
 								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * -16]);
+						}
+						else
+							box->info.color = 0;
+					}
+					else if (box->sprites[i].texture == 20)
+					{
+						if (box->info.tex_x < 56 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 12)
+						{
+							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->timer % 80) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 42]);
+							if ((box->info.color & 0x00FFFFFF) != 0)
+								my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
+							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 8]);
 						}
 						else
 							box->info.color = 0;
