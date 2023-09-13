@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phelebra <phelebra@student.42.fr>          +#+  +:+       +#+         #
+#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/13 16:56:18 by phelebra         ###   ########.fr        #
+#    Updated: 2023/09/13 17:03:00 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ LDFLAGS += -pie
 endif
 ifeq ($(UNAME_S),Darwin)
 MLX_FLAGS = -lm -lglfw -Iinclude -lft -lmlx -lX11 -lXext -lstdc++ -L/usr/X11/lib -framework OpenGL -framework AppKit
-CFLAGS += -fPIE
-LDFLAGS += -pie
+CFLAGS +=
+LDFLAGS +=
 endif
 
 all: lib $(NAME)
