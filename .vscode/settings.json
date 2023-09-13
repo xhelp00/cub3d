@@ -20,6 +20,7 @@
 	},
 	"peacock.color": "#61dafb",
 	"files.associations": {
-		"so_long.h": "c"
+		"so_long.h": "c",
+		"stdbool.h": "c"
 	}
 }

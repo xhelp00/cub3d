@@ -1,78 +1,53 @@
-NAME = cub3d
-#BONUS = bonus
-UNAME_S := $(shell uname -s)
-CC = cc
-FLAGS = -g -Wall -Werror -Wextra
-BOLD	:= \033[1m
-RED		:= \033[31;1m
-GREEN	:= \033[32;1m
-RESET	:= \033[0m
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
+#    Updated: 2023/09/13 15:02:02 by phelebra         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-OBJ = obj/raycaster_textured.o
-MLX = lib/MLX42/libmlx42.a
-MLX_DIR = lib/MLX42/
-LIBFT = obj/libft/libft.o
-LIBFT_DIR = src/libft
-NAME_H = include/so_long.h
+NAME = cub3d
+CFLAGS = -Wall -Wextra -Werror
+LIBFT = Libft
+MLX = minilibx
+UNAME_S := $(shell uname -s)
+
+SRC = main.c hook.c parser.c draw_image.c values.c casting.c
+OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
-MLX_FLAGS = -ldl -lglfw -pthread -lm
+MLX_FLAGS = -lft -lmlx -lXext -lX11 -lm
 endif
 ifeq ($(UNAME_S),Darwin)
-MLX_FLAGS = -Iinclude -lglfw
+MLX_FLAGS = -lm -lglfw -Iinclude -lft -lmlx -lX11 -lXext -lstdc++ -L/usr/X11/lib -framework OpenGL -framework AppKit
 endif
 
-all: $(NAME)
+all: lib $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ) $(NAME_H) $(MLX)
-	$(CC) $(OBJ) $(LIBFT) $(MLX) $(MLX_FLAGS) -o $(NAME)
-	@echo "$(RED)$(BOLD)Runable cub3d created. ✅$(RESET)"
+lib:
+	@make -C $(LIBFT)
+	@make -C $(MLX)
+	@echo "Finished making libraries :D"
 
-obj/%.o: src/%.c
-	$(CC) -g -Wall -Wextra -Werror -c $< -o $@
-
-$(LIBFT): $(LIBFT_DIR)/*.c
-	@if  [ ! -d obj/libft ]; then \
-		mkdir -p obj/libft; \
-	fi
-	@make -C $(LIBFT_DIR)
-	@echo "$(RED)$(BOLD)Libft compiled. ✅$(RESET)"
-	@cp $(LIBFT_DIR)/libft.a $(LIBFT)
-	@echo "$(RED)$(BOLD)Library created. ✅$(RESET)"
-	@make fclean -C $(LIBFT_DIR)
-	@echo "$(RED)$(BOLD)Library objects cleanup. ✅$(RESET)"
-
-$(MLX): $(MLX_DIR)
-	@make -C $(MLX_DIR)
-	@echo "$(RED)$(BOLD)MLX42 compiled. ✅$(RESET)"
-
-	@echo "$(RED)$(BOLD)Eudald Approves ✅$(RESET)"
-
+$(NAME): $(OBJ)
+	@g++ $(CFLAGS) -g -o $@ $^ -L $(LIBFT) -L $(MLX) $(MLX_FLAGS)
 
 clean:
-	@echo "$(RED)Cleaning object files... ✅$(RESET)"
-	@$(RM) $(OBJ) $(LIBFT) $(MLX)
+	@make clean -C $(LIBFT)
+	@make clean -C $(MLX)
+	@rm -f $(OBJ)
 
-fclean: clean
-	@echo "$(RED)Cleaning... ✅$(RESET)"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⡛⠛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⢷⣄⣸⡇⠈⠉⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⣹⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⢀⣀⣠⣤⣴⠶⠛⠋⠉⢿⣿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⡷⠾⠟⠛⠛⠋⠉⠀⠀⣀⣀⣤⣴⠾⢿⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣤⣤⣤⣴⠶⠶⠟⠛⠋⠉⠁⠀⠀⠈⢿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡙⠻⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣽⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⢰⠀⠀⠀⠀⢀⠀⠀⡀⠀⢀⡀⠀⣄⢀⣤⣾⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⢀⣿⢠⡆⠀⢀⣼⣇⣀⣿⣦⣼⣿⣾⣿⣿⣿⣿⣿⣿"
-	@echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
-	@$(RM) $(NAME)
-	@make fclean -C $(MLX_DIR)
+fclean:
+	@rm -f $(OBJ)
+	@rm -f $(NAME)
+	@make fclean -C $(LIBFT)
+	@make clean -C $(MLX)
 
-re: clean all
+re:	fclean
+	@make all
 
-.PHONY: all clean fclean re 
+.PHONY: re, fclean, clean
