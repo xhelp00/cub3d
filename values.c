@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   values.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/13 13:20:12 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:59:45 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,21 @@ void	init_textures(t_box *box)
 	int		i;
 
 	box->textures = malloc(50 * sizeof(t_image));
+	i = -1;
+	while (++i < 50)
+		box->textures[i].img = 0;
 	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
 	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
 	box->textures[2].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
 	box->textures[10].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
 	box->textures[11].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
 	box->textures[12].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
+	box->textures[20].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
 		if (!box->textures[i].img)
-			box->textures[i].img = mlx_xpm_file_to_image(box->mlx, "textures/grey_bricks.xpm", &k, &j);
+			box->textures[i].img = mlx_xpm_file_to_image(box->mlx, "textures/missing.xpm", &k, &j);
 		box->textures[i].addr = (unsigned char *)mlx_get_data_addr(box->textures[i].img,
 			&box->textures[i].bits_pp, &box->textures[i].line_len, &box->textures[i].endian);
 	}
@@ -47,6 +51,7 @@ void	init_vals(t_box *box)
 {
 	box->info.pos_x = 4;
 	box->info.pos_y = 5;
+	box->info.pos_z = 0;
 	box->info.dir_x = -1.0;
 	box->info.dir_y = 0;
 	box->info.plane_x = 0;
@@ -61,9 +66,14 @@ void	init_vals(t_box *box)
 	box->info.move_y = 0;
 	box->info.hit = 0;
 	box->info.sprint = 0;
+	box->info.pitch = 0;
+	box->info.up_down = 0;
 	box->timer = 0;
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
+	box->mouse.distance = 0;
+	box->mouse.x = 0;
+	box->mouse.y = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
 }
 

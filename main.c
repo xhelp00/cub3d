@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/20 10:13:02 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:16:39 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	timer(t_box *box)
 	if (box->timer > 1000000000)
 		box->timer = 0;
 	box->timer++;
+	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	redraw(box);
 	return (0);
 }
@@ -107,6 +109,9 @@ int	main(int argc, char **argv)
 	box.image.addr = (unsigned char *)mlx_get_data_addr(box.image.img,
 			&box.image.bits_pp, &box.image.line_len, &box.image.endian);
 	redraw(&box);
+	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+	mlx_mouse_hide(box.mlx, box.win);
+	mlx_mouse_hook(box.win, mouse, &box);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);
 	mlx_hook(box.win, 2, 1L << 0, key_press, &box);
 	mlx_hook(box.win, 3, 1L << 1, key_release, &box);
@@ -149,7 +154,7 @@ void single_square_test(t_box *box) {
     t_rect rect;
 
     char grid_item = box->map[0][0];  // Just picking the top-left item as a test
-    
+
     rect.x = 300;
     rect.y = 400;
     rect.width = 20;

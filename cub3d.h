@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/20 10:08:36 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:15:58 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct s_info
 	float	ray_dir_x1;
 	float	ray_dir_y1;
 	int		p;
-	float	pos_z;
+	double	pos_z;
 	float	row_distance;
 	float	floor_step_x;
 	float	floor_step_y;
@@ -117,6 +117,10 @@ typedef struct s_info
 	double	dy;
 	double	t_angle;
 	int		text_n;
+	double	pitch;
+	int		is_floor;
+	float	cam_z;
+	int		up_down;
 }				t_info;
 
 typedef struct s_image
@@ -137,6 +141,13 @@ typedef struct s_sprite
 	double	dist;
 }				t_sprite;
 
+typedef struct s_mouse
+{
+	int		x;
+	int		y;
+	double	distance;
+}				t_mouse;
+
 typedef struct s_box
 {
 	void			*mlx;
@@ -152,6 +163,7 @@ typedef struct s_box
 	size_t			timer;
 	struct timeval	time;
 	struct timeval	old_time;
+	t_mouse			mouse;
 }				t_box;
 
 typedef struct	s_rect
@@ -169,6 +181,7 @@ typedef struct	s_rect
 int		exit_hook(t_box *box);
 int		key_press(int key, t_box *box);
 int		key_release(int key, t_box *box);
+int		mouse(int keycode, int x, int y, t_box *box);
 
 //Parser.c
 void	parser(t_box *box, int fd);
@@ -205,5 +218,8 @@ void print_map_contents(t_box *box);
 void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color);
 void single_square_test(t_box *box);
 
+
+//Movement.c
+void	cal_ene_move(t_box *box);
 
 #endif

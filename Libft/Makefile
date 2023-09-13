@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phelebra <phelebra@student.42.fr>          +#+  +:+       +#+         #
+#    By: nroth <nroth@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/10 10:00:32 by nroth             #+#    #+#              #
-#    Updated: 2023/09/13 16:58:57 by phelebra         ###   ########.fr        #
+#    Updated: 2023/03/02 16:35:39 by nroth            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ OBJS = ${SRCS:.c=.o}
 OBJS_PREFIXED = ${addprefix ${OBJS_DIR}, ${OBJS}}
 
 CC_FLAGS = -Wall -Wextra -Werror
-CC = cc 
+CC = cc
 
 # Colors
 
@@ -53,7 +53,7 @@ all: ${NAME}
 
 ${OBJS_DIR}%.o : %.c
 	@ mkdir -p ${OBJS_DIR}
-	@ ${CC} ${CC_FLAGS} -fPIE -c $< -o $@
+	@ ${CC} ${CC_FLAGS} -c $< -o $@
 
 ${NAME}:	${OBJS_PREFIXED} ${FT_PRINTF}
 	@ ar -crs ${NAME} ${OBJS_PREFIXED}
