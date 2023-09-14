@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <phelebra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/11 16:21:48 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/14 16:53:59 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,5 +175,8 @@ void	cal_move(t_box *box);
 void	cast_floor(t_box *box);
 void	cast_wall(t_box *box);
 void	cast_obj(t_box *box);
+
+//Minimap.c
+void	drawMinimap(t_box *box);
 
 #endif

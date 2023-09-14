@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_image.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <phelebra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/06 14:38:21 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/14 16:47:41 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,5 +161,6 @@ void	redraw(t_box *box)
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	fps = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, fps);
+	drawMinimap(box);
 	free(fps);
 }

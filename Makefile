@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
+#    By: phelebra <phelebra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/13 15:02:02 by phelebra         ###   ########.fr        #
+#    Updated: 2023/09/14 17:54:40 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT = Libft
 MLX = minilibx
 UNAME_S := $(shell uname -s)
 
-SRC = main.c hook.c parser.c draw_image.c values.c casting.c
+SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
