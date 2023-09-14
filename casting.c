@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/13 17:03:43 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/14 14:08:59 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void	cast_obj(t_box *box)
 				box->info.part = box->info.draw_start_y;
 				while (box->info.part < box->info.draw_end_y)
 				{
-					box->info.d = (box->info.part) * 256 - SCREENHEIGHT * 128 + box->info.sprite_height * 128;
+					box->info.d = (box->info.part - box->info.v_move_screen) * 256 - SCREENHEIGHT * 128 + box->info.sprite_height * 128;
 					box->info.tex_y = ((box->info.d * TEXTUREHEIGHT) / box->info.sprite_height) / 256;
 					//printf("Color from: %i\n", box->sprites[i].texture);
 					if ((box->info.t_angle > 2.7 && box->info.t_angle < 3.3) || (box->info.t_angle > -3.3 && box->info.t_angle < -2.7))

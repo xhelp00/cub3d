@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/13 15:40:03 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/14 14:10:42 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,8 @@ typedef struct s_mouse
 {
 	int		x;
 	int		y;
-	double	distance;
+	double	xdistance;
+	double	ydistance;
 }				t_mouse;
 
 typedef struct s_box
