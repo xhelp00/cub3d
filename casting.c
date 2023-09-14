@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/14 14:08:59 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:41:41 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void	cast_wall(t_box *box)
 			box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
 			if (box->info.side)
 				box->info.color = (box->info.color >> 1) & 8355711;
+			apply_fog(box, box->info.prep_wall_dist * 9);
 			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
@@ -256,7 +257,7 @@ void	cast_obj(t_box *box)
 					else if (box->sprites[i].texture == 11)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15)
-							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 40) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
+							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->time.tv_usec / 100000.0) / 2)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
 						else
 							box->info.color = 0;
 					}
@@ -280,7 +281,10 @@ void	cast_obj(t_box *box)
 						{
 							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->timer % 80) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 42]);
 							if ((box->info.color & 0x00FFFFFF) != 0)
+							{
+								apply_fog(box, box->sprites[i].dist);
 								my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
+							}
 							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 8]);
 						}
 						else
@@ -289,7 +293,10 @@ void	cast_obj(t_box *box)
 					else
 						box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[box->info.tex_x * 4 + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
 					if ((box->info.color & 0x00FFFFFF) != 0)
+					{
+						apply_fog(box, box->sprites[i].dist);
 						my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
+					}
 					box->info.part++;
 				}
 			}
