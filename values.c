@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/14 14:23:46 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/17 17:17:57 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ void	init_vals(t_box *box)
 	box->mouse.ydistance = 0;
 	box->mouse.x = 0;
 	box->mouse.y = 0;
+	box->info.distance = 0;
+	box->info.color = 0;
+	box->info.rot_speed = 0;
+	box->info.move_speed = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
 }
 
