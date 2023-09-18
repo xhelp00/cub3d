@@ -6,14 +6,14 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:46:15 by phelebra          #+#    #+#             */
-/*   Updated: 2023/09/18 15:45:17 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/18 16:49:29 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 # define MINIMAP_RATIO 200
-# define MINIMAP_OFFSET 10
+# define MINIMAP_OFFSET 50
 
 void drawMinimap(t_box *box)
 {
@@ -36,7 +36,7 @@ void	draw_map(t_box *box)
 		while (++j < box->map_width)
 		{
 			grid_item = box->map[i][j];
-			rect.x = j * 20 + MINIMAP_OFFSET;
+			rect.x = (j * 20) + SCREENWIDTH - (box->map_width * 20) - MINIMAP_OFFSET;
 			rect.y = i * 20 + MINIMAP_OFFSET;
 			rect.width = 20;
 			rect.height = 20;
