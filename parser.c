@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 18:29:34 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/06 14:19:49 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/18 11:02:36 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	parser(t_box *box, int fd)
 	box->map = malloc(sizeof(char *));
 	box->map[0] = NULL;
 	box->map_width = 0;
+	box->map_height = 0;
 	line = get_next_line(fd);
 	while (line[0] != '\n')
 	{
@@ -30,6 +31,7 @@ void	parser(t_box *box, int fd)
 		if ((int) ft_strlen(line) - 1 > box->map_width)
 			box->map_width = ft_strlen(line) - 1;
 		line = (free(line), get_next_line(fd));
+		box->map_height++;
 	}
 	free(line);
 	i = -1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/11 16:21:48 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/18 14:28:12 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,11 +145,23 @@ typedef struct s_box
 	int				n_sprites;
 	char			**map;
 	int				map_width;
+	int				map_height;
 	t_info			info;
 	size_t			timer;
 	struct timeval	time;
 	struct timeval	old_time;
 }				t_box;
+
+typedef struct	s_rect
+{
+	int			x;
+	int			y;
+	double		width;
+	double		height;
+	int			fill_color;
+	int			border_color;
+	int			border_width;
+}				t_rect;
 
 //Hook.c
 int		exit_hook(t_box *box);
@@ -175,5 +187,15 @@ void	cal_move(t_box *box);
 void	cast_floor(t_box *box);
 void	cast_wall(t_box *box);
 void	cast_obj(t_box *box);
+
+//Minimap.c
+void	drawMinimap(t_box *box);
+void	draw_map(t_box *box);
+int		get_fill_color(char grid_item);
+
+
+//Graphics.c
+void	draw_rect(t_rect *rect, unsigned char *img, int res_width);
+
 
 #endif

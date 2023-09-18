@@ -6,7 +6,7 @@
 #    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/13 17:03:00 by phelebra         ###   ########.fr        #
+#    Updated: 2023/09/18 13:40:21 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFT = Libft
 MLX = minilibx
 UNAME_S := $(shell uname -s)
 
-SRC = main.c hook.c parser.c draw_image.c values.c casting.c
+SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
