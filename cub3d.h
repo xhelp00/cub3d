@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/18 14:28:12 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:07:28 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 # define UDIV 1
 # define VDIV 1
 # define VMOVE 0.0
+# define MINIMAP_OFFSET 10
+
 
 typedef struct s_info
 {
@@ -195,7 +197,12 @@ int		get_fill_color(char grid_item);
 
 
 //Graphics.c
-void	draw_rect(t_rect *rect, unsigned char *img, int res_width);
+void	draw_rect(t_rect *rect, unsigned char *img, int res_width, t_box *box);
+
+//testing
+void print_map_contents(t_box *box);
+void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color);
+void single_square_test(t_box *box);
 
 
 #endif

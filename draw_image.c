@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/18 14:39:08 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/19 14:19:01 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,19 +149,28 @@ void	draw_hud(t_box *box)
 void	redraw(t_box *box)
 {
 	char	*fps;
-
+	
 	mlx_destroy_image(box->mlx, box->image.img);
+	box->image.bits_pp = 0;
+	box->image.line_len = 0;
+	box->image.endian = 0;
 	box->image.img = mlx_new_image(box->mlx, SCREENWIDTH, SCREENHEIGHT);
+	//box->image.addr = malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(unsigned char *));
 	box->image.addr = (unsigned char *)mlx_get_data_addr(box->image.img,
 			&box->image.bits_pp, &box->image.line_len, &box->image.endian);
+	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
 	cast_floor(box);
 	cast_wall(box);
 	cast_obj(box);
 	cal_move(box);
+	//print_map_contents(box);
+    //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
+
 	drawMinimap(box);
+	//single_square_test(box);
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	fps = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, fps);
-	
+	//exit(1);
 	free(fps);
 }
