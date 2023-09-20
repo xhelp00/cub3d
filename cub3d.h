@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/19 15:07:28 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/20 10:08:36 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,10 +194,11 @@ void	cast_obj(t_box *box);
 void	drawMinimap(t_box *box);
 void	draw_map(t_box *box);
 int		get_fill_color(char grid_item);
+void	draw_player(t_box *box);
 
 
 //Graphics.c
-void	draw_rect(t_rect *rect, unsigned char *img, int res_width, t_box *box);
+void	draw_rect(t_rect *rect, t_box *box);
 
 //testing
 void print_map_contents(t_box *box);

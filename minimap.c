@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:46:15 by phelebra          #+#    #+#             */
-/*   Updated: 2023/09/19 15:15:30 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/20 15:08:35 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 void drawMinimap(t_box *box)
 {
 	draw_map(box);
-
+//	draw_rays(box); TBD	
+	draw_player(box);
 }
 
 void	draw_map(t_box *box)
@@ -39,9 +40,19 @@ void	draw_map(t_box *box)
 			rect.border_color = 0x0014213d;
 			rect.border_width = 0;
 			rect.fill_color = get_fill_color(grid_item);
-			draw_rect(&rect, box->image.addr, SCREENWIDTH, box);
+			draw_rect(&rect, box);
 		}
 	}
+}
+
+void	draw_player(t_box *box)
+{
+	t_rect	rect;
+	
+	rect.x = (box->info.pos_x * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET - 5;
+	rect.y = (box->info.pos_y * 10) + MINIMAP_OFFSET - 5;
+	rect.fill_color = 0x00e63946;
+	draw_rect(&rect, box);
 }
 
 int		get_fill_color(char grid_item)

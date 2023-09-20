@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/19 14:11:45 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/20 10:13:02 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
+//***testing stuff below to be removed***s//
+
 void print_map_contents(t_box *box)
 {
     for (int i = 0; i < box->map_height; i++)
@@ -156,5 +158,5 @@ void single_square_test(t_box *box) {
     rect.border_width = 0;
     rect.fill_color = get_fill_color(grid_item);
     printf("Calling single_square_test\n");
-    draw_rect(&rect, box->image.addr, SCREENWIDTH, box);
+    draw_rect(&rect, box);
 }

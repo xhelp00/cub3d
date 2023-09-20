@@ -6,21 +6,19 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:36:11 by phelebra          #+#    #+#             */
-/*   Updated: 2023/09/19 18:00:42 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/20 10:06:55 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	draw_rect(t_rect *rect, unsigned char *img, int res_width, t_box *box)
+void	draw_rect(t_rect *rect, t_box *box)
 {
 	int	i;
 	int	j;
 	int	tmp_x = 0;
 	int	tmp_y = 0;
 
-	(void)res_width;
-	(void)img;
 	//rect->border_width--;
 	i = -1;
 	while (++i < rect->height)
