@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:17:31 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/21 17:17:50 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,96 +21,27 @@ void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 	*(unsigned int *)pixel = color;
 }
 
+void	apply_fog(t_box *box, double dist)
+{
+	if (dist / 100 < 1.0)
+	{
+		int	r = (box->info.color >> 16) & 0xFF;
+		int	g = (box->info.color >> 8) & 0xFF;
+		int	b = box->info.color & 0xFF;
+		int	nr = r * (1 - dist / 100);
+		int	ng = g * (1 - dist / 100);
+		int	nb = b * (1 - dist / 100);
+		box->info.color = (nr << 16 | ng << 8 | nb);
+	}
+	else
+		box->info.color = 0;
+}
+
 int	extract_color(unsigned char *pixel)
 {
 	return (pixel[3] << 24 | pixel[2] << 16 | pixel[1] << 8 | pixel[0]);
 }
 
-void	cal_move(t_box *box)
-{
-	box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
-	if (box->mouse.xdistance < 0)
-		box->mouse.xdistance *= -1;
-	else if (box->mouse.xdistance == 0)
-		box->mouse.xdistance = 1;
-	if (box->mouse.xdistance > 1)
-		box->mouse.xdistance = box->mouse.xdistance / 15;
-	if (box->info.rotate == 1 || box->mouse.x > SCREENWIDTH / 2)
-	{
-		box->info.old_dir_x = box->info.dir_x;
-		box->info.dir_x = box->info.dir_x * cos(-box->info.rot_speed * box->mouse.xdistance) - box->info.dir_y * sin(-box->info.rot_speed * box->mouse.xdistance);
-		box->info.dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * box->mouse.xdistance) + box->info.dir_y * cos(-box->info.rot_speed * box->mouse.xdistance);
-		box->info.old_plane_x = box->info.plane_x;
-		box->info.plane_x = box->info.plane_x * cos(-box->info.rot_speed * box->mouse.xdistance) - box->info.plane_y * sin(-box->info.rot_speed * box->mouse.xdistance);
-		box->info.plane_y = box->info.old_plane_x * sin(-box->info.rot_speed * box->mouse.xdistance) + box->info.plane_y * cos(-box->info.rot_speed * box->mouse.xdistance);
-	}
-	else if (box->info.rotate == -1 || box->mouse.x < SCREENWIDTH / 2)
-	{
-		box->info.old_dir_x = box->info.dir_x;
-		box->info.dir_x = box->info.dir_x * cos(box->info.rot_speed * box->mouse.xdistance) - box->info.dir_y * sin(box->info.rot_speed * box->mouse.xdistance);
-		box->info.dir_y = box->info.old_dir_x * sin(box->info.rot_speed * box->mouse.xdistance) + box->info.dir_y * cos(box->info.rot_speed * box->mouse.xdistance);
-		box->info.old_plane_x = box->info.plane_x;
-		box->info.plane_x = box->info.plane_x * cos(box->info.rot_speed * box->mouse.xdistance) - box->info.plane_y * sin(box->info.rot_speed * box->mouse.xdistance);
-		box->info.plane_y = box->info.old_plane_x * sin(box->info.rot_speed * box->mouse.xdistance) + box->info.plane_y * cos(box->info.rot_speed * box->mouse.xdistance);
-	}
-	if (box->info.move_x == 1)
-	{
-		if (box->map[(int)(box->info.pos_x + box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			box->info.pos_x += box->info.dir_x * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_y * box->info.move_speed)] == '0')
-			box->info.pos_y += box->info.dir_y * box->info.move_speed;
-	}
-	else if (box->info.move_x == -1)
-	{
-		if (box->map[(int)(box->info.pos_x - box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			box->info.pos_x -= box->info.dir_x * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_y * box->info.move_speed)] == '0')
-			box->info.pos_y -= box->info.dir_y * box->info.move_speed;
-	}
-	if (box->info.move_y == 1)
-	{
-		if (box->map[(int)(box->info.pos_x + box->info.dir_y * box->info.move_speed)][(int)(box->info.pos_y)] == '0')
-			box->info.pos_x += box->info.dir_y * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_x * box->info.move_speed)] == '0')
-			box->info.pos_y -= box->info.dir_x * box->info.move_speed;
-	}
-	else if (box->info.move_y == -1)
-	{
-		if (box->map[(int)(box->info.pos_x - box->info.dir_y * box->info.move_speed)][(int)(box->info.pos_y)] == '0')
-			box->info.pos_x -= box->info.dir_y * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_x * box->info.move_speed)] == '0')
-			box->info.pos_y += box->info.dir_x * box->info.move_speed;
-	}
-
-	box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
-	if (box->mouse.ydistance < 0)
-		box->mouse.ydistance *= -1;
-	if (box->info.up_down == 1 || box->mouse.y < SCREENHEIGHT / 2)
-	{
-		box->info.pitch += 25 * box->info.rot_speed * box->mouse.ydistance;
-		if (box->info.pitch > 400)
-			box->info.pitch = 400;
-	}
-	else if (box->info.up_down == -1 || box->mouse.y > SCREENHEIGHT / 2)
-	{
-		box->info.pitch -= 25 * box->info.rot_speed * box->mouse.ydistance;
-		if (box->info.pitch < -400)
-			box->info.pitch = -400;
-	}
-	if (box->info.pos_z > 0)
-		box->info.pos_z -= 100 * box->info.move_speed;
-
-	box->old_time = box->time;
-	gettimeofday(&box->time, NULL);
-	box->info.frame_time = (box->time.tv_sec - box->old_time.tv_sec) +
-						((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0);
-	box->info.move_speed = box->info.frame_time * 3.0;
-	box->info.rot_speed = box->info.frame_time * 1.5;
-	if (box->info.sprint)
-		box->info.move_speed *= 2;
-	if (box->info.pos_z == -200)
-		box->info.move_speed *= 0.5;
-}
 /*
 void	draw_hud(t_box *box)
 {

@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:17:01 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/21 17:17:43 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void	bubble_sort_sprites(t_box *box);
 void	redraw(t_box *box);
 int		extract_color(unsigned char *pixel);
 void	my_mlx_pyxel_put(t_image *image, int x, int y, int color);
-void	cal_move(t_box *box);
+void	apply_fog(t_box *box, double dist);
 
 //Casting.c
 void	cast_floor(t_box *box);
@@ -221,6 +221,7 @@ void single_square_test(t_box *box);
 
 
 //Movement.c
+void	cal_move(t_box *box);
 void	cal_ene_move(t_box *box);
 
 #endif
