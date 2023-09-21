@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: antess <antess@student.42.fr>              +#+  +:+       +#+         #
+#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/21 20:41:21 by phelebra         ###   ########.fr        #
+#    Updated: 2023/09/21 20:58:56 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,18 +18,16 @@ MLX = minilibx
 SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c movement.c
 OBJ = $(SRC:.c=.o)
 
-
 ifeq ($(UNAME_S),Linux)
 MLX_FLAGS = -lft -lmlx -lXext -lX11 -lm
 CFLAGS += -fPIE
-LDFLAGS += -pie 
+LDFLAGS += -pie
 endif
 ifeq ($(UNAME_S),Darwin)
 MLX_FLAGS = -lm -lglfw -Iinclude -lft -lmlx -lX11 -lXext -lstdc++ -L/usr/X11/lib -framework OpenGL -framework AppKit
 CFLAGS +=
 LDFLAGS +=
 endif
-
 
 all: lib $(NAME)
 
