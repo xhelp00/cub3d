@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/17 13:39:29 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:53:46 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,8 @@ void	cal_move(t_box *box)
 void	cal_ene_move(t_box *box)
 {
 	int		i;
-	float	speed;
 
 	i = -1;
-	speed = 0.05;
 	while (++i < box->n_sprites)
 	{
 		/*
