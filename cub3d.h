@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:17:43 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/21 17:18:00 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ typedef struct s_info
 	int		is_floor;
 	float	cam_z;
 	int		up_down;
+	int		distance;
 }				t_info;
 
 typedef struct s_image

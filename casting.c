@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/14 20:41:41 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/17 17:38:42 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ void	cast_floor(t_box *box)
 			box->info.floor_texture = 1;
 			box->info.ceiling_texture = 1;
 
+			box->info.distance = (int)((box->info.pos_x - box->info.floor_x) * (box->info.pos_x - box->info.floor_x) + (box->info.pos_y - box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
+
 			box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
 			box->info.color = (box->info.color >> 1) & 8355711;
+			apply_fog(box, box->info.distance);
 			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 
 			box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.ceiling_texture].line_len * box->info.ty]);
 			box->info.color = (box->info.color >> 1) & 8355711;
+			apply_fog(box, box->info.distance);
 			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 		}
 	}
@@ -266,11 +270,11 @@ void	cast_obj(t_box *box)
 						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
 							if (box->sprites[i].dist < 2)
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 16]);
+								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 16]);
 							else if (box->sprites[i].dist > 5)
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 48]);
+								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 48]);
 							else
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->timer % 48) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * -16]);
+								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * -16]);
 						}
 						else
 							box->info.color = 0;
@@ -279,7 +283,7 @@ void	cast_obj(t_box *box)
 					{
 						if (box->info.tex_x < 56 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 12)
 						{
-							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->timer % 80) / 8)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 42]);
+							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->time.tv_usec / 100000.0))) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 42]);
 							if ((box->info.color & 0x00FFFFFF) != 0)
 							{
 								apply_fog(box, box->sprites[i].dist);

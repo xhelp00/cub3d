@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:17:50 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/21 17:18:07 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,9 @@ void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 void	apply_fog(t_box *box, double dist)
 {
 	if (dist / 100 < 1.0)
-	{
-		int	r = (box->info.color >> 16) & 0xFF;
-		int	g = (box->info.color >> 8) & 0xFF;
-		int	b = box->info.color & 0xFF;
-		int	nr = r * (1 - dist / 100);
-		int	ng = g * (1 - dist / 100);
-		int	nb = b * (1 - dist / 100);
-		box->info.color = (nr << 16 | ng << 8 | nb);
-	}
+		box->info.color = ((int)(((box->info.color >> 16) & 0xFF) * (1 - dist / 100)) << 16
+				| (int)(((box->info.color >> 8) & 0xFF) * (1 - dist / 100)) << 8
+				| (int)((box->info.color & 0xFF) * (1 - dist / 100)));
 	else
 		box->info.color = 0;
 }

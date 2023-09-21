@@ -6,12 +6,12 @@
 #    By: antess <antess@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/21 17:05:20 by antess           ###   ########.fr        #
+#    Updated: 2023/09/21 17:12:47 by antess           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 LIBFT = Libft
 MLX = minilibx
 
@@ -26,7 +26,7 @@ lib:
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@cc $(CFLAGS) -g -L $(LIBFT) -L $(MLX) -o $@ $^ -lft -lmlx -lXext -lX11 -lm
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ -lft -lmlx -lXext -lX11 -lm
 
 clean:
 	@make clean -C $(LIBFT)

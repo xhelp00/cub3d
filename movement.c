@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/14 19:29:39 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/17 13:39:29 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,15 @@ void	cal_ene_move(t_box *box)
 		if (box->sprites[i].texture == 10)
 		{
 			if (box->sprites[i].x < box->info.pos_x)
-				box->sprites[i].x += 0.01;
+				box->sprites[i].x += speed;
 			if (box->sprites[i].x > box->info.pos_x)
-				box->sprites[i].x -= 0.01;
+				box->sprites[i].x -= speed;
 			if (box->sprites[i].y < box->info.pos_y)
-				box->sprites[i].y += 0.01;
+				box->sprites[i].y += speed;
 			if (box->sprites[i].y > box->info.pos_y)
-				box->sprites[i].y -= 0.01;
+				box->sprites[i].y -= speed;
 		}
-		*/
+*/
 	/*
 		if (box->sprites[i].texture == 12)
 		{
