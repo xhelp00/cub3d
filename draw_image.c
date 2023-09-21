@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:17:11 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/21 17:17:31 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,13 @@ void	cal_move(t_box *box)
 		box->mouse.ydistance *= -1;
 	if (box->info.up_down == 1 || box->mouse.y < SCREENHEIGHT / 2)
 	{
-		box->info.pitch += 25 * box->info.move_speed * box->mouse.ydistance;
+		box->info.pitch += 25 * box->info.rot_speed * box->mouse.ydistance;
 		if (box->info.pitch > 400)
 			box->info.pitch = 400;
 	}
 	else if (box->info.up_down == -1 || box->mouse.y > SCREENHEIGHT / 2)
 	{
-		box->info.pitch -= 25 * box->info.move_speed * box->mouse.ydistance;
+		box->info.pitch -= 25 * box->info.rot_speed * box->mouse.ydistance;
 		if (box->info.pitch < -400)
 			box->info.pitch = -400;
 	}
@@ -107,10 +107,7 @@ void	cal_move(t_box *box)
 	box->info.move_speed = box->info.frame_time * 3.0;
 	box->info.rot_speed = box->info.frame_time * 1.5;
 	if (box->info.sprint)
-	{
 		box->info.move_speed *= 2;
-		box->info.rot_speed *= 1.5;
-	}
 	if (box->info.pos_z == -200)
 		box->info.move_speed *= 0.5;
 }

@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/13 15:59:45 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/14 14:23:46 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	init_vals(t_box *box)
 	box->timer = 0;
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
-	box->mouse.distance = 0;
+	box->mouse.xdistance = 0;
+	box->mouse.ydistance = 0;
 	box->mouse.x = 0;
 	box->mouse.y = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
