@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:16:31 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/21 17:17:11 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,30 +28,30 @@ int	extract_color(unsigned char *pixel)
 
 void	cal_move(t_box *box)
 {
-	box->mouse.distance = (box->mouse.x - (SCREENWIDTH / 2));
-	if (box->mouse.distance < 0)
-		box->mouse.distance *= -1;
-	else if (box->mouse.distance == 0)
-		box->mouse.distance = 1;
-	if (box->mouse.distance > 1)
-		box->mouse.distance = box->mouse.distance / 15;
+	box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
+	if (box->mouse.xdistance < 0)
+		box->mouse.xdistance *= -1;
+	else if (box->mouse.xdistance == 0)
+		box->mouse.xdistance = 1;
+	if (box->mouse.xdistance > 1)
+		box->mouse.xdistance = box->mouse.xdistance / 15;
 	if (box->info.rotate == 1 || box->mouse.x > SCREENWIDTH / 2)
 	{
 		box->info.old_dir_x = box->info.dir_x;
-		box->info.dir_x = box->info.dir_x * cos(-box->info.rot_speed * box->mouse.distance) - box->info.dir_y * sin(-box->info.rot_speed * box->mouse.distance);
-		box->info.dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * box->mouse.distance) + box->info.dir_y * cos(-box->info.rot_speed * box->mouse.distance);
+		box->info.dir_x = box->info.dir_x * cos(-box->info.rot_speed * box->mouse.xdistance) - box->info.dir_y * sin(-box->info.rot_speed * box->mouse.xdistance);
+		box->info.dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * box->mouse.xdistance) + box->info.dir_y * cos(-box->info.rot_speed * box->mouse.xdistance);
 		box->info.old_plane_x = box->info.plane_x;
-		box->info.plane_x = box->info.plane_x * cos(-box->info.rot_speed * box->mouse.distance) - box->info.plane_y * sin(-box->info.rot_speed * box->mouse.distance);
-		box->info.plane_y = box->info.old_plane_x * sin(-box->info.rot_speed * box->mouse.distance) + box->info.plane_y * cos(-box->info.rot_speed * box->mouse.distance);
+		box->info.plane_x = box->info.plane_x * cos(-box->info.rot_speed * box->mouse.xdistance) - box->info.plane_y * sin(-box->info.rot_speed * box->mouse.xdistance);
+		box->info.plane_y = box->info.old_plane_x * sin(-box->info.rot_speed * box->mouse.xdistance) + box->info.plane_y * cos(-box->info.rot_speed * box->mouse.xdistance);
 	}
 	else if (box->info.rotate == -1 || box->mouse.x < SCREENWIDTH / 2)
 	{
 		box->info.old_dir_x = box->info.dir_x;
-		box->info.dir_x = box->info.dir_x * cos(box->info.rot_speed * box->mouse.distance) - box->info.dir_y * sin(box->info.rot_speed * box->mouse.distance);
-		box->info.dir_y = box->info.old_dir_x * sin(box->info.rot_speed * box->mouse.distance) + box->info.dir_y * cos(box->info.rot_speed * box->mouse.distance);
+		box->info.dir_x = box->info.dir_x * cos(box->info.rot_speed * box->mouse.xdistance) - box->info.dir_y * sin(box->info.rot_speed * box->mouse.xdistance);
+		box->info.dir_y = box->info.old_dir_x * sin(box->info.rot_speed * box->mouse.xdistance) + box->info.dir_y * cos(box->info.rot_speed * box->mouse.xdistance);
 		box->info.old_plane_x = box->info.plane_x;
-		box->info.plane_x = box->info.plane_x * cos(box->info.rot_speed * box->mouse.distance) - box->info.plane_y * sin(box->info.rot_speed * box->mouse.distance);
-		box->info.plane_y = box->info.old_plane_x * sin(box->info.rot_speed * box->mouse.distance) + box->info.plane_y * cos(box->info.rot_speed * box->mouse.distance);
+		box->info.plane_x = box->info.plane_x * cos(box->info.rot_speed * box->mouse.xdistance) - box->info.plane_y * sin(box->info.rot_speed * box->mouse.xdistance);
+		box->info.plane_y = box->info.old_plane_x * sin(box->info.rot_speed * box->mouse.xdistance) + box->info.plane_y * cos(box->info.rot_speed * box->mouse.xdistance);
 	}
 	if (box->info.move_x == 1)
 	{
@@ -82,29 +82,28 @@ void	cal_move(t_box *box)
 			box->info.pos_y += box->info.dir_x * box->info.move_speed;
 	}
 
-	if (box->info.up_down == 1)
+	box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
+	if (box->mouse.ydistance < 0)
+		box->mouse.ydistance *= -1;
+	if (box->info.up_down == 1 || box->mouse.y < SCREENHEIGHT / 2)
 	{
-		box->info.pitch += 400* box->info.move_speed;
+		box->info.pitch += 25 * box->info.move_speed * box->mouse.ydistance;
 		if (box->info.pitch > 400)
 			box->info.pitch = 400;
 	}
-	else if (box->info.up_down == -1)
+	else if (box->info.up_down == -1 || box->mouse.y > SCREENHEIGHT / 2)
 	{
-		box->info.pitch -= 400 * box->info.move_speed;
+		box->info.pitch -= 25 * box->info.move_speed * box->mouse.ydistance;
 		if (box->info.pitch < -400)
 			box->info.pitch = -400;
 	}
-	if (box->info.pitch > 0)
-		box->info.pitch = (int)(box->info.pitch - 100 * box->info.move_speed);
-	else if (box->info.pitch < 0)
-		box->info.pitch = (int)(box->info.pitch + 100 * box->info.move_speed);
 	if (box->info.pos_z > 0)
 		box->info.pos_z -= 100 * box->info.move_speed;
 
 	box->old_time = box->time;
 	gettimeofday(&box->time, NULL);
 	box->info.frame_time = (box->time.tv_sec - box->old_time.tv_sec) +
-						((box->time.tv_usec - box->old_time.tv_usec)/1000000.0);
+						((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0);
 	box->info.move_speed = box->info.frame_time * 3.0;
 	box->info.rot_speed = box->info.frame_time * 1.5;
 	if (box->info.sprint)
