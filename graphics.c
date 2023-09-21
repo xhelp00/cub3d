@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:36:11 by phelebra          #+#    #+#             */
-/*   Updated: 2023/09/20 10:06:55 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/21 15:03:50 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,3 +40,28 @@ void	draw_rect(t_rect *rect, t_box *box)
 		}
 	}
 }
+
+/* void	draw_line(t_line *line, t_box *box)
+{
+	double	delta_x;
+	double	delta_y;
+	int		pixels;
+	double	pixel_x;
+	double	pixel_y;
+
+	delta_x = line->end_x - line->begin_x;
+	delta_y = line->end_y - line->begin_y;
+	pixels = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+	delta_x /= pixels;
+	delta_y /= pixels;
+	pixel_x = line->begin_x;
+	pixel_y = line->begin_y;
+	while (pixels)
+	{
+		//img[(int)pixel_y * res_width + (int)pixel_x] = line->color;
+		my_mlx_pyxel_put(&box->image, (int)pixel_x, (int)pixel_y, line->color);
+		pixel_x += delta_x;
+		pixel_y += delta_y;
+		pixels--;
+	}
+} */
