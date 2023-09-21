@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   values.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/17 17:17:57 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/21 21:29:14 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	init_textures(t_box *box)
 	while (++i < 50)
 	{
 		if (!box->textures[i].img)
-			box->textures[i].img = mlx_xpm_file_to_image(box->mlx, "textures/missing.xpm", &k, &j);
+			box->textures[i].img = mlx_xpm_file_to_image(box->mlx, "textures/grey_bricks.xpm", &k, &j);
 		box->textures[i].addr = (unsigned char *)mlx_get_data_addr(box->textures[i].img,
 			&box->textures[i].bits_pp, &box->textures[i].line_len, &box->textures[i].endian);
 	}
