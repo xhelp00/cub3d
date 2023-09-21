@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 16:24:06 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 17:18:33 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,8 @@ typedef struct s_box
 	t_mouse			mouse;
 }				t_box;
 
-typedef struct s_rect
+//shape rect used for drawing minimap
+typedef struct	s_rect
 {
 	int			x;
 	int			y;
@@ -187,6 +188,17 @@ typedef struct s_rect
 	int			border_color;
 	int			border_width;
 }				t_rect;
+
+//shape line
+typedef struct	s_line
+{
+	int			begin_x;
+	int			begin_y;
+	int			end_x;
+	int			end_y;
+	int			color;
+	int			width;
+}				t_line;
 
 //Hook.c
 int		exit_hook(t_box *box);
@@ -221,9 +233,11 @@ void	drawMinimap(t_box *box);
 void	draw_map(t_box *box);
 int		get_fill_color(char grid_item);
 void	draw_player(t_box *box);
+void	draw_rays(t_box *box);
 
 //Graphics.c
 void	draw_rect(t_rect *rect, t_box *box);
+void	draw_line(t_line *line, t_box *box);
 
 //testing
 void	print_map_contents(t_box *box);
