@@ -120,7 +120,7 @@ typedef struct	s_xvar
 
 
 int				mlx_int_do_nothing();
-unsigned int				mlx_get_color_value();
+int				mlx_get_color_value();
 int				mlx_int_get_good_color();
 int				mlx_int_find_in_pcm();
 int				mlx_int_anti_resize_win();

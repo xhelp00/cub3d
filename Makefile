@@ -3,32 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
+#    By: antess <antess@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/18 13:40:21 by phelebra         ###   ########.fr        #
+#    Updated: 2023/09/21 17:23:03 by antess           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 LIBFT = Libft
 MLX = minilibx
-UNAME_S := $(shell uname -s)
 
-SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c
+SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c movement.c
 OBJ = $(SRC:.c=.o)
-
-ifeq ($(UNAME_S),Linux)
-MLX_FLAGS = -lft -lmlx -lXext -lX11 -lm
-CFLAGS += -fPIE
-LDFLAGS += -pie
-endif
-ifeq ($(UNAME_S),Darwin)
-MLX_FLAGS = -lm -lglfw -Iinclude -lft -lmlx -lX11 -lXext -lstdc++ -L/usr/X11/lib -framework OpenGL -framework AppKit
-CFLAGS +=
-LDFLAGS +=
-endif
 
 all: lib $(NAME)
 
@@ -38,18 +26,16 @@ lib:
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@g++ $(CFLAGS) -g -o $@ $^ -L $(LIBFT) -L $(MLX) $(MLX_FLAGS) $(LDFLAGS)
-	
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ -lft -lmlx -lXext -lX11 -lm
+
 clean:
 	@make clean -C $(LIBFT)
-	@make clean -C $(MLX)
 	@rm -f $(OBJ)
 
 fclean:
 	@rm -f $(OBJ)
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFT)
-	@make clean -C $(MLX)
 
 re:	fclean
 	@make all

@@ -6,11 +6,18 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:52:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/06 13:54:59 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:12:28 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	mouse(int keycode, int x, int y, t_box *box)
+{
+	box->mouse.x = 0;
+	printf("DUMP of MOUSE: %i, %i, %i\n", keycode, x, y);
+	return (0);
+}
 
 /*	Key_press
 
@@ -32,6 +39,14 @@ int	key_press(int key, t_box *box)
 		box->info.move_y = 1;
 	if (key == 65505)
 		box->info.sprint = 1;
+	if (key == 65365)
+		box->info.up_down = 1;
+	if (key == 65366)
+		box->info.up_down = -1;
+	if (key == 32)
+		box->info.pos_z = 200;
+	if (key == 65507)
+		box->info.pos_z = -200;
 	return (0);
 }
 
@@ -58,6 +73,12 @@ int	key_release(int key, t_box *box)
 		box->info.move_y = 0;
 	if (key == 100 || key == 65363)
 		box->info.move_y = 0;
+	if (key == 65505)
+		box->info.sprint = 0;
+	if (key == 65365 || key == 65366)
+		box->info.up_down = 0;
+	if (key == 65507)
+		box->info.pos_z = 0;
 	//printf("Key released: %i\n", key);
 	return (0);
 }

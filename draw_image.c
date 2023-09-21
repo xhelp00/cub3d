@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_image.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/19 14:19:01 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:22:33 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,72 +21,21 @@ void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 	*(unsigned int *)pixel = color;
 }
 
+void	apply_fog(t_box *box, double dist)
+{
+	if (dist / 100 < 1.0)
+		box->info.color = ((int)(((box->info.color >> 16) & 0xFF) * (1 - dist / 100)) << 16
+				| (int)(((box->info.color >> 8) & 0xFF) * (1 - dist / 100)) << 8
+				| (int)((box->info.color & 0xFF) * (1 - dist / 100)));
+	else
+		box->info.color = 0;
+}
+
 int	extract_color(unsigned char *pixel)
 {
 	return (pixel[3] << 24 | pixel[2] << 16 | pixel[1] << 8 | pixel[0]);
 }
 
-void	cal_move(t_box *box)
-{
-	if (box->info.rotate == 1)
-	{
-		box->info.old_dir_x = box->info.dir_x;
-		box->info.dir_x = box->info.dir_x * cos(-box->info.rot_speed) - box->info.dir_y * sin(-box->info.rot_speed);
-		box->info.dir_y = box->info.old_dir_x * sin(-box->info.rot_speed) + box->info.dir_y * cos(-box->info.rot_speed);
-		box->info.old_plane_x = box->info.plane_x;
-		box->info.plane_x = box->info.plane_x * cos(-box->info.rot_speed) - box->info.plane_y * sin(-box->info.rot_speed);
-		box->info.plane_y = box->info.old_plane_x * sin(-box->info.rot_speed) + box->info.plane_y * cos(-box->info.rot_speed);
-	}
-	else if (box->info.rotate == -1)
-	{
-		box->info.old_dir_x = box->info.dir_x;
-		box->info.dir_x = box->info.dir_x * cos(box->info.rot_speed) - box->info.dir_y * sin(box->info.rot_speed);
-		box->info.dir_y = box->info.old_dir_x * sin(box->info.rot_speed) + box->info.dir_y * cos(box->info.rot_speed);
-		box->info.old_plane_x = box->info.plane_x;
-		box->info.plane_x = box->info.plane_x * cos(box->info.rot_speed) - box->info.plane_y * sin(box->info.rot_speed);
-		box->info.plane_y = box->info.old_plane_x * sin(box->info.rot_speed) + box->info.plane_y * cos(box->info.rot_speed);
-	}
-	if (box->info.move_x == 1)
-	{
-		if (box->map[(int)(box->info.pos_x + box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			box->info.pos_x += box->info.dir_x * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_y * box->info.move_speed)] == '0')
-			box->info.pos_y += box->info.dir_y * box->info.move_speed;
-	}
-	else if (box->info.move_x == -1)
-	{
-		if (box->map[(int)(box->info.pos_x - box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			box->info.pos_x -= box->info.dir_x * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_y * box->info.move_speed)] == '0')
-			box->info.pos_y -= box->info.dir_y * box->info.move_speed;
-	}
-	if (box->info.move_y == 1)
-	{
-		if (box->map[(int)(box->info.pos_x + box->info.dir_y * box->info.move_speed)][(int)(box->info.pos_y)] == '0')
-			box->info.pos_x += box->info.dir_y * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_x * box->info.move_speed)] == '0')
-			box->info.pos_y -= box->info.dir_x * box->info.move_speed;
-	}
-	else if (box->info.move_y == -1)
-	{
-		if (box->map[(int)(box->info.pos_x - box->info.dir_y * box->info.move_speed)][(int)(box->info.pos_y)] == '0')
-			box->info.pos_x -= box->info.dir_y * box->info.move_speed;
-		if (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_x * box->info.move_speed)] == '0')
-			box->info.pos_y += box->info.dir_x * box->info.move_speed;
-	}
-
-	box->old_time = box->time;
-	gettimeofday(&box->time, NULL);
-	box->info.frame_time = (box->time.tv_sec - box->old_time.tv_sec) +
-						((box->time.tv_usec - box->old_time.tv_usec)/1000000.0);
-	box->info.move_speed = box->info.frame_time * 3.0;
-	box->info.rot_speed = box->info.frame_time * 1.5;
-	if (box->info.sprint)
-	{
-		box->info.move_speed *= 2;
-		box->info.rot_speed *= 1.5;
-	}
-}
 /*
 void	draw_hud(t_box *box)
 {
@@ -149,7 +98,7 @@ void	draw_hud(t_box *box)
 void	redraw(t_box *box)
 {
 	char	*fps;
-	
+
 	mlx_destroy_image(box->mlx, box->image.img);
 	box->image.bits_pp = 0;
 	box->image.line_len = 0;
@@ -163,6 +112,7 @@ void	redraw(t_box *box)
 	cast_wall(box);
 	cast_obj(box);
 	cal_move(box);
+	cal_ene_move(box);
 	//print_map_contents(box);
     //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
 
@@ -171,6 +121,6 @@ void	redraw(t_box *box)
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	fps = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, fps);
-	//exit(1);
+
 	free(fps);
 }
