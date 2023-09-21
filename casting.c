@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   casting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/17 17:38:42 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:00:51 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,6 @@ void	cast_floor(t_box *box)
 			box->info.distance = (int)((box->info.pos_x - box->info.floor_x) * (box->info.pos_x - box->info.floor_x) + (box->info.pos_y - box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
 
 			box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
-			box->info.color = (box->info.color >> 1) & 8355711;
-			apply_fog(box, box->info.distance);
-			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
-
-			box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.ceiling_texture].line_len * box->info.ty]);
 			box->info.color = (box->info.color >> 1) & 8355711;
 			apply_fog(box, box->info.distance);
 			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
