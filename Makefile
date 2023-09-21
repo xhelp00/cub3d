@@ -6,7 +6,7 @@
 #    By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/25 17:57:33 by jbartosi         ###   ########.fr        #
+#    Updated: 2023/09/25 17:58:20 by jbartosi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ CFLAGS += -fPIE
 LDFLAGS += -pie
 endif
 ifeq ($(UNAME_S),Darwin)
-MLX_FLAGS = -lm -lglfw -Iinclude -lft -lmlx -lX11 -lXext -lstdc++ -L/usr/X11/lib -framework OpenGL -framework AppKit
+MLX_FLAGS = -lm -lglfw -Iinclude -lft -lmlx -L/usr/X11/lib -L/Users/helebrant/.brew/Cellar/libx11/1.8.6/lib -L/Users/helebrant/.brew/Cellar/libxext/1.3.5/lib -lX11 -lXext -lstdc++  -framework OpenGL -framework AppKit
 CFLAGS +=
 LDFLAGS +=
 endif
