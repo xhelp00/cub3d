@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/10 18:29:34 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 16:27:17 by jbartosi         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2023/09/25 17:24:03 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "cub3d.h"
 
@@ -146,8 +147,18 @@ void	parser(t_box *box, int fd)
 			box->map[i] = (free(box->map[i]), tmp);
 		}
 	}
-	box->sprites = malloc(sizeof(t_sprite));
-	box->sprites = NULL;
+	box->sprites = malloc(100 * sizeof(t_sprite));
+	i = 0;
+	while (i < 100)
+	{
+		box->sprites[i].x = 0;
+		box->sprites[i].y = 0;
+		box->sprites[i].texture = 0;
+		box->sprites[i].dir_x = 0;
+		box->sprites[i].dir_y = 0;
+		box->sprites[i].frame = 0;
+		box->sprites[i++].state = IDLE;
+	}
 	line = get_next_line(fd);
 	float	x = 0;
 	float	y = 0;

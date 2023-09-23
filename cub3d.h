@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 17:19:53 by jbartosi         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2023/09/25 17:21:16 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef CUB3D_H
 # define CUB3D_H
@@ -178,7 +179,7 @@ typedef struct s_box
 }				t_box;
 
 //shape rect used for drawing minimap
-typedef struct	s_rect
+typedef struct s_rect
 {
 	int			x;
 	int			y;
@@ -250,6 +251,6 @@ void	cal_move(t_box *box);
 void	cal_sprite_move(t_box *box);
 
 //Main.c
-int		count_sprites(t_box *box);
+void	count_sprites(t_box *box);
 
 #endif
