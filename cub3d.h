@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 17:47:27 by jbartosi         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2023/09/25 17:51:12 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #ifndef CUB3D_H
@@ -235,7 +236,6 @@ void	draw_map(t_box *box);
 int		get_fill_color(char grid_item);
 void	draw_player(t_box *box);
 void	draw_rays(t_box *box);
-
 
 //Graphics.c
 void	draw_rect(t_rect *rect, t_box *box);

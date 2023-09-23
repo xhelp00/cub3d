@@ -6,9 +6,10 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2023/09/25 17:29:40 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 17:49:48 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #include "cub3d.h"
@@ -99,15 +100,43 @@ void	cal_move(t_box *box)
 		box->info.move_speed *= 0.5;
 }
 
-void	sprite_hit(t_box *box, int index)
+void	*tick(void *data)
 {
-	box->sprites[index].state = HIT;
-	gettimeofday(&box->sprites[index].hit_time, NULL);
-	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
-	// if (10 < (box->time.tv_sec - box->old_time.tv_sec) +
-	// 		((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0))
-	// sprite_remove(box, index);
-	// printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
+	t_box	*box;
+	int		last;
+
+	box = (struct s_box *) data;
+	box->sprites[box->info.to_destroy].frame = 0;
+	last = (int)(box->time.tv_usec / 100000.0);
+	while (box->sprites[box->info.to_destroy].frame < 16)
+	{
+		//gettimeofday(&box->time, NULL);
+		if ((int)(box->time.tv_usec / 100000.0) != last)
+		{
+			last = (int)(box->time.tv_usec / 100000.0);
+			box->sprites[box->info.to_destroy].frame++;
+		}
+	}
+	box->sprites[box->info.to_destroy].x = 0;
+	box->sprites[box->info.to_destroy].y = 0;
+	box->sprites[box->info.to_destroy].dir_x = 0;
+	box->sprites[box->info.to_destroy].dir_y = 0;
+	box->sprites[box->info.to_destroy].texture = 0;
+	box->sprites[box->info.to_destroy].frame = 0;
+	box->sprites[box->info.to_destroy].state = IDLE;
+	count_sprites(box);
+	return (NULL);
+
+}
+
+void	destroy_sprite(t_box *box, int i)
+{
+	pthread_t	t;
+
+	box->sprites[i].state = HIT;
+	box->info.to_destroy = i;
+	pthread_create(&t, NULL, &tick, box);
+	//pthread_join(t, NULL);
 }
 
 void	cal_sprite_move(t_box *box)
