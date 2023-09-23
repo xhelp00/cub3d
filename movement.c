@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2023/09/25 17:49:48 by jbartosi         ###   ########.fr       */
+/*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
+/*   Updated: 2023/09/25 17:52:38 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,43 +100,19 @@ void	cal_move(t_box *box)
 		box->info.move_speed *= 0.5;
 }
 
-void	*tick(void *data)
-{
-	t_box	*box;
-	int		last;
-
-	box = (struct s_box *) data;
-	box->sprites[box->info.to_destroy].frame = 0;
-	last = (int)(box->time.tv_usec / 100000.0);
-	while (box->sprites[box->info.to_destroy].frame < 16)
-	{
-		//gettimeofday(&box->time, NULL);
-		if ((int)(box->time.tv_usec / 100000.0) != last)
-		{
-			last = (int)(box->time.tv_usec / 100000.0);
-			box->sprites[box->info.to_destroy].frame++;
-		}
-	}
-	box->sprites[box->info.to_destroy].x = 0;
-	box->sprites[box->info.to_destroy].y = 0;
-	box->sprites[box->info.to_destroy].dir_x = 0;
-	box->sprites[box->info.to_destroy].dir_y = 0;
-	box->sprites[box->info.to_destroy].texture = 0;
-	box->sprites[box->info.to_destroy].frame = 0;
-	box->sprites[box->info.to_destroy].state = IDLE;
-	count_sprites(box);
-	return (NULL);
-
-}
-
 void	destroy_sprite(t_box *box, int i)
 {
-	pthread_t	t;
-
 	box->sprites[i].state = HIT;
-	box->info.to_destroy = i;
-	pthread_create(&t, NULL, &tick, box);
-	//pthread_join(t, NULL);
+	box->sprites[i].x = 0;
+	box->sprites[i].y = 0;
+	box->sprites[i].dir_x = 0;
+	box->sprites[i].dir_y = 0;
+	box->sprites[i].texture = 0;
+	box->sprites[i].frame = 0;
+	box->sprites[i].state = IDLE;
+	printf("\e[0;31mDestroing tear of index %i\e[0m\n", box->n_sprites);
+	box->n_sprites--;
+	printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
 }
 
 void	cal_sprite_move(t_box *box)
