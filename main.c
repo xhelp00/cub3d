@@ -5,11 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 17:55:06 by jbartosi         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2023/09/25 17:59:31 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 
 #include "cub3d.h"
@@ -18,7 +17,7 @@
 
 	Calculates how many sprites needs to be drawn each redraw
 */
-int	count_sprites(t_box *box)
+void	count_sprites(t_box *box)
 {
 	int	i;
 
