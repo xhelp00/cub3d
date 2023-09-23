@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   casting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:00:51 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/23 15:44:03 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,8 +289,12 @@ void	cast_obj(t_box *box)
 						else
 							box->info.color = 0;
 					}
+					else if (box->sprites[i].texture == 30 && box->sprites[i].state == HIT)
+						box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 64 * box->sprites[i].frame) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 64 * (box->sprites[i].frame / 4)]);
+					else if (box->sprites[i].texture == 30 && box->sprites[i].state == IDLE)
+						box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[(box->info.tex_x * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len]);
 					else
-						box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[box->info.tex_x * 4 + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
+						box->info.color = 0;
 					if ((box->info.color & 0x00FFFFFF) != 0)
 					{
 						apply_fog(box, box->sprites[i].dist);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:22:19 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/23 15:51:06 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <math.h>
 # include <sys/time.h>
 # include <dirent.h>
+# include <pthread.h>
 # include "Libft/libft.h"
 # include "minilibx/mlx.h"
 
@@ -33,7 +34,6 @@
 # define VDIV 1
 # define VMOVE 0.0
 # define MINIMAP_OFFSET 10
-
 
 typedef struct s_info
 {
@@ -122,6 +122,7 @@ typedef struct s_info
 	float	cam_z;
 	int		up_down;
 	int		distance;
+	int		to_destroy;
 }				t_info;
 
 typedef struct s_image
@@ -134,12 +135,19 @@ typedef struct s_image
 	char			*name;
 }				t_image;
 
+# define IDLE 0
+# define HIT 1
+
 typedef struct s_sprite
 {
 	double	x;
 	double	y;
 	int		texture;
 	double	dist;
+	double	dir_x;
+	double	dir_y;
+	int		state;
+	int		frame;
 }				t_sprite;
 
 typedef struct s_mouse
@@ -162,13 +170,12 @@ typedef struct s_box
 	int				map_width;
 	int				map_height;
 	t_info			info;
-	size_t			timer;
 	struct timeval	time;
 	struct timeval	old_time;
 	t_mouse			mouse;
 }				t_box;
 
-typedef struct	s_rect
+typedef struct s_rect
 {
 	int			x;
 	int			y;
@@ -211,18 +218,20 @@ void	draw_map(t_box *box);
 int		get_fill_color(char grid_item);
 void	draw_player(t_box *box);
 
-
 //Graphics.c
 void	draw_rect(t_rect *rect, t_box *box);
 
 //testing
-void print_map_contents(t_box *box);
-void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color);
-void single_square_test(t_box *box);
-
+void	print_map_contents(t_box *box);
+void	fill_buffer_with_color(unsigned char *buffer, int width,
+			int height, int color);
+void	single_square_test(t_box *box);
 
 //Movement.c
 void	cal_move(t_box *box);
-void	cal_ene_move(t_box *box);
+void	cal_sprite_move(t_box *box);
+
+//Main.c
+void	count_sprites(t_box *box);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 18:29:34 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/18 11:02:36 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/09/23 15:41:15 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,11 @@ void	parser(t_box *box, int fd)
 	{
 		box->sprites[i].x = 0;
 		box->sprites[i].y = 0;
-		box->sprites[i++].texture = 0;
+		box->sprites[i].texture = 0;
+		box->sprites[i].dir_x = 0;
+		box->sprites[i].dir_y = 0;
+		box->sprites[i].frame = 0;
+		box->sprites[i++].state = IDLE;
 	}
 	line = get_next_line(fd);
 	i = 0;

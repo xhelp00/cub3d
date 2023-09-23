@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/17 17:17:57 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/23 15:50:06 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	init_textures(t_box *box)
 	box->textures[11].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
 	box->textures[12].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
 	box->textures[20].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
+	box->textures[30].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
@@ -68,7 +69,6 @@ void	init_vals(t_box *box)
 	box->info.sprint = 0;
 	box->info.pitch = 0;
 	box->info.up_down = 0;
-	box->timer = 0;
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
 	box->mouse.xdistance = 0;

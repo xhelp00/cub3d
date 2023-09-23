@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:22:39 by antess           ###   ########.fr       */
+/*   Updated: 2023/09/23 15:50:28 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 
 	Calculates how many sprites needs to be drawn each redraw
 */
-int	count_sprites(t_box *box)
+void	count_sprites(t_box *box)
 {
 	int	i;
 
 	i = 0;
 	while (box->sprites[i].x != 0)
 		i++;
-	return (i);
+	box->n_sprites = i;
 }
 
 /*	Check
@@ -41,7 +41,7 @@ void	check(t_box *box, int argc, char **argv)
 		return (printf("Error\nCannot open file.\n"), exit(1));
 	init_vals(box);
 	parser(box, fd);
-	box->n_sprites = count_sprites(box);
+	count_sprites(box);
 	close(fd);
 }
 
@@ -51,9 +51,6 @@ void	check(t_box *box, int argc, char **argv)
 */
 int	timer(t_box *box)
 {
-	if (box->timer > 1000000000)
-		box->timer = 0;
-	box->timer++;
 	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	redraw(box);

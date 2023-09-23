@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:52:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/13 16:12:28 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/23 15:50:39 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,22 @@
 
 int	mouse(int keycode, int x, int y, t_box *box)
 {
-	box->mouse.x = 0;
-	printf("DUMP of MOUSE: %i, %i, %i\n", keycode, x, y);
+	int	i;
+
+	(void)x;
+	(void)y;
+	if (keycode == 1)
+	{
+		i = 0;
+		while (box->sprites[i].texture > 0)
+			i++;
+		box->sprites[i].texture = 30;
+		box->sprites[i].x = box->info.pos_x;
+		box->sprites[i].y = box->info.pos_y;
+		box->sprites[i].dir_x = box->info.dir_x;
+		box->sprites[i].dir_y = box->info.dir_y;
+		count_sprites(box);
+	}
 	return (0);
 }
 
@@ -79,7 +93,7 @@ int	key_release(int key, t_box *box)
 		box->info.up_down = 0;
 	if (key == 65507)
 		box->info.pos_z = 0;
-	//printf("Key released: %i\n", key);
+	// printf("Key released: %i\n", key);
 	return (0);
 }
 
