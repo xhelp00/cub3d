@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2023/09/25 17:59:31 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 18:00:53 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 	Calculates how many sprites needs to be drawn each redraw
 */
-void	count_sprites(t_box *box)
+int	count_sprites(t_box *box)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 17:59:45 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 18:01:08 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,6 @@ void	cal_move(t_box *box);
 void	cal_sprite_move(t_box *box);
 
 //Main.c
-void	count_sprites(t_box *box);
+int	count_sprites(t_box *box);
 
 #endif
