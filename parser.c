@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2023/09/25 17:24:03 by jbartosi         ###   ########.fr       */
+/*   Created: 2023/06/10 18:29:34 by jbartosi          #+#    #+#             */
+/*   Updated: 2023/09/25 17:25:10 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,18 +147,8 @@ void	parser(t_box *box, int fd)
 			box->map[i] = (free(box->map[i]), tmp);
 		}
 	}
-	box->sprites = malloc(100 * sizeof(t_sprite));
-	i = 0;
-	while (i < 100)
-	{
-		box->sprites[i].x = 0;
-		box->sprites[i].y = 0;
-		box->sprites[i].texture = 0;
-		box->sprites[i].dir_x = 0;
-		box->sprites[i].dir_y = 0;
-		box->sprites[i].frame = 0;
-		box->sprites[i++].state = IDLE;
-	}
+	box->sprites = malloc(sizeof(t_sprite));
+	box->sprites = NULL;
 	line = get_next_line(fd);
 	float	x = 0;
 	float	y = 0;

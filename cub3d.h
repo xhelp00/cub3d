@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2023/09/25 17:21:16 by jbartosi         ###   ########.fr       */
+/*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
+/*   Updated: 2023/09/25 17:27:02 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,6 +251,6 @@ void	cal_move(t_box *box);
 void	cal_sprite_move(t_box *box);
 
 //Main.c
-void	count_sprites(t_box *box);
+int	count_sprites(t_box *box);
 
 #endif
