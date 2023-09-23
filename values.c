@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 15:50:06 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/23 18:33:22 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	init_vals(t_box *box)
 	box->info.rot_speed = 0;
 	box->info.move_speed = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
+	box->n_sprites = 0;
 }
 
 void	reset_vals(t_box *box)

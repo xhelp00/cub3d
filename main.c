@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 15:50:28 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/23 18:27:30 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,17 @@
 
 	Calculates how many sprites needs to be drawn each redraw
 */
-void	count_sprites(t_box *box)
+int	count_sprites(t_box *box)
 {
 	int	i;
 
 	i = 0;
-	while (box->sprites[i].x != 0)
+	if (box->sprites == NULL)
+		return (box->n_sprites = 0, 0);
+	while (box->sprites[i].texture && box->sprites[i].x > 0)
 		i++;
 	box->n_sprites = i;
+	return (0);
 }
 
 /*	Check
@@ -41,7 +44,6 @@ void	check(t_box *box, int argc, char **argv)
 		return (printf("Error\nCannot open file.\n"), exit(1));
 	init_vals(box);
 	parser(box, fd);
-	count_sprites(box);
 	close(fd);
 }
 
