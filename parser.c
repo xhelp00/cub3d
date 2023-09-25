@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 18:29:34 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 15:02:53 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 16:27:17 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	sprite_append(t_box *box, float x, float y, int texture)
 		new[i].dir_x = box->sprites[i].dir_x;
 		new[i].dir_y = box->sprites[i].dir_y;
 		new[i].index = box->sprites[i].index;
-		new[i].state = IDLE;
+		new[i].state = box->sprites[i].state;
+		new[i].frame = box->sprites[i].frame;
 	}
 	new[i].x = x;
 	new[i].y = y;
@@ -60,7 +61,8 @@ void	sprite_remove(t_box *box, int to_rem)
 		new[i].dir_x = box->sprites[i + p].dir_x;
 		new[i].dir_y = box->sprites[i + p].dir_y;
 		new[i].index = box->sprites[i + p].index;
-		new[i].state = IDLE;
+		new[i].state = box->sprites[i + p].state;
+		new[i].frame = box->sprites[i + p].frame;
 	}
 	free(box->sprites);
 	box->sprites = new;

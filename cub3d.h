@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/24 15:48:55 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 16:24:06 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,15 +140,16 @@ typedef struct s_image
 
 typedef struct s_sprite
 {
-	int		index;
-	double	x;
-	double	y;
-	int		texture;
-	double	dist;
-	double	dir_x;
-	double	dir_y;
-	int		state;
-	int		frame;
+	int				index;
+	double			x;
+	double			y;
+	int				texture;
+	double			dist;
+	double			dir_x;
+	double			dir_y;
+	int				state;
+	int				frame;
+	struct timeval	hit_time;
 }				t_sprite;
 
 typedef struct s_mouse
