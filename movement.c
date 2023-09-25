@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 17:55:27 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 17:56:23 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,14 @@ void	cal_move(t_box *box)
 		box->info.move_speed *= 0.5;
 }
 
-void	destroy_sprite(t_box *box, int index)
+void	sprite_hit(t_box *box, int index)
 {
 	box->sprites[index].state = HIT;
+	gettimeofday(&box->sprites[index].hit_time, NULL);
 	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
-	sprite_remove(box, index);
+	// if (10 < (box->time.tv_sec - box->old_time.tv_sec) +
+	// 		((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0))
+	// sprite_remove(box, index);
 	// printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
 }
 
