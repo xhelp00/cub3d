@@ -252,6 +252,6 @@ void	cal_move(t_box *box);
 void	cal_sprite_move(t_box *box);
 
 //Main.c
-int	count_sprites(t_box *box);
+int		count_sprites(t_box *box);
 
 #endif
