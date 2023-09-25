@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 17:52:38 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 17:55:27 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,19 +100,12 @@ void	cal_move(t_box *box)
 		box->info.move_speed *= 0.5;
 }
 
-void	destroy_sprite(t_box *box, int i)
+void	destroy_sprite(t_box *box, int index)
 {
-	box->sprites[i].state = HIT;
-	box->sprites[i].x = 0;
-	box->sprites[i].y = 0;
-	box->sprites[i].dir_x = 0;
-	box->sprites[i].dir_y = 0;
-	box->sprites[i].texture = 0;
-	box->sprites[i].frame = 0;
-	box->sprites[i].state = IDLE;
-	printf("\e[0;31mDestroing tear of index %i\e[0m\n", box->n_sprites);
-	box->n_sprites--;
-	printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
+	box->sprites[index].state = HIT;
+	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
+	sprite_remove(box, index);
+	// printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
 }
 
 void	cal_sprite_move(t_box *box)
