@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 18:29:34 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 18:27:13 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 15:02:53 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,45 @@ void	sprite_append(t_box *box, float x, float y, int texture)
 		new[i].texture = box->sprites[i].texture;
 		new[i].dir_x = box->sprites[i].dir_x;
 		new[i].dir_y = box->sprites[i].dir_y;
+		new[i].index = box->sprites[i].index;
+		new[i].state = IDLE;
 	}
 	new[i].x = x;
 	new[i].y = y;
 	new[i].texture = texture;
 	new[i].dir_x = 0;
 	new[i].dir_y = 0;
+	new[i].state = IDLE;
+	new[i].index = box->n_sprites;
 	free(box->sprites);
 	box->sprites = new;
 	box->n_sprites++;
+}
+
+void	sprite_remove(t_box *box, int to_rem)
+{
+	t_sprite	*new;
+	int			i;
+	int			p;
+
+	new = (t_sprite *) malloc(sizeof(t_sprite) * (box->n_sprites - 1));
+	i = -1;
+	p = 0;
+	while (++i < box->n_sprites - 1)
+	{
+		if (box->sprites[i].index == to_rem)
+			p = 1;
+		new[i].x = box->sprites[i + p].x;
+		new[i].y = box->sprites[i + p].y;
+		new[i].texture = box->sprites[i + p].texture;
+		new[i].dir_x = box->sprites[i + p].dir_x;
+		new[i].dir_y = box->sprites[i + p].dir_y;
+		new[i].index = box->sprites[i + p].index;
+		new[i].state = IDLE;
+	}
+	free(box->sprites);
+	box->sprites = new;
+	box->n_sprites--;
 }
 
 void	parser(t_box *box, int fd)
@@ -133,12 +163,12 @@ void	parser(t_box *box, int fd)
 		s++;
 		texture = ft_atoi(line + s);
 		line = (free(line), get_next_line(fd));
-		printf("%s\n%f | %f | %i\n", "ADDING SPRITE IN PROGRESS!!!!", x, y, texture);
+		// printf("%s\n%f | %f | %i\n", "ADDING SPRITE IN PROGRESS!!!!", x, y, texture);
 		sprite_append(box, x, y, texture);
-		i = -1;
-		printf("\nDUMP:\n");
-		while (++i < box->n_sprites)
-			printf("Texture: %i | x: %f | y: %f\n", box->sprites[i].texture, box->sprites[i].x, box->sprites[i].y);
+		// i = -1;
+		// printf("\nDUMP:\n");
+		// while (++i < box->n_sprites)
+		// 	printf("Texture: %i | x: %f | y: %f\n", box->sprites[i].texture, box->sprites[i].x, box->sprites[i].y);
 	}
 	free(line);
 }

@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 18:27:30 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 14:35:27 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	count_sprites(t_box *box)
 	i = 0;
 	if (box->sprites == NULL)
 		return (box->n_sprites = 0, 0);
-	while (box->sprites[i].texture && box->sprites[i].x > 0)
+	while (box->sprites[i].texture > 0)
 		i++;
 	box->n_sprites = i;
 	return (0);

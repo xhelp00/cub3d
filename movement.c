@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 18:06:07 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 14:56:05 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,25 +98,22 @@ void	cal_move(t_box *box)
 		box->info.move_speed *= 0.5;
 }
 
-void	destroy_sprite(t_box *box, int i)
+void	destroy_sprite(t_box *box, int index)
 {
-	box->sprites[i].state = HIT;
-	box->sprites[i].x = 0;
-	box->sprites[i].y = 0;
-	box->sprites[i].dir_x = 0;
-	box->sprites[i].dir_y = 0;
-	box->sprites[i].texture = 0;
-	box->sprites[i].frame = 0;
-	box->sprites[i].state = IDLE;
-	printf("\e[0;31mDestroing tear of index %i\e[0m\n", box->n_sprites);
-	box->n_sprites--;
-	printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
+	box->sprites[index].state = HIT;
+	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
+	sprite_remove(box, index);
+	// printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
 }
 
 void	cal_sprite_move(t_box *box)
 {
 	int		i;
 
+	// i = -1;
+	// printf("\nDUMP:\n");
+	// while (++i < box->n_sprites)
+	// 	printf("Index: %i | texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f\n", box->sprites[i].index, box->sprites[i].texture, box->sprites[i].x, box->sprites[i].y, box->sprites[i].dir_x, box->sprites[i].dir_y);
 	i = -1;
 	while (++i < box->n_sprites)
 	{
@@ -148,9 +145,10 @@ void	cal_sprite_move(t_box *box)
 	*/
 		if (box->sprites[i].texture == 30 && box->sprites[i].state == IDLE)
 		{
+			// printf("MOVE\n");
 			if (box->map[(int)(box->sprites[i].x + box->sprites[i].dir_x * box->info.move_speed)][(int)box->sprites[i].y] == '1'
 					|| box->map[(int)(box->sprites[i].x)][(int)(box->sprites[i].y + box->sprites[i].dir_y * box->info.move_speed)] == '1')
-				//destroy_sprite(box, i);
+				destroy_sprite(box, box->sprites[i].index);
 			if (box->map[(int)(box->sprites[i].x + box->sprites[i].dir_x * box->info.move_speed)][(int)box->sprites[i].y] == '0')
 				box->sprites[i].x += box->sprites[i].dir_x * box->info.move_speed;
 			if (box->map[(int)(box->sprites[i].x)][(int)(box->sprites[i].y + box->sprites[i].dir_y * box->info.move_speed)] == '0')

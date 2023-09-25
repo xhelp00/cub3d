@@ -6,7 +6,7 @@
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:52:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 18:35:58 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/09/25 14:55:38 by jbartosi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,15 @@
 
 int	mouse(int keycode, int x, int y, t_box *box)
 {
-	int	i;
-
 	(void)x;
 	(void)y;
 	if (keycode == 1)
 	{
 		sprite_append(box, box->info.pos_x, box->info.pos_y, 30);
-		printf("\e[0;36mAdded tear to index %i\e[0m\n", box->n_sprites);
+		// printf("\e[0;36mAdded tear to index %i\e[0m\n", box->n_sprites);
 		box->sprites[box->n_sprites - 1].dir_x = box->info.dir_x;
 		box->sprites[box->n_sprites - 1].dir_y = box->info.dir_y;
-		printf("\e[0;32mNumber of sprites after adding %i\e[0m\n", box->n_sprites);
-		i = -1;
-		printf("\nDUMP:\n");
-		while (++i < box->n_sprites)
-			printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f\n", box->sprites[i].texture, box->sprites[i].x, box->sprites[i].y, box->sprites[i].dir_x, box->sprites[i].dir_y);
+		// printf("\e[0;32mNumber of sprites after adding %i\e[0m\n", box->n_sprites);
 	}
 	return (0);
 }
