@@ -20,8 +20,8 @@ int	mouse(int keycode, int x, int y, t_box *box)
 	{
 		sprite_append(box, box->info.pos_x, box->info.pos_y, 30);
 		// printf("\e[0;36mAdded tear to index %i\e[0m\n", box->n_sprites);
-		box->sprites[box->n_sprites - 1].dir_x = box->info.dir_x;
-		box->sprites[box->n_sprites - 1].dir_y = box->info.dir_y;
+		// box->sprites[box->n_sprites - 1].dir_x = box->info.dir_x;
+		// box->sprites[box->n_sprites - 1].dir_y = box->info.dir_y;
 		// printf("\e[0;32mNumber of sprites after adding %i\e[0m\n", box->n_sprites);
 	}
 	return (0);

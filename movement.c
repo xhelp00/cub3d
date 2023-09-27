@@ -98,10 +98,10 @@ void	cal_move(t_box *box)
 		box->info.move_speed *= 0.5;
 }
 
-void	sprite_hit(t_box *box, int index)
+void	sprite_hit(t_sprite *sprite)
 {
-	box->sprites[index].state = HIT;
-	gettimeofday(&box->sprites[index].hit_time, NULL);
+	sprite->state = HIT;
+	gettimeofday(&sprite->hit_time, NULL);
 	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
 	// if (10 < (box->time.tv_sec - box->old_time.tv_sec) +
 	// 		((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0))
@@ -111,14 +111,21 @@ void	sprite_hit(t_box *box, int index)
 
 void	cal_sprite_move(t_box *box)
 {
-	int		i;
+	t_sprite	*sprites;
 
-	// i = -1;
-	// printf("\nDUMP:\n");
-	// while (++i < box->n_sprites)
-	// 	printf("Index: %i | texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f\n", box->sprites[i].index, box->sprites[i].texture, box->sprites[i].x, box->sprites[i].y, box->sprites[i].dir_x, box->sprites[i].dir_y);
-	i = -1;
-	while (++i < box->n_sprites)
+	sprites = box->sprites;
+	// if (sprites)
+	// {
+	// 	return ;
+	// }
+	printf("\nDUMP:\n");
+	while (sprites)
+	{
+		printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f\n", sprites->texture, sprites->x, sprites->y, sprites->dir_x, sprites->dir_y);
+		sprites = sprites->next;
+	}
+	sprites = box->sprites;
+	while (sprites)
 	{
 		/*
 		if (box->sprites[i].texture == 10)
@@ -146,27 +153,27 @@ void	cal_sprite_move(t_box *box)
 				box->sprites[i].y -= speed;
 		}
 	*/
-		if (box->sprites[i].texture == 30)
+		if (sprites->texture == 30)
 		{
-			if (box->sprites[i].state == HIT)
+			if (sprites->state == HIT)
 			{
-				box->sprites[i].frame = ((((box->time.tv_sec - box->sprites[i].hit_time.tv_sec) + ((box->time.tv_usec - box->sprites[i].hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-				printf("%i FRAME: %i\n", box->sprites[i].index, box->sprites[i].frame);
-				if (box->sprites[i].frame > 14)
+				sprites->frame = ((((box->time.tv_sec - sprites->hit_time.tv_sec) + ((box->time.tv_usec - sprites->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+				printf("FRAME: %i\n", sprites->frame);
+				if (sprites->frame > 14)
 				{
-					printf("\e[0;31mDestroing tear of index %i\e[0m\n", box->sprites[i].index);
-					sprite_remove(box, box->sprites[i].index);
+					sprite_remove(sprites);
 					printf("\e[0;32mNumber of sprites after destroing %i\e[0m\n", box->n_sprites);
 				}
 			}
-			else if (box->map[(int)(box->sprites[i].x + box->sprites[i].dir_x * box->info.move_speed)][(int)box->sprites[i].y] == '1'
-					|| box->map[(int)(box->sprites[i].x)][(int)(box->sprites[i].y + box->sprites[i].dir_y * box->info.move_speed)] == '1')
-				sprite_hit(box, box->sprites[i].index);
+			else if (box->map[(int)(sprites->x + sprites->dir_x * box->info.move_speed)][(int)sprites->y] == '1'
+					|| box->map[(int)(sprites->x)][(int)(sprites->y + sprites->dir_y * box->info.move_speed)] == '1')
+				sprite_hit(sprites);
 			else
 			{
-				box->sprites[i].x += box->sprites[i].dir_x * box->info.move_speed;
-				box->sprites[i].y += box->sprites[i].dir_y * box->info.move_speed;
+				sprites->x += sprites->dir_x * box->info.move_speed;
+				sprites->y += sprites->dir_y * box->info.move_speed;
 			}
 		}
+		sprites = sprites->next;
 	}
 }

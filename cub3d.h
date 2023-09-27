@@ -142,7 +142,6 @@ typedef struct s_image
 
 typedef struct s_sprite
 {
-	int				index;
 	double			x;
 	double			y;
 	int				texture;
@@ -152,6 +151,8 @@ typedef struct s_sprite
 	int				state;
 	int				frame;
 	struct timeval	hit_time;
+	struct s_sprite	*prev;
+	struct s_sprite	*next;
 }				t_sprite;
 
 typedef struct s_mouse
@@ -211,7 +212,7 @@ int		mouse(int keycode, int x, int y, t_box *box);
 //Parser.c
 void	parser(t_box *box, int fd);
 void	sprite_append(t_box *box, float x, float y, int texture);
-void	sprite_remove(t_box *box, int to_rem);
+void	sprite_remove(t_sprite *to_rem);
 
 //Values.c
 void	init_vals(t_box *box);

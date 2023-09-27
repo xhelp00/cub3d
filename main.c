@@ -19,15 +19,19 @@
 */
 int	count_sprites(t_box *box)
 {
-	int	i;
+	int			counter;
+	t_sprite	*sprites;
 
-	i = 0;
-	if (box->sprites == NULL)
-		return (box->n_sprites = 0, 0);
-	while (box->sprites[i].texture > 0)
-		i++;
-	box->n_sprites = i;
-	return (0);
+	sprites = box->sprites;
+	if (!sprites)
+		return (0);
+	counter = 1;
+	while (sprites->next)
+	{
+		sprites = sprites->next;
+		counter++;
+	}
+	return (counter);
 }
 
 /*	Check

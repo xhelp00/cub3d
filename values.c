@@ -50,6 +50,7 @@ void	init_textures(t_box *box)
 */
 void	init_vals(t_box *box)
 {
+	box->sprites = NULL;
 	box->info.pos_x = 4;
 	box->info.pos_y = 5;
 	box->info.pos_z = 0;
@@ -97,33 +98,38 @@ void	reset_vals(t_box *box)
 
 void	swap(t_sprite *x, t_sprite *y)
 {
-	t_sprite	tmp;
-
-	tmp = *x;
-	*x = *y;
-	*y = tmp;
+	*x->next = *y->next;
+	if (y->next)
+		*y->next = *x;
+	*y->prev = *x->prev;
+	if (x->prev)
+		*x->prev = *y;
 }
 
 void	bubble_sort_sprites(t_box *box)
 {
-	int	i;
-	int	j;
+	t_sprite	*sprites;
+	t_sprite	*tmp;
 
-	i = -1;
-	while (++i < box->n_sprites)
-		box->sprites[i].dist = ((box->info.pos_x - box->sprites[i].x)
-				* (box->info.pos_x - box->sprites[i].x)
-				+ (box->info.pos_y - box->sprites[i].y)
-				* (box->info.pos_y - box->sprites[i].y));
-	i = -1;
-	while (++i < box->n_sprites - 1)
+	sprites = box->sprites;
+	while (sprites)
 	{
-		j = -1;
-		while (++j < box->n_sprites - i - 1)
-			if (box->sprites[j].dist > box->sprites[j + 1].dist)
-				swap(&box->sprites[j], &box->sprites[j + 1]);
+		sprites->dist = ((box->info.pos_x - sprites->x)
+				* (box->info.pos_x - sprites->x)
+				+ (box->info.pos_y - sprites->y)
+				* (box->info.pos_y - sprites->y));
+		sprites = sprites->next;
 	}
-	i = -1;
-	while (++i < box->n_sprites / 2)
-		swap(&box->sprites[i], &box->sprites[box->n_sprites - i - 1]);
+	sprites = box->sprites;
+	while (sprites)
+	{
+		tmp = sprites;
+		while (tmp->next)
+		{
+			if (tmp->dist < tmp->next->dist)
+				swap(tmp, tmp->next);
+			tmp = tmp->next;
+		}
+		sprites = sprites->next;
+	}
 }
