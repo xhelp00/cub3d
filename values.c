@@ -96,14 +96,15 @@ void	reset_vals(t_box *box)
 	box->info.color = 0;
 }
 
-void	swap(t_sprite *x, t_sprite *y)
+void	swap(t_sprite *x)
 {
-	*x->next = *y->next;
-	if (y->next)
-		*y->next = *x;
-	*y->prev = *x->prev;
-	if (x->prev)
-		*x->prev = *y;
+	t_data	*tmp;
+
+	if (!x || (x->data == NULL && x->next == NULL))
+		return ;
+	tmp = x->data;
+	x->data = x->next->data;
+	x->next->data = tmp;
 }
 
 void	bubble_sort_sprites(t_box *box)
@@ -114,10 +115,10 @@ void	bubble_sort_sprites(t_box *box)
 	sprites = box->sprites;
 	while (sprites)
 	{
-		sprites->dist = ((box->info.pos_x - sprites->x)
-				* (box->info.pos_x - sprites->x)
-				+ (box->info.pos_y - sprites->y)
-				* (box->info.pos_y - sprites->y));
+		sprites->data->dist = ((box->info.pos_x - sprites->data->x)
+				* (box->info.pos_x - sprites->data->x)
+				+ (box->info.pos_y - sprites->data->y)
+				* (box->info.pos_y - sprites->data->y));
 		sprites = sprites->next;
 	}
 	sprites = box->sprites;
@@ -126,8 +127,8 @@ void	bubble_sort_sprites(t_box *box)
 		tmp = sprites;
 		while (tmp->next)
 		{
-			if (tmp->dist < tmp->next->dist)
-				swap(tmp, tmp->next);
+			if (tmp->data->dist < tmp->next->data->dist)
+				swap(tmp);
 			tmp = tmp->next;
 		}
 		sprites = sprites->next;

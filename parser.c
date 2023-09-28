@@ -19,14 +19,17 @@ t_sprite	*new_sprite(void)
 	new = ft_calloc(1, sizeof(t_sprite));
 	if (!new)
 		return (NULL);
-	new->x = 0;
-	new->y = 0;
-	new->texture = 0;
-	new->dir_x = 0;
-	new->dir_y = 0;
-	new->state = 0;
-	new->frame = 0;
-	new->state = IDLE;
+	new->data = ft_calloc(1, sizeof(t_data));
+	if (!new->data)
+		return (NULL);
+	new->data->x = 0;
+	new->data->y = 0;
+	new->data->texture = 0;
+	new->data->dir_x = 0;
+	new->data->dir_y = 0;
+	new->data->state = 0;
+	new->data->frame = 0;
+	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
@@ -57,19 +60,23 @@ void	sprite_append(t_box *box, float x, float y, int texture)
 	t_sprite	*new;
 
 	new = new_sprite();
-	new->x = x;
-	new->y = y;
-	new->texture = texture;
-	new->dir_x = box->info.dir_x;
-	new->dir_y = box->info.dir_y;
+	new->data->x = x;
+	new->data->y = y;
+	new->data->texture = texture;
+	new->data->dir_x = box->info.dir_x;
+	new->data->dir_y = box->info.dir_y;
 	sprite_add_back(box, new);
 }
 
-void	sprite_remove(t_sprite *to_rem)
+void	sprite_remove(t_box *box, t_sprite *to_rem)
 {
-	to_rem->prev->next = to_rem->next;
+	if (to_rem == box->sprites)
+		box->sprites = box->sprites->next;
+	else
+		to_rem->prev->next = to_rem->next;
 	if (to_rem->next)
 		to_rem->next->prev = to_rem->prev;
+	free(to_rem->data);
 	free(to_rem);
 }
 

@@ -140,7 +140,7 @@ typedef struct s_image
 # define IDLE 0
 # define HIT 1
 
-typedef struct s_sprite
+typedef struct s_data
 {
 	double			x;
 	double			y;
@@ -151,6 +151,11 @@ typedef struct s_sprite
 	int				state;
 	int				frame;
 	struct timeval	hit_time;
+}				t_data;
+
+typedef struct s_sprite
+{
+	t_data			*data;
 	struct s_sprite	*prev;
 	struct s_sprite	*next;
 }				t_sprite;
@@ -212,7 +217,7 @@ int		mouse(int keycode, int x, int y, t_box *box);
 //Parser.c
 void	parser(t_box *box, int fd);
 void	sprite_append(t_box *box, float x, float y, int texture);
-void	sprite_remove(t_sprite *to_rem);
+void	sprite_remove(t_box *box, t_sprite *to_rem);
 
 //Values.c
 void	init_vals(t_box *box);
