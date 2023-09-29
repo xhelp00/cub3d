@@ -24,6 +24,10 @@ t_sprite	*new_sprite(void)
 		return (NULL);
 	new->data->x = 0;
 	new->data->y = 0;
+	new->data->start_x = 0;
+	new->data->start_y = 0;
+	new->data->travel = 0;
+	new->data->hp = 100;
 	new->data->texture = 0;
 	new->data->dir_x = 0;
 	new->data->dir_y = 0;
@@ -62,6 +66,8 @@ void	sprite_append(t_box *box, float x, float y, int texture)
 	new = new_sprite();
 	new->data->x = x;
 	new->data->y = y;
+	new->data->start_x = x;
+	new->data->start_y = y;
 	new->data->texture = texture;
 	new->data->dir_x = box->info.dir_x;
 	new->data->dir_y = box->info.dir_y;

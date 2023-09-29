@@ -31,67 +31,45 @@ void	apply_fog(t_box *box, double dist)
 		box->info.color = 0;
 }
 
+void	hit_mark(t_box *box, t_sprite *sprite)
+{
+	if (sprite->data->state == HIT && sprite->data->texture != 30)
+	{
+		sprite->data->frame = (((box->time.tv_sec - sprite->data->hit_time.tv_sec) + ((box->time.tv_usec - sprite->data->hit_time.tv_usec) / 1000000.0)) * 10);
+		//printf("FRAME: %i\n", sprite->data->frame);
+		if (sprite->data->frame < 1)
+				box->info.color = 0x00FF0000;
+		else
+			sprite->data->state = IDLE;
+	}
+}
+
 int	extract_color(unsigned char *pixel)
 {
 	return (pixel[3] << 24 | pixel[2] << 16 | pixel[1] << 8 | pixel[0]);
 }
 
-/*
 void	draw_hud(t_box *box)
 {
-	int	x;
-	int	y;
+	char	*str;
 
-	//HEALTH BAR
-	if (box->player.h_state == 0)
-		box->player.h_offset = 0;
-	else if (box->player.h_state == 1)
-		box->player.h_offset = 80;
-	else if (box->player.h_state == 2)
-		box->player.h_offset = 160;
-	else if (box->player.h_state == 3)
-		box->player.h_offset = 240;
-	x = -1;
-	while (++x < 80)
-	{
-		y = SCREENHEIGHT - 40;
-		while (++y < SCREENHEIGHT)
-		{
-			if (x < (int)box->timer % 120 && x > (int)box->timer % 120 - 40)
-				my_mlx_pyxel_put(&box->image, x, y, extract_color(&box->player.h_bar.addr[(x + box->player.h_offset) * 4 + box->player.h_bar.line_len * (y - (SCREENHEIGHT - 40))]));
-			else
-				my_mlx_pyxel_put(&box->image, x, y, extract_color(&box->player.h_bar.addr[1 * 4 + box->player.h_bar.line_len * (y - (SCREENHEIGHT - 40) + 48)]));
-		}
-	}
-
-	//GUN
-	if ((box->info.pos_x > 3.9 && box->info.pos_x < 4.1) && (box->info.pos_y > 3.9 && box->info.pos_y < 4.1))
-		box->player.has_gun = 1;
-	if (box->player.has_gun > 0)
-	{
-		x = -1;
-		while (++x < SCREENWIDTH)
-		{
-			y = -1;
-			while (++y < SCREENHEIGHT)
-			{
-				if (box->player.has_gun == 1)
-				{
-					box->info.color = extract_color(&box->player.gun_overlay.addr[x * 4 + box->player.gun_overlay.line_len * y]);
-					if ((box->info.color & 0x00FFFFFF) != 0)
-						my_mlx_pyxel_put(&box->image, x, y, box->info.color);
-				}
-				if (x >= 80 && x < 160 && y >= 640)
-				{
-					box->info.color = extract_color(&box->player.gun_hotbar.addr[(x - 80) * 4 + box->player.gun_hotbar.line_len * (y - 640)]);
-					if ((box->info.color & 0x00FFFFFF) != 0)
-						my_mlx_pyxel_put(&box->image, x, y, box->info.color);
-				}
-			}
-		}
-	}
+	str = ft_strjoin("SPEED: ", ft_itoa(box->player.speed));
+	mlx_string_put(box->mlx, box->win, 20, 200, 0x00FFFFFF, str);
+	free(str);
+	str = ft_strjoin("RANGE: ", ft_itoa(box->player.range));
+	mlx_string_put(box->mlx, box->win, 20, 240, 0x00FFFFFF, str);
+	free(str);
+	str = ft_strjoin("FIRE RATE: ", ft_itoa(box->player.fire_rate));
+	mlx_string_put(box->mlx, box->win, 20, 280, 0x00FFFFFF, str);
+	free(str);
+	str = ft_strjoin("SHOT SPEED: ", ft_itoa(box->player.shot_speed));
+	mlx_string_put(box->mlx, box->win, 20, 320, 0x00FFFFFF, str);
+	free(str);
+	str = ft_strjoin("DMG: ", ft_itoa(box->player.dmg));
+	mlx_string_put(box->mlx, box->win, 20, 360, 0x00FFFFFF, str);
+	free(str);
 }
-*/
+
 /*	Redraw
 
 */
@@ -121,6 +99,7 @@ void	redraw(t_box *box)
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	fps = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, fps);
+	draw_hud(box);
 
 	free(fps);
 }

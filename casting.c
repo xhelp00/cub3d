@@ -283,6 +283,7 @@ void	cast_obj(t_box *box)
 							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->time.tv_usec / 100000.0))) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 42]);
 							if ((box->info.color & 0x00FFFFFF) != 0)
 							{
+								hit_mark(box, sprites);
 								apply_fog(box, sprites->data->dist);
 								my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
 							}
@@ -293,12 +294,13 @@ void	cast_obj(t_box *box)
 					}
 					else if (sprites->data->texture == 30 && sprites->data->state == HIT)
 						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 64 * sprites->data->frame) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 64 * (sprites->data->frame / 4)]);
-					else if (sprites->data->texture == 30 && sprites->data->state == IDLE)
+					else if (sprites->data->texture == 30 && sprites->data->state == IDLE && sprites->data->travel * 10 > 1)
 						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len]);
 					else
 						box->info.color = 0;
 					if ((box->info.color & 0x00FFFFFF) != 0)
 					{
+						hit_mark(box, sprites);
 						apply_fog(box, sprites->data->dist);
 						my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
 					}

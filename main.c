@@ -115,10 +115,11 @@ int	main(int argc, char **argv)
 	redraw(&box);
 	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	mlx_mouse_hide(box.mlx, box.win);
-	mlx_mouse_hook(box.win, mouse, &box);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);
 	mlx_hook(box.win, 2, 1L << 0, key_press, &box);
 	mlx_hook(box.win, 3, 1L << 1, key_release, &box);
+	mlx_hook(box.win, 4, 1L << 2, mouse_press, &box);
+	mlx_hook(box.win, 5, 1L << 3, mouse_release, &box);
 	mlx_loop_hook(box.mlx, timer, &box);
 	mlx_loop(box.mlx);
 	return (0);

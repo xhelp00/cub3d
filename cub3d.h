@@ -144,12 +144,16 @@ typedef struct s_data
 {
 	double			x;
 	double			y;
+	double			start_x;
+	double			start_y;
+	double			travel;
 	int				texture;
 	double			dist;
 	double			dir_x;
 	double			dir_y;
 	int				state;
 	int				frame;
+	int				hp;
 	struct timeval	hit_time;
 }				t_data;
 
@@ -159,6 +163,17 @@ typedef struct s_sprite
 	struct s_sprite	*prev;
 	struct s_sprite	*next;
 }				t_sprite;
+
+typedef struct s_player
+{
+	int				speed;
+	int				range;
+	int				fire_rate;
+	int				shot_speed;
+	int				dmg;
+	int				cry;
+	struct timeval	last_tear;
+}				t_player;
 
 typedef struct s_mouse
 {
@@ -175,6 +190,7 @@ typedef struct s_box
 	t_image			image;
 	t_image			*textures;
 	t_sprite		*sprites;
+	t_player		player;
 	int				n_sprites;
 	char			**map;
 	int				map_width;
@@ -212,7 +228,8 @@ typedef struct	s_line
 int		exit_hook(t_box *box);
 int		key_press(int key, t_box *box);
 int		key_release(int key, t_box *box);
-int		mouse(int keycode, int x, int y, t_box *box);
+int		mouse_press(int keycode, int x, int y, t_box *box);
+int		mouse_release(int keycode, int x, int y, t_box *box);
 
 //Parser.c
 void	parser(t_box *box, int fd);
@@ -230,6 +247,7 @@ void	redraw(t_box *box);
 int		extract_color(unsigned char *pixel);
 void	my_mlx_pyxel_put(t_image *image, int x, int y, int color);
 void	apply_fog(t_box *box, double dist);
+void	hit_mark(t_box *box, t_sprite *sprite);
 
 //Casting.c
 void	cast_floor(t_box *box);

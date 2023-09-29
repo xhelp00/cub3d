@@ -82,6 +82,13 @@ void	init_vals(t_box *box)
 	box->info.move_speed = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
 	box->n_sprites = 0;
+	box->player.speed = 100;
+	box->player.range = 65;
+	box->player.fire_rate = 50;
+	box->player.shot_speed = 10;
+	box->player.dmg = 35;
+	box->player.cry = 0;
+	gettimeofday(&box->player.last_tear, NULL);
 }
 
 void	reset_vals(t_box *box)
@@ -119,6 +126,10 @@ void	bubble_sort_sprites(t_box *box)
 				* (box->info.pos_x - sprites->data->x)
 				+ (box->info.pos_y - sprites->data->y)
 				* (box->info.pos_y - sprites->data->y));
+		sprites->data->travel = ((sprites->data->start_x - sprites->data->x)
+				* (sprites->data->start_x - sprites->data->x)
+				+ (sprites->data->start_y - sprites->data->y)
+				* (sprites->data->start_y - sprites->data->y));
 		sprites = sprites->next;
 	}
 	sprites = box->sprites;
