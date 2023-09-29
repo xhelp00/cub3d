@@ -91,7 +91,7 @@ void	cal_move(t_box *box)
 		if (((box->time.tv_sec - box->player.last_tear.tv_sec + ((box->time.tv_usec - box->player.last_tear.tv_usec) / 1000000.0))) > box->player.fire_rate / 100.0)
 		{
 			gettimeofday(&box->player.last_tear, NULL);
-			sprite_append(box, box->info.pos_x, box->info.pos_y, 30);
+			sprite_append(box, box->info.pos_x, box->info.pos_y, TEAR);
 		}
 	}
 

@@ -243,7 +243,7 @@ void	cast_obj(t_box *box)
 						box->info.text_n = 7;
 					else
 						box->info.text_n = 0;
-					if (sprites->data->texture == 10)
+					if (sprites->data->texture == BABY)
 					{
 						if (box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
@@ -255,14 +255,14 @@ void	cast_obj(t_box *box)
 						else
 							box->info.color = 0;
 					}
-					else if (sprites->data->texture == 11)
+					else if (sprites->data->texture == NERVE_ENDING)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15)
 							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->time.tv_usec / 100000.0) / 2)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y]);
 						else
 							box->info.color = 0;
 					}
-					else if (sprites->data->texture == 12)
+					else if (sprites->data->texture == LEECH)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
@@ -276,7 +276,7 @@ void	cast_obj(t_box *box)
 						else
 							box->info.color = 0;
 					}
-					else if (sprites->data->texture == 20)
+					else if (sprites->data->texture == ISAAC)
 					{
 						if (box->info.tex_x < 56 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 12)
 						{
@@ -292,10 +292,29 @@ void	cast_obj(t_box *box)
 						else
 							box->info.color = 0;
 					}
-					else if (sprites->data->texture == 30 && sprites->data->state == HIT)
+					else if (sprites->data->texture == TEAR && sprites->data->state == HIT)
 						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 64 * sprites->data->frame) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 64 * (sprites->data->frame / 4)]);
-					else if (sprites->data->texture == 30 && sprites->data->state == IDLE && sprites->data->travel * 10 > 1)
+					else if (sprites->data->texture == TEAR && sprites->data->state == IDLE && sprites->data->travel * 10 > 1)
 						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len]);
+					else if (sprites->data->texture == LARRY_JR_HEAD)
+					{
+						if (box->info.tex_x < 60 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 25)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16 + 48 - 48 * ((int)((box->time.tv_usec / 100000.0) * 2) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -20]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == LARRY_JR_BODY)
+					{
+						if (box->info.tex_x < 50 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 30)
+						{
+							if (sprites->data->seg == sprites->data->n_segments)
+								box->info.color = extract_color(&box->textures[LARRY_JR_HEAD].addr[((box->info.tex_x - 20 + 32 * ((int)((box->time.tv_usec / 100000.0) * 2) / 10)) * 4) + box->textures[LARRY_JR_HEAD].line_len * box->info.tex_y + box->textures[LARRY_JR_HEAD].line_len * 96]);
+							else
+								box->info.color = extract_color(&box->textures[LARRY_JR_HEAD].addr[((box->info.tex_x - 20 + 32 - 32 * ((int)((box->time.tv_usec / 100000.0) * 2) / 10)) * 4) + box->textures[LARRY_JR_HEAD].line_len * box->info.tex_y + box->textures[LARRY_JR_HEAD].line_len * 64]);
+						}
+						else
+							box->info.color = 0;
+					}
 					else
 						box->info.color = 0;
 					if ((box->info.color & 0x00FFFFFF) != 0)

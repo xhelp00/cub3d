@@ -154,8 +154,19 @@ typedef struct s_data
 	int				state;
 	int				frame;
 	int				hp;
+	int				n_segments;
+	int				seg;
 	struct timeval	hit_time;
 }				t_data;
+
+//Texture numbers
+# define BABY 10
+# define NERVE_ENDING 11
+# define LEECH 12
+# define ISAAC 20
+# define TEAR 30
+# define LARRY_JR_HEAD 40
+# define LARRY_JR_BODY 41
 
 typedef struct s_sprite
 {

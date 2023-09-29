@@ -33,6 +33,8 @@ t_sprite	*new_sprite(void)
 	new->data->dir_y = 0;
 	new->data->state = 0;
 	new->data->frame = 0;
+	new->data->n_segments = 0;
+	new->data->seg = 0;
 	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;
@@ -50,6 +52,8 @@ t_sprite	*last_sprite(t_sprite *s)
 
 void	sprite_add_back(t_box *box, t_sprite *new)
 {
+	if (new->data->texture == LARRY_JR_HEAD)
+		new->data->n_segments = 5;
 	if (box->sprites == NULL)
 		box->sprites = new;
 	else
@@ -182,6 +186,18 @@ void	parser(t_box *box, int fd)
 		line = (free(line), get_next_line(fd));
 		// printf("%s\n%f | %f | %i\n", "ADDING SPRITE IN PROGRESS!!!!", x, y, texture);
 		sprite_append(box, x, y, texture);
+		t_sprite	*last;
+		last = last_sprite(box->sprites);
+		if (last->data->texture == LARRY_JR_HEAD)
+		{
+			// printf("JARRY LUNIOR\n");
+			while (last->data->seg++ < last->data->n_segments)
+			{
+				last_sprite(box->sprites)->data->seg = last->data->seg;
+				// printf("JARRY BODY SEG %i\n", last->data->seg);
+				sprite_append(box, x + last->data->seg / 3.0, y, LARRY_JR_BODY);
+			}
+		}
 		// i = -1;
 		// printf("\nDUMP:\n");
 		// while (++i < box->n_sprites)

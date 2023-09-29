@@ -29,11 +29,12 @@ void	init_textures(t_box *box)
 	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
 	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
 	box->textures[2].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
-	box->textures[10].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
-	box->textures[11].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
-	box->textures[12].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
-	box->textures[20].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
-	box->textures[30].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
+	box->textures[BABY].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
+	box->textures[NERVE_ENDING].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
+	box->textures[LEECH].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
+	box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
+	box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
+	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
