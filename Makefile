@@ -3,12 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
+#    By: antess <antess@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/21 21:25:02 by phelebra         ###   ########.fr        #
+#    Updated: 2023/09/30 14:55:44 by antess           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = cub3d
 CFLAGS = -Wall -Wextra -Werror -g
@@ -38,7 +39,7 @@ lib:
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@cc $(CFLAGS) $(MLX_FLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS)
 
 clean:
 	@make clean -C $(LIBFT)
