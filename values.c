@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 21:29:14 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/02 15:00:41 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ void	init_textures(t_box *box)
 	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
 	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
 	box->textures[2].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
-	box->textures[10].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
-	box->textures[11].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
-	box->textures[12].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
-	box->textures[20].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
+	box->textures[BABY].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
+	box->textures[NERVE_ENDING].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
+	box->textures[LEECH].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
+	box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
+	box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
+	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
@@ -49,6 +51,7 @@ void	init_textures(t_box *box)
 */
 void	init_vals(t_box *box)
 {
+	box->sprites = NULL;
 	box->info.pos_x = 4;
 	box->info.pos_y = 5;
 	box->info.pos_z = 0;
@@ -68,7 +71,6 @@ void	init_vals(t_box *box)
 	box->info.sprint = 0;
 	box->info.pitch = 0;
 	box->info.up_down = 0;
-	box->timer = 0;
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
 	box->mouse.xdistance = 0;
@@ -80,6 +82,14 @@ void	init_vals(t_box *box)
 	box->info.rot_speed = 0;
 	box->info.move_speed = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
+	box->n_sprites = 0;
+	box->player.speed = 100;
+	box->player.range = 65;
+	box->player.fire_rate = 50;
+	box->player.shot_speed = 10;
+	box->player.dmg = 35;
+	box->player.cry = 0;
+	gettimeofday(&box->player.last_tear, NULL);
 }
 
 void	reset_vals(t_box *box)
@@ -94,35 +104,45 @@ void	reset_vals(t_box *box)
 	box->info.color = 0;
 }
 
-void	swap(t_sprite *x, t_sprite *y)
+void	swap(t_sprite *x)
 {
-	t_sprite	tmp;
+	t_data	*tmp;
 
-	tmp = *x;
-	*x = *y;
-	*y = tmp;
+	if (!x || (x->data == NULL && x->next == NULL))
+		return ;
+	tmp = x->data;
+	x->data = x->next->data;
+	x->next->data = tmp;
 }
 
 void	bubble_sort_sprites(t_box *box)
 {
-	int	i;
-	int	j;
+	t_sprite	*sprites;
+	t_sprite	*tmp;
 
-	i = -1;
-	while (++i < box->n_sprites)
-		box->sprites[i].dist = ((box->info.pos_x - box->sprites[i].x)
-				* (box->info.pos_x - box->sprites[i].x)
-				+ (box->info.pos_y - box->sprites[i].y)
-				* (box->info.pos_y - box->sprites[i].y));
-	i = -1;
-	while (++i < box->n_sprites - 1)
+	sprites = box->sprites;
+	while (sprites)
 	{
-		j = -1;
-		while (++j < box->n_sprites - i - 1)
-			if (box->sprites[j].dist > box->sprites[j + 1].dist)
-				swap(&box->sprites[j], &box->sprites[j + 1]);
+		sprites->data->dist = ((box->info.pos_x - sprites->data->x)
+				* (box->info.pos_x - sprites->data->x)
+				+ (box->info.pos_y - sprites->data->y)
+				* (box->info.pos_y - sprites->data->y));
+		sprites->data->travel = ((sprites->data->start_x - sprites->data->x)
+				* (sprites->data->start_x - sprites->data->x)
+				+ (sprites->data->start_y - sprites->data->y)
+				* (sprites->data->start_y - sprites->data->y));
+		sprites = sprites->next;
 	}
-	i = -1;
-	while (++i < box->n_sprites / 2)
-		swap(&box->sprites[i], &box->sprites[box->n_sprites - i - 1]);
+	sprites = box->sprites;
+	while (sprites)
+	{
+		tmp = sprites;
+		while (tmp->next)
+		{
+			if (tmp->data->dist < tmp->next->data->dist)
+				swap(tmp);
+			tmp = tmp->next;
+		}
+		sprites = sprites->next;
+	}
 }

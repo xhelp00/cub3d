@@ -6,9 +6,10 @@
 #    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/21 21:25:02 by phelebra         ###   ########.fr        #
+#    Updated: 2023/10/02 15:01:57 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = cub3d
 CFLAGS = -Wall -Wextra -Werror -g
@@ -38,7 +39,7 @@ lib:
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@cc $(CFLAGS) $(MLX_FLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS)
 
 clean:
 	@make clean -C $(LIBFT)
