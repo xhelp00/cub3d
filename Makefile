@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+         #
+#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/09/25 17:58:20 by jbartosi         ###   ########.fr        #
+#    Updated: 2023/10/02 15:01:57 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
