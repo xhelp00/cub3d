@@ -58,6 +58,8 @@ void	init_vals(t_box *box)
 	box->info.pos_z = 0;
 	box->info.dir_x = -1.0;
 	box->info.dir_y = 0;
+	box->info.start_dir_x = -1.0;
+	box->info.start_dir_y = 0;
 	box->info.plane_x = 0;
 	box->info.plane_y = 0.66;
 	gettimeofday(&box->time, NULL);
