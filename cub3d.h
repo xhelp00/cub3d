@@ -54,6 +54,8 @@ typedef struct s_info
 	double	pos_y;
 	double	dir_x;
 	double	dir_y;
+	double	start_dir_x;
+	double	start_dir_y;
 	double	plane_x;
 	double	plane_y;
 	double	camera_x;
@@ -133,6 +135,7 @@ typedef struct s_info
 	int		distance;
 	t_ray		*ray;
 	int		to_destroy;
+	int		flipped;
 }				t_info;
 
 typedef struct s_image

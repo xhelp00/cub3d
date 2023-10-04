@@ -229,6 +229,7 @@ void	cast_obj(t_box *box)
 		while (box->info.stripe < box->info.draw_end_x)
 		{
 			box->info.tex_x = (int)(256 * (box->info.stripe - (-box->info.sprite_width / 2 + box->info.sprite_screen_x)) * TEXTUREWIDTH / box->info.sprite_width) / 256;
+			box->info.flipped = 0;
 			if (box->info.transform_y > 0 && box->info.transform_y < box->info.zbuffer[box->info.stripe])
 			{
 				//printf("Sprite n: %i // %f > 0 | %d > 0 | %d < %d | %f < %f\n", i, box->info.transform_y, box->info.stripe, box->info.stripe, SCREENWIDTH, box->info.transform_y, box->info.zbuffer[box->info.stripe]);
@@ -279,10 +280,23 @@ void	cast_obj(t_box *box)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
-							if (sprites->data->dist < 2)
+							//UP
+							if (sprites->data->dir_x < -0.7
+									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
-							else if (sprites->data->dist > 5)
+							//DOWN
+							else if (sprites->data->dir_x > 0.7
+									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 48]);
+							//LEFT
+							else if (sprites->data->dir_x > -0.7 && sprites->data->dir_x < 0.7
+									&& sprites->data->dir_y < -0.7 && !box->info.flipped)
+							{
+								box->info.tex_x = 46 - (box->info.tex_x - 16);
+								box->info.flipped = 1;
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
+							}
+							//RIGHT
 							else
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 						}
