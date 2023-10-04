@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/14 16:43:39 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/14 16:45:09 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,6 @@ void	cast_obj(t_box *box)
 		while (box->info.stripe < box->info.draw_end_x)
 		{
 			box->info.tex_x = (int)(256 * (box->info.stripe - (-box->info.sprite_width / 2 + box->info.sprite_screen_x)) * TEXTUREWIDTH / box->info.sprite_width) / 256;
-			box->info.flipped = 0;
 			box->info.flipped = 0;
 			if (box->info.transform_y > 0 && box->info.transform_y < box->info.zbuffer[box->info.stripe])
 			{
