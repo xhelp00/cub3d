@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/14 16:59:04 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 13:59:00 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,85 +335,12 @@ void	cast_obj(t_box *box)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
-							//SPRITE UP
-							if (sprites->data->dir_x < -0.7
-									&& sprites->data->dir_y > -0.75 && sprites->data->dir_y < 0.75)
-							{
-								//PLAYER UP
-								if (box->info.dir_x < -0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, UP);
-								//PLAYER DOWN
-								else if (box->info.dir_x > 0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, DOWN);
-								//PLAYER LEFT
-								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
-									&& box->info.dir_y < -0.7)
-									cast_leech(box, sprites, RIGHT);
-								//PLAYER RIGHT
-								else
-									cast_leech(box, sprites, LEFT);
-							}
-							//SPRITE DOWN
-							else if (sprites->data->dir_x > 0.7
-									&& sprites->data->dir_y > -0.75 && sprites->data->dir_y < 0.75)
-							{
-								//PLAYER UP
-								if (box->info.dir_x < -0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, DOWN);
-								//PLAYER DOWN
-								else if (box->info.dir_x > 0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, UP);
-								//PLAYER LEFT
-								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
-									&& box->info.dir_y < -0.7)
-									cast_leech(box, sprites, LEFT);
-								//PLAYER RIGHT
-								else
-									cast_leech(box, sprites, RIGHT);
-							}
-							//SPRITE LEFT
-							else if (sprites->data->dir_x > -0.75 && sprites->data->dir_x < 0.75
-									&& sprites->data->dir_y < -0.7 && !box->info.flipped)
-							{
-								//PLAYER UP
-								if (box->info.dir_x < -0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, LEFT);
-								//PLAYER DOWN
-								else if (box->info.dir_x > 0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, RIGHT);
-								//PLAYER LEFT
-								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
-									&& box->info.dir_y < -0.7)
-									cast_leech(box, sprites, UP);
-								//PLAYER RIGHT
-								else
-									cast_leech(box, sprites, DOWN);
-							}
-							//SPRITE RIGHT
+							if (sprites->data->dist < 2)
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
+							else if (sprites->data->dist > 5)
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 48]);
 							else
-							{
-								//PLAYER UP
-								if (box->info.dir_x < -0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, RIGHT);
-								//PLAYER DOWN
-								else if (box->info.dir_x > 0.7
-									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
-									cast_leech(box, sprites, LEFT);
-								//PLAYER LEFT
-								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
-									&& box->info.dir_y < -0.7)
-									cast_leech(box, sprites, DOWN);
-								//PLAYER RIGHT
-								else
-									cast_leech(box, sprites, UP);
-							}
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 						}
 						else
 							box->info.color = 0;
