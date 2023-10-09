@@ -10,6 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
+
 NAME = cub3d
 CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 LIBFT = Libft
@@ -38,7 +39,7 @@ lib:
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@cc $(CFLAGS) $(MLX_FLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS)
 
 clean:
 	@make clean -C $(LIBFT)

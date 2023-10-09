@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
+
 #include "cub3d.h"
 
 void	cast_floor(t_box *box)
@@ -184,14 +186,14 @@ void	cast_wall(t_box *box)
 
 void	cast_obj(t_box *box)
 {
-	int	i;
+	t_sprite	*sprites;
 
+	sprites = box->sprites;
 	bubble_sort_sprites(box);
-	i = -1;
-	while (++i < box->n_sprites)
+	while (sprites)
 	{
-		box->info.sprite_x = box->sprites[i].x - box->info.pos_x;
-		box->info.sprite_y = box->sprites[i].y - box->info.pos_y;
+		box->info.sprite_x = sprites->data->x - box->info.pos_x;
+		box->info.sprite_y = sprites->data->y - box->info.pos_y;
 		box->info.inv_det = 1.0 / (box->info.plane_x * box->info.dir_y - box->info.dir_x * box->info.plane_y);
 		box->info.transform_x = box->info.inv_det * (box->info.dir_y * box->info.sprite_x - box->info.dir_x * box->info.sprite_y);
 		box->info.transform_y = box->info.inv_det * (-box->info.plane_y * box->info.sprite_x + box->info.plane_x * box->info.sprite_y);
@@ -218,10 +220,10 @@ void	cast_obj(t_box *box)
 		if (box->info.draw_end_x >= SCREENWIDTH)
 			box->info.draw_end_x = SCREENWIDTH - 1;
 
-		box->info.dx = box->sprites[i].x - box->info.pos_x;
-		box->info.dy = box->sprites[i].y - box->info.pos_y;
+		box->info.dx = sprites->data->x - box->info.pos_x;
+		box->info.dy = sprites->data->y - box->info.pos_y;
 		box->info.t_angle = atan2(box->info.dy, box->info.dx);
-		//printf("Angle: %f | %f %f %f - %f %f - %f\n", angle, dx, dy, box->sprites[i].x, box->info.pos_x, box->sprites[i].y, box->info.pos_y);
+		//printf("Angle: %f | %f %f %f - %f %f - %f\n", angle, dx, dy, sprites->data->x, box->info.pos_x, sprites->data->y, box->info.pos_y);
 
 		box->info.stripe = box->info.draw_start_x;
 		while (box->info.stripe < box->info.draw_end_x)
@@ -235,7 +237,7 @@ void	cast_obj(t_box *box)
 				{
 					box->info.d = (box->info.part - box->info.v_move_screen) * 256 - SCREENHEIGHT * 128 + box->info.sprite_height * 128;
 					box->info.tex_y = ((box->info.d * TEXTUREHEIGHT) / box->info.sprite_height) / 256;
-					//printf("Color from: %i\n", box->sprites[i].texture);
+					//printf("Color from: %i\n", sprites->data->texture);
 					if ((box->info.t_angle > 2.7 && box->info.t_angle < 3.3) || (box->info.t_angle > -3.3 && box->info.t_angle < -2.7))
 						box->info.text_n = 0;
 					else if (box->info.t_angle > -2.7 && box->info.t_angle < -2.0)
@@ -254,59 +256,84 @@ void	cast_obj(t_box *box)
 						box->info.text_n = 7;
 					else
 						box->info.text_n = 0;
-					if (box->sprites[i].texture == 10)
+					if (sprites->data->texture == BABY)
 					{
 						if (box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
-							if (box->sprites[i].dist < 2)
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[(box->info.tex_x * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 16]);
+							if (sprites->data->dist < 2)
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
 							else
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[(box->info.tex_x * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * -16]);
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 						}
 						else
 							box->info.color = 0;
 					}
-					else if (box->sprites[i].texture == 11)
+					else if (sprites->data->texture == NERVE_ENDING)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15)
-							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->time.tv_usec / 100000.0) / 2)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)(box->time.tv_usec / 100000.0) / 2)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y]);
 						else
 							box->info.color = 0;
 					}
-					else if (box->sprites[i].texture == 12)
+					else if (sprites->data->texture == LEECH)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
-							if (box->sprites[i].dist < 2)
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 16]);
-							else if (box->sprites[i].dist > 5)
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 48]);
+							if (sprites->data->dist < 2)
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
+							else if (sprites->data->dist > 5)
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 48]);
 							else
-								box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * -16]);
+								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 						}
 						else
 							box->info.color = 0;
 					}
-					else if (box->sprites[i].texture == 20)
+					else if (sprites->data->texture == ISAAC)
 					{
 						if (box->info.tex_x < 56 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 12)
 						{
-							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->time.tv_usec / 100000.0))) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 42]);
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16 + 32 * ((int)(box->time.tv_usec / 100000.0))) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 42]);
 							if ((box->info.color & 0x00FFFFFF) != 0)
 							{
-								apply_fog(box, box->sprites[i].dist);
+								hit_mark(box, sprites);
+								apply_fog(box, sprites->data->dist);
 								my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
 							}
-							box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[((box->info.tex_x - 16) * 4) + box->textures[box->sprites[i].texture].line_len * box->info.tex_y + box->textures[box->sprites[i].texture].line_len * 8]);
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 8]);
+						}
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == TEAR && sprites->data->state == HIT)
+						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 64 * sprites->data->frame) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 64 * (sprites->data->frame / 4)]);
+					else if (sprites->data->texture == TEAR && sprites->data->state == IDLE && sprites->data->travel * 10 > 1)
+						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len]);
+					else if (sprites->data->texture == LARRY_JR_HEAD)
+					{
+						if (box->info.tex_x < 60 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 25)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16 + 48 - 48 * ((int)((box->time.tv_usec / 100000.0) * 2) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -20]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == LARRY_JR_BODY)
+					{
+						if (box->info.tex_x < 50 && box->info.tex_x > 20 && box->info.tex_y < 60 && box->info.tex_y > 30)
+						{
+							if (sprites->data->seg == sprites->data->n_segments)
+								box->info.color = extract_color(&box->textures[LARRY_JR_HEAD].addr[((box->info.tex_x - 20 + 32 * ((int)((box->time.tv_usec / 100000.0) * 2) / 10)) * 4) + box->textures[LARRY_JR_HEAD].line_len * box->info.tex_y + box->textures[LARRY_JR_HEAD].line_len * 96]);
+							else
+								box->info.color = extract_color(&box->textures[LARRY_JR_HEAD].addr[((box->info.tex_x - 20 + 32 - 32 * ((int)((box->time.tv_usec / 100000.0) * 2) / 10)) * 4) + box->textures[LARRY_JR_HEAD].line_len * box->info.tex_y + box->textures[LARRY_JR_HEAD].line_len * 64]);
 						}
 						else
 							box->info.color = 0;
 					}
 					else
-						box->info.color = extract_color(&box->textures[box->sprites[i].texture].addr[box->info.tex_x * 4 + box->textures[box->sprites[i].texture].line_len * box->info.tex_y]);
+						box->info.color = 0;
 					if ((box->info.color & 0x00FFFFFF) != 0)
 					{
-						apply_fog(box, box->sprites[i].dist);
+						hit_mark(box, sprites);
+						apply_fog(box, sprites->data->dist);
 						my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
 					}
 					box->info.part++;
@@ -314,5 +341,6 @@ void	cast_obj(t_box *box)
 			}
 			box->info.stripe++;
 		}
+		sprites = sprites->next;
 	}
 }

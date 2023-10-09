@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -22,6 +24,7 @@
 # include <math.h>
 # include <sys/time.h>
 # include <dirent.h>
+# include <pthread.h>
 # include "Libft/libft.h"
 # include "minilibx/mlx.h"
 
@@ -129,6 +132,7 @@ typedef struct s_info
 	int		up_down;
 	int		distance;
 	t_ray		*ray;
+	int		to_destroy;
 }				t_info;
 
 typedef struct s_image
@@ -141,13 +145,54 @@ typedef struct s_image
 	char			*name;
 }				t_image;
 
+# define IDLE 0
+# define HIT 1
+
+typedef struct s_data
+{
+	double			x;
+	double			y;
+	double			start_x;
+	double			start_y;
+	double			travel;
+	int				texture;
+	double			dist;
+	double			dir_x;
+	double			dir_y;
+	int				state;
+	int				frame;
+	int				hp;
+	int				n_segments;
+	int				seg;
+	struct timeval	hit_time;
+}				t_data;
+
+//Texture numbers
+# define BABY 10
+# define NERVE_ENDING 11
+# define LEECH 12
+# define ISAAC 20
+# define TEAR 30
+# define LARRY_JR_HEAD 40
+# define LARRY_JR_BODY 41
+
 typedef struct s_sprite
 {
-	double	x;
-	double	y;
-	int		texture;
-	double	dist;
+	t_data			*data;
+	struct s_sprite	*prev;
+	struct s_sprite	*next;
 }				t_sprite;
+
+typedef struct s_player
+{
+	int				speed;
+	int				range;
+	int				fire_rate;
+	int				shot_speed;
+	int				dmg;
+	int				cry;
+	struct timeval	last_tear;
+}				t_player;
 
 typedef struct s_mouse
 {
@@ -164,12 +209,12 @@ typedef struct s_box
 	t_image			image;
 	t_image			*textures;
 	t_sprite		*sprites;
+	t_player		player;
 	int				n_sprites;
 	char			**map;
 	int				map_width;
 	int				map_height;
 	t_info			info;
-	size_t			timer;
 	struct timeval	time;
 	struct timeval	old_time;
 	t_mouse			mouse;
@@ -202,10 +247,13 @@ typedef struct	s_line
 int		exit_hook(t_box *box);
 int		key_press(int key, t_box *box);
 int		key_release(int key, t_box *box);
-int		mouse(int keycode, int x, int y, t_box *box);
+int		mouse_press(int keycode, int x, int y, t_box *box);
+int		mouse_release(int keycode, int x, int y, t_box *box);
 
 //Parser.c
 void	parser(t_box *box, int fd);
+void	sprite_append(t_box *box, float x, float y, int texture);
+void	sprite_remove(t_box *box, t_sprite *to_rem);
 
 //Values.c
 void	init_vals(t_box *box);
@@ -218,6 +266,7 @@ void	redraw(t_box *box);
 int		extract_color(unsigned char *pixel);
 void	my_mlx_pyxel_put(t_image *image, int x, int y, int color);
 void	apply_fog(t_box *box, double dist);
+void	hit_mark(t_box *box, t_sprite *sprite);
 
 //Casting.c
 void	cast_floor(t_box *box);
@@ -231,19 +280,21 @@ int		get_fill_color(char grid_item);
 void	draw_player(t_box *box);
 void	draw_rays(t_box *box);
 
-
 //Graphics.c
 void	draw_rect(t_rect *rect, t_box *box);
 void	draw_line(t_line *line, t_box *box);
 
 //testing
-void print_map_contents(t_box *box);
-void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color);
-void single_square_test(t_box *box);
-
+void	print_map_contents(t_box *box);
+void	fill_buffer_with_color(unsigned char *buffer, int width,
+			int height, int color);
+void	single_square_test(t_box *box);
 
 //Movement.c
 void	cal_move(t_box *box);
-void	cal_ene_move(t_box *box);
+void	cal_sprite_move(t_box *box);
+
+//Main.c
+int		count_sprites(t_box *box);
 
 #endif

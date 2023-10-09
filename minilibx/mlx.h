@@ -1,9 +1,9 @@
 /*
-** mlx.h for MinilibX in 
-** 
+** mlx.h for MinilibX in
+**
 ** Made by Charlie Root
 ** Login   <ol@epitech.net>
-** 
+**
 ** Started on  Mon Jul 31 16:37:50 2000 Charlie Root
 ** Last update Tue May 15 16:23:28 2007 Olivier Crouzet
 */
@@ -74,7 +74,7 @@ char	*mlx_get_data_addr(void *img_ptr, int *bits_per_pixel,
 */
 int	mlx_put_image_to_window(void *mlx_ptr, void *win_ptr, void *img_ptr,
 				int x, int y);
-int	mlx_get_color_value(void *mlx_ptr, int color);
+unsigned int	mlx_get_color_value(void *mlx_ptr, int color);
 
 
 /*
