@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/30 14:56:14 by antess           ###   ########.fr       */
+/*   Updated: 2023/10/09 20:20:52 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	init_vals(t_box *box)
 	box->info.pos_z = 0;
 	box->info.dir_x = -1.0;
 	box->info.dir_y = 0;
+	box->info.start_dir_x = -1.0;
+	box->info.start_dir_y = 0;
 	box->info.plane_x = 0;
 	box->info.plane_y = 0.66;
 	gettimeofday(&box->time, NULL);

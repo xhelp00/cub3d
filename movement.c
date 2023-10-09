@@ -145,35 +145,34 @@ void	cal_sprite_move(t_box *box)
 	// 	sprites = sprites->next;
 	// }
 	sprites = box->sprites;
+	printf("Dir_x %f | Dir_y %f\n", box->info.dir_x, box->info.dir_y);
 	while (sprites)
 	{
-		/*
-		if (box->sprites[i].texture == 10)
+
+		// if (sprites->data->texture == BABY)
+		// {
+		// 	if (sprites->data->x < box->info.pos_x)
+		// 		sprites->data->x += 0.01;
+		// 	if (sprites->data->x > box->info.pos_x)
+		// 		sprites->data->x -= 0.01;
+		// 	if (sprites->data->y < box->info.pos_y)
+		// 		sprites->data->y += 0.01;
+		// 	if (sprites->data->y > box->info.pos_y)
+		// 		sprites->data->y -= 0.01;
+		// }
+
+
+		if (sprites->data->texture == LEECH)
 		{
-			if (box->sprites[i].x < box->info.pos_x)
-				box->sprites[i].x += speed;
-			if (box->sprites[i].x > box->info.pos_x)
-				box->sprites[i].x -= speed;
-			if (box->sprites[i].y < box->info.pos_y)
-				box->sprites[i].y += speed;
-			if (box->sprites[i].y > box->info.pos_y)
-				box->sprites[i].y -= speed;
+			box->info.old_dir_x = sprites->data->dir_x;
+			sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed) - sprites->data->dir_y * sin(box->info.rot_speed);
+			sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed) + sprites->data->dir_y * cos(box->info.rot_speed);
+
+			sprites->data->x += sprites->data->dir_x * 0.01;
+			sprites->data->y += sprites->data->dir_y * 0.01;
 		}
-*/
-	/*
-		if (box->sprites[i].texture == 12)
-		{
-			if (box-box->sprites[i].index>map[(int)(box->sprites[i].x + speed)][(int)(box->sprites[i].y)] == '0')
-				box->sprites[i].x += speed;
-			else if (box->map[(int)(box->sprites[i].x)][(int)(box->sprites[i].y + speed)] == '0')
-				box->sprites[i].y += speed;
-			else if (box->map[(int)(box->sprites[i].x - speed)][(int)(box->sprites[i].y)] == '0')
-				box->sprites[i].x -= speed;
-			else if (box->map[(int)(box->sprites[i].x)][(int)(box->sprites[i].y - speed)] == '0')
-				box->sprites[i].y -= speed;
-		}
-	*/
-		if (sprites->data->texture == 30)
+
+		if (sprites->data->texture == TEAR)
 		{
 			if (sprites->data->state == HIT)
 			{
@@ -199,7 +198,7 @@ void	cal_sprite_move(t_box *box)
 					if (1 > ((obj->data->x - sprites->data->x)
 							* (obj->data->x - sprites->data->x)
 							+ (obj->data->y - sprites->data->y)
-							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture != 30
+							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture != TEAR
 							&& obj->data->state == IDLE)
 						sprite_hit(box, sprites, obj);
 					obj = obj->next;
