@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 21:29:14 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:51:37 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	init_textures(t_box *box)
 */
 void	init_vals(t_box *box)
 {
+	box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 	box->info.pos_x = 4;
 	box->info.pos_y = 5;
 	box->info.pos_z = 0;
@@ -80,6 +81,7 @@ void	init_vals(t_box *box)
 	box->info.rot_speed = 0;
 	box->info.move_speed = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
+	
 }
 
 void	reset_vals(t_box *box)
@@ -92,6 +94,7 @@ void	reset_vals(t_box *box)
 	box->info.hit = 0;
 	box->info.text_num = 0;
 	box->info.color = 0;
+	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 }
 
 void	swap(t_sprite *x, t_sprite *y)

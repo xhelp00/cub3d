@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 14:13:03 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:04:50 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,13 +110,14 @@ void	redraw(t_box *box)
 	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
 	cast_floor(box);
 	cast_wall(box);
+	
 	cast_obj(box);
 	cal_move(box);
 	cal_ene_move(box);
 	//print_map_contents(box);
     //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
 
-	//drawMinimap(box);
+	drawMinimap(box);
 	//single_square_test(box);
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	fps = ft_itoa(1.0 / box->info.frame_time);

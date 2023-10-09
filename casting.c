@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 14:17:21 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/09 16:15:01 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void	cast_floor(t_box *box)
 void	cast_wall(t_box *box)
 {
 	int	x;
-	t_line	line;
+	//t_line	line;
+	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 
 	x = -1;
 	while (++x < SCREENWIDTH)
@@ -129,14 +130,6 @@ void	cast_wall(t_box *box)
 			if (box->map[box->info.map_x][box->info.map_y] > '0')
 				box->info.hit = 1;
 		}
-
-		line.begin_x = (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET ;
-		line.begin_y = (box->info.pos_x * 10) + MINIMAP_OFFSET ;
-		line.end_x = (box->info.map_y *10) - (box->map_width * 10) + SCREENWIDTH - MINIMAP_OFFSET;
-		line.end_y = (box->info.map_x *10) + MINIMAP_OFFSET;
-		line.color = 0x00e63946;
-		draw_line(&line, box); 
-
 		if (!box->info.side)
 			box->info.prep_wall_dist = (box->info.side_dist_x - box->info.delta_dist_x);
 		else
@@ -178,6 +171,14 @@ void	cast_wall(t_box *box)
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
 		//printf("%i: %f\n", x, box->info.zbuffer[x]);
+
+		//this part is updating array of rays (their endings)
+		box->info.ray[x].end_x = (box->info.map_y *10) - (box->map_width * 10) + SCREENWIDTH - MINIMAP_OFFSET;
+		box->info.ray[x].end_y = (box->info.map_x *10) + MINIMAP_OFFSET;
+		if (box->info.ray[x].end_x < (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET -5)
+			box->info.ray[x].end_x += 10;
+		if (box->info.ray[x].end_y < (box->info.pos_x * 10) + MINIMAP_OFFSET -5)
+			box->info.ray[x].end_y += 10;
 	}
 }
 
