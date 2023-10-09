@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:46:15 by phelebra          #+#    #+#             */
-/*   Updated: 2023/09/21 15:13:41 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/09 14:08:19 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void drawMinimap(t_box *box)
 {
 	draw_map(box);
-	//draw_rays(box);
 	draw_player(box);
+	//draw_rays(box);
 }
 
 void	draw_map(t_box *box)
@@ -68,15 +68,20 @@ int		get_fill_color(char grid_item)
 
 /* void	draw_rays(t_box *box)
 {
-	//int		i;
+	int		i;
 	t_line	line;
 
-	
+	i = -1;
+	while (++i < SCREENWIDTH)
+	{
 	line.begin_x = (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET ;
 	line.begin_y = (box->info.pos_x * 10) + MINIMAP_OFFSET ;
-	line.end_x = (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET + box->info.dir_y ;
-	line.end_y = (box->info.pos_x * 10) + MINIMAP_OFFSET + box->info.dir_x ;
+	//line.end_x = box->info.pos_y * 10 + SCREENWIDTH + sin(box->info.t_angle) * 10 * box->info.prep_wall_dist - MINIMAP_OFFSET;
+	//line.end_y = box->info.pos_x * 10 + MINIMAP_OFFSET + cos(box->info.t_angle) * 10 * box->info.prep_wall_dist;
+	line.end_x = box->info.pos_y * 10 + SCREENWIDTH + sin(atan2(box->info.ray_dir_y, box->info.ray_dir_x)) * (10 * box->info.prep_wall_dist - MINIMAP_OFFSET);
+	line.end_y = box->info.pos_x * 10 + MINIMAP_OFFSET + cos(atan2(box->info.ray_dir_y, box->info.ray_dir_x)) * (10 * box->info.prep_wall_dist);
+	
 	line.color = 0x00e63946;
 	draw_line(&line, box);
-	
+	}
 } */

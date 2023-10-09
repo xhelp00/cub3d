@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_image.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/21 17:22:33 by antess           ###   ########.fr       */
+/*   Updated: 2023/10/09 14:13:03 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	redraw(t_box *box)
 	//print_map_contents(box);
     //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
 
-	drawMinimap(box);
+	//drawMinimap(box);
 	//single_square_test(box);
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	fps = ft_itoa(1.0 / box->info.frame_time);
