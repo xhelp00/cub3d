@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_image.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/23 14:37:42 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:04:50 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	redraw(t_box *box)
 	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
 	cast_floor(box);
 	cast_wall(box);
+	
 	cast_obj(box);
 	cal_move(box);
 	cal_sprite_move(box);

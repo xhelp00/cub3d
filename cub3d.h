@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/02 15:01:36 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:50:38 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,15 @@
 # define VMOVE 0.0
 # define MINIMAP_OFFSET 10
 
+typedef struct s_ray
+{
+	int		end_x;
+	int		end_y;
+}				t_ray;
+
 typedef struct s_info
 {
+	
 	int		move_y;
 	int		move_x;
 	int		rotate;
@@ -124,6 +131,7 @@ typedef struct s_info
 	float	cam_z;
 	int		up_down;
 	int		distance;
+	t_ray		*ray;
 	int		to_destroy;
 }				t_info;
 

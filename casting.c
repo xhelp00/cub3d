@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   casting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 18:00:03 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/10/09 16:15:01 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	cast_floor(t_box *box)
 void	cast_wall(t_box *box)
 {
 	int	x;
+	//t_line	line;
+	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 
 	x = -1;
 	while (++x < SCREENWIDTH)
@@ -90,6 +92,9 @@ void	cast_wall(t_box *box)
 		box->info.map_y = (int)box->info.pos_y;
 		box->info.delta_dist_x = fabs(1 / box->info.ray_dir_x);
 		box->info.delta_dist_y = fabs(1 / box->info.ray_dir_y);
+
+		
+
 		if (box->info.ray_dir_x < 0)
 		{
 			box->info.step_x = -1;
@@ -168,6 +173,14 @@ void	cast_wall(t_box *box)
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
 		//printf("%i: %f\n", x, box->info.zbuffer[x]);
+
+		//this part is updating array of rays (their endings)
+		box->info.ray[x].end_x = (box->info.map_y *10) - (box->map_width * 10) + SCREENWIDTH - MINIMAP_OFFSET;
+		box->info.ray[x].end_y = (box->info.map_x *10) + MINIMAP_OFFSET;
+		if (box->info.ray[x].end_x < (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET -5)
+			box->info.ray[x].end_x += 10;
+		if (box->info.ray[x].end_y < (box->info.pos_x * 10) + MINIMAP_OFFSET -5)
+			box->info.ray[x].end_y += 10;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 13:36:11 by phelebra          #+#    #+#             */
-/*   Updated: 2023/09/21 15:03:50 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/06 15:40:57 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	draw_rect(t_rect *rect, t_box *box)
 	}
 }
 
-/* void	draw_line(t_line *line, t_box *box)
+ void	draw_line(t_line *line, t_box *box)
 {
 	double	delta_x;
 	double	delta_y;
@@ -64,4 +64,4 @@ void	draw_rect(t_rect *rect, t_box *box)
 		pixel_y += delta_y;
 		pixels--;
 	}
-} */
+} 
