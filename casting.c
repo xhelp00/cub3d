@@ -103,7 +103,7 @@ void	cast_wall(t_box *box)
 		box->info.delta_dist_x = fabs(1 / box->info.ray_dir_x);
 		box->info.delta_dist_y = fabs(1 / box->info.ray_dir_y);
 
-		
+
 
 		if (box->info.ray_dir_x < 0)
 		{
@@ -192,6 +192,22 @@ void	cast_wall(t_box *box)
 		if (box->info.ray[x].end_y < (box->info.pos_x * 10) + MINIMAP_OFFSET -5)
 			box->info.ray[x].end_y += 10;
 	}
+}
+
+void	cast_leech(t_box *box, t_sprite *sprites, int dir)
+{
+	if (dir == UP)
+		box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
+	else if (dir == DOWN)
+		box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 48]);
+	else if (dir == LEFT && !box->info.flipped)
+	{
+		box->info.tex_x = 46 - (box->info.tex_x - 16);
+		box->info.flipped = 1;
+		box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
+	}
+	else
+		box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 }
 
 void	cast_obj(t_box *box)
@@ -297,25 +313,85 @@ void	cast_obj(t_box *box)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
-							//UP
+							//SPRITE UP
 							if (sprites->data->dir_x < -0.7
 									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
-								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
-							//DOWN
+							{
+								//PLAYER UP
+								if (box->info.dir_x < -0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, UP);
+								//PLAYER DOWN
+								else if (box->info.dir_x > 0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, DOWN);
+								//PLAYER LEFT
+								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
+									&& box->info.dir_y < -0.7)
+									cast_leech(box, sprites, RIGHT);
+								//PLAYER RIGHT
+								else
+									cast_leech(box, sprites, LEFT);
+							}
+							//SPRITE DOWN
 							else if (sprites->data->dir_x > 0.7
 									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
-								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 48]);
-							//LEFT
+							{
+								//PLAYER UP
+								if (box->info.dir_x < -0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, DOWN);
+								//PLAYER DOWN
+								else if (box->info.dir_x > 0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, UP);
+								//PLAYER LEFT
+								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
+									&& box->info.dir_y < -0.7)
+									cast_leech(box, sprites, LEFT);
+								//PLAYER RIGHT
+								else
+									cast_leech(box, sprites, RIGHT);
+							}
+							//SPRITE LEFT
 							else if (sprites->data->dir_x > -0.7 && sprites->data->dir_x < 0.7
 									&& sprites->data->dir_y < -0.7 && !box->info.flipped)
 							{
-								box->info.tex_x = 46 - (box->info.tex_x - 16);
-								box->info.flipped = 1;
-								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
+								//PLAYER UP
+								if (box->info.dir_x < -0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, LEFT);
+								//PLAYER DOWN
+								else if (box->info.dir_x > 0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, RIGHT);
+								//PLAYER LEFT
+								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
+									&& box->info.dir_y < -0.7)
+									cast_leech(box, sprites, UP);
+								//PLAYER RIGHT
+								else
+									cast_leech(box, sprites, DOWN);
 							}
-							//RIGHT
+							//SPRITE RIGHT
 							else
-								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 16 + 32 * ((int)((box->time.tv_usec / 100000.0) * 6) / 10)) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
+							{
+								//PLAYER UP
+								if (box->info.dir_x < -0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, RIGHT);
+								//PLAYER DOWN
+								else if (box->info.dir_x > 0.7
+									&& box->info.dir_y > -0.75 && box->info.dir_y < 0.75)
+									cast_leech(box, sprites, LEFT);
+								//PLAYER LEFT
+								else if (box->info.dir_x > -0.75 && box->info.dir_x < 0.75
+									&& box->info.dir_y < -0.7)
+									cast_leech(box, sprites, DOWN);
+								//PLAYER RIGHT
+								else
+									cast_leech(box, sprites, UP);
+							}
 						}
 						else
 							box->info.color = 0;
