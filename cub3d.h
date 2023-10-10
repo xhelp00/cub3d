@@ -151,6 +151,11 @@ typedef struct s_image
 # define IDLE 0
 # define HIT 1
 
+# define UP 0
+# define DOWN 1
+# define LEFT 2
+# define RIGHT 3
+
 typedef struct s_data
 {
 	double			x;
