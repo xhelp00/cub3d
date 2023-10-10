@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 15:29:06 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:30:18 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,7 @@ void	cast_wall(t_box *box)
 		box->info.delta_dist_x = fabs(1 / box->info.ray_dir_x);
 		box->info.delta_dist_y = fabs(1 / box->info.ray_dir_y);
 
-
-
+		
 
 		if (box->info.ray_dir_x < 0)
 		{
