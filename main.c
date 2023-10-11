@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 18:01:56 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:07:44 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	timer(t_box *box)
 	closedir(pdir);
 */
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **env)
 {
 	t_box			box;
 
@@ -113,6 +113,7 @@ int	main(int argc, char **argv)
 	box.image.addr = (unsigned char *)mlx_get_data_addr(box.image.img,
 			&box.image.bits_pp, &box.image.line_len, &box.image.endian);
 	redraw(&box);
+	box.pid = music(env, "sounds/Isaac.wav");
 	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	mlx_mouse_hide(box.mlx, box.win);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);
