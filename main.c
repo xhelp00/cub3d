@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/11 13:07:44 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:35:06 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ int	timer(t_box *box)
 {
 	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+	/* while (box->info.angry && !box->info.sound)
+	{
+		box->info.sound = 1;
+		box->info.angry = 0;
+		box->p = music(box->env, "sounds/angry.wav");
+	} */
 	redraw(box);
 	return (0);
 }
@@ -113,6 +119,7 @@ int	main(int argc, char **argv, char **env)
 	box.image.addr = (unsigned char *)mlx_get_data_addr(box.image.img,
 			&box.image.bits_pp, &box.image.line_len, &box.image.endian);
 	redraw(&box);
+	box.env = env;
 	box.pid = music(env, "sounds/Isaac.wav");
 	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	mlx_mouse_hide(box.mlx, box.win);
