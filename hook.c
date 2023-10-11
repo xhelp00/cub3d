@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hook.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:52:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 18:02:10 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:03:08 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ int	key_release(int key, t_box *box)
 {
 	if (key == 65307)
 	{
-		mlx_destroy_window(box->mlx, box->win);
+		//mlx_destroy_window(box->mlx, box->win);
+		exit_hook(box);
 		exit(0);
 	}
 	if (key == 113)
@@ -100,6 +101,16 @@ int	key_release(int key, t_box *box)
 */
 int	exit_hook(t_box *box)
 {
+
+	if (box->pid > 0)
+	{
+		if (kill(box->pid, SIGTERM) == -1)
+		{
+        	perror("Failed to terminate child process");
+    	}
+		//waitpid(box.pid, NULL, 0);  // This waits for the child to terminate
+	}
+
 	mlx_destroy_window(box->mlx, box->win);
 	exit(0);
 }

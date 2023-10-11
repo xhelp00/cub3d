@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 15:50:38 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:05:45 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # include <pthread.h>
 # include "Libft/libft.h"
 # include "minilibx/mlx.h"
+# include <signal.h>
+# include <sys/wait.h>
+
 
 # define SCREENWIDTH 1280
 # define SCREENHEIGHT 720
@@ -204,6 +207,7 @@ typedef struct s_mouse
 
 typedef struct s_box
 {
+	int				pid;
 	void			*mlx;
 	void			*win;
 	t_image			image;
@@ -283,6 +287,9 @@ void	draw_rays(t_box *box);
 //Graphics.c
 void	draw_rect(t_rect *rect, t_box *box);
 void	draw_line(t_line *line, t_box *box);
+
+//Sound.c
+int		music(char **env, char *track);
 
 //testing
 void	print_map_contents(t_box *box);
