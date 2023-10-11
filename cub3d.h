@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/11 13:38:32 by antess           ###   ########.fr       */
+/*   Updated: 2023/10/11 16:39:21 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_ray
 
 typedef struct s_info
 {
+	int		angry; //if close to BABY
+	int 	sound; //tracking if played sound
 	int		move_y;
 	int		move_x;
 	int		rotate;
@@ -226,6 +228,8 @@ typedef struct s_mouse
 typedef struct s_box
 {
 	int				pid;
+	int				p;
+	char 			**env;
 	void			*mlx;
 	void			*win;
 	t_image			image;

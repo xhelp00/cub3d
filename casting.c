@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 16:15:01 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:43:44 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,9 +297,14 @@ void	cast_obj(t_box *box)
 							{
 								sprites->data->state = AWAKE;
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
+								if (!box->info.sound)
+									box->info.angry = 1; //not sure if this is good place to check distance - probably not
 							}
 							else
+							{
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
+								box->info.sound = 0;
+							}
 						}
 						else
 							box->info.color = 0;

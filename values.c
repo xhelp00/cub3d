@@ -6,7 +6,7 @@
 /*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 20:36:05 by antess           ###   ########.fr       */
+/*   Updated: 2023/10/11 15:35:33 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void	init_vals(t_box *box)
 	box->player.hit = 0;
 	gettimeofday(&box->player.last_tear, NULL);
 	gettimeofday(&box->player.hit_time, NULL);
+	box->info.angry = 0;
 }
 
 void	reset_vals(t_box *box)
