@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/11 13:05:45 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/11 13:38:32 by antess           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_ray
 
 typedef struct s_info
 {
-	
+
 	int		move_y;
 	int		move_x;
 	int		rotate;
@@ -233,7 +233,7 @@ typedef struct s_box
 }				t_box;
 
 //shape rect used for drawing minimap
-typedef struct	s_rect
+typedef struct s_rect
 {
 	int			x;
 	int			y;
