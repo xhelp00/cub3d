@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/14 16:46:49 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/14 16:55:41 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ typedef struct s_ray
 
 typedef struct s_info
 {
+	int		angry; //if close to BABY
+	int 	sound; //tracking if played sound
 	int		angry; //if close to BABY
 	int 	sound; //tracking if played sound
 	int		move_y;
@@ -231,6 +233,8 @@ typedef struct s_box
 	int 			music;
 	char			*map_filename;
 	int				pid;
+	int				p;
+	char 			**env;
 	int				p;
 	char 			**env;
 	void			*mlx;

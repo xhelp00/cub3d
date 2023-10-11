@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/14 16:47:47 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/14 16:56:28 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,12 @@ int	timer(t_box *box)
 		printf("YOU ARE DEAD!!!\n");
 		exit_hook(box);
 	}
+	/* while (box->info.angry && !box->info.sound)
+	{
+		box->info.sound = 1;
+		box->info.angry = 0;
+		box->p = music(box->env, "sounds/angry.wav");
+	} */
 	redraw(box);
 	return (0);
 }

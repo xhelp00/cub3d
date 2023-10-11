@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/14 16:54:20 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/14 16:57:24 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 		{
 			box->p = music(box->env, "sounds/die.mp3");
 			sprite_remove(box, what);
+		}
 	}
 	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
 	// if (10 < (box->time.tv_sec - box->old_time.tv_sec) +
