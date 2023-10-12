@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 15:15:43 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:15:52 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,7 +336,7 @@ void	cast_obj(t_box *box)
 						{
 							//SPRITE UP
 							if (sprites->data->dir_x < -0.7
-									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
+									&& sprites->data->dir_y > -0.75 && sprites->data->dir_y < 0.75)
 							{
 								//PLAYER UP
 								if (box->info.dir_x < -0.7
@@ -356,7 +356,7 @@ void	cast_obj(t_box *box)
 							}
 							//SPRITE DOWN
 							else if (sprites->data->dir_x > 0.7
-									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
+									&& sprites->data->dir_y > -0.75 && sprites->data->dir_y < 0.75)
 							{
 								//PLAYER UP
 								if (box->info.dir_x < -0.7
@@ -375,7 +375,7 @@ void	cast_obj(t_box *box)
 									cast_leech(box, sprites, RIGHT);
 							}
 							//SPRITE LEFT
-							else if (sprites->data->dir_x > -0.7 && sprites->data->dir_x < 0.7
+							else if (sprites->data->dir_x > -0.75 && sprites->data->dir_x < 0.75
 									&& sprites->data->dir_y < -0.7 && !box->info.flipped)
 							{
 								//PLAYER UP
