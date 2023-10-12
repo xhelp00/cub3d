@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/12 11:06:24 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:28:25 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ int	main(int argc, char **argv, char **env)
 			&box.image.bits_pp, &box.image.line_len, &box.image.endian);
 	redraw(&box);
 	box.env = env;
-	box.pid = music(env, "sounds/Isaac.wav");
+	box.pid = music(env, "sounds/Isaac.mp3");
 	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	mlx_mouse_hide(box.mlx, box.win);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);
