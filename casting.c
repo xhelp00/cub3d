@@ -278,7 +278,10 @@ void	cast_obj(t_box *box)
 						if (box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
 							if (sprites->data->dist < 2)
+							{
+								sprites->data->state = AWAKE;
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
+							}
 							else
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 						}
@@ -298,7 +301,7 @@ void	cast_obj(t_box *box)
 						{
 							//SPRITE UP
 							if (sprites->data->dir_x < -0.7
-									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
+									&& sprites->data->dir_y > -0.75 && sprites->data->dir_y < 0.75)
 							{
 								//PLAYER UP
 								if (box->info.dir_x < -0.7
@@ -318,7 +321,7 @@ void	cast_obj(t_box *box)
 							}
 							//SPRITE DOWN
 							else if (sprites->data->dir_x > 0.7
-									&& sprites->data->dir_y > -0.7 && sprites->data->dir_y < 0.7)
+									&& sprites->data->dir_y > -0.75 && sprites->data->dir_y < 0.75)
 							{
 								//PLAYER UP
 								if (box->info.dir_x < -0.7
@@ -337,7 +340,7 @@ void	cast_obj(t_box *box)
 									cast_leech(box, sprites, RIGHT);
 							}
 							//SPRITE LEFT
-							else if (sprites->data->dir_x > -0.7 && sprites->data->dir_x < 0.7
+							else if (sprites->data->dir_x > -0.75 && sprites->data->dir_x < 0.75
 									&& sprites->data->dir_y < -0.7 && !box->info.flipped)
 							{
 								//PLAYER UP
@@ -395,9 +398,9 @@ void	cast_obj(t_box *box)
 						else
 							box->info.color = 0;
 					}
-					else if (sprites->data->texture == TEAR && sprites->data->state == HIT)
+					else if (sprites->data->texture == TEAR && sprites->data->hit)
 						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x + 64 * sprites->data->frame) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 64 * (sprites->data->frame / 4)]);
-					else if (sprites->data->texture == TEAR && sprites->data->state == IDLE && sprites->data->travel * 10 > 1)
+					else if (sprites->data->texture == TEAR && !sprites->data->hit && sprites->data->travel * 10 > 1)
 						box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len]);
 					else if (sprites->data->texture == LARRY_JR_HEAD)
 					{

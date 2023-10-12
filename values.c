@@ -92,7 +92,12 @@ void	init_vals(t_box *box)
 	box->player.shot_speed = 10;
 	box->player.dmg = 35;
 	box->player.cry = 0;
+	box->player.state = 0;
+	box->player.hp = 3;
+	box->player.max_hp = 3;
+	box->player.hit = 0;
 	gettimeofday(&box->player.last_tear, NULL);
+	gettimeofday(&box->player.hit_time, NULL);
 }
 
 void	reset_vals(t_box *box)

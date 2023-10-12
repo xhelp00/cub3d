@@ -100,6 +100,7 @@ void	cal_move(t_box *box)
 	box->info.frame_time = (box->time.tv_sec - box->old_time.tv_sec) +
 						((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0);
 	box->info.move_speed = box->info.frame_time * 3.0;
+	box->info.ene_move_speed = box->info.frame_time * 3.0;
 	box->info.rot_speed = box->info.frame_time * 1.5;
 	if (box->info.sprint)
 		box->info.move_speed *= 2;
@@ -111,15 +112,15 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 {
 	if (what == NULL)
 	{
-		who->data->state = HIT;
+		who->data->hit = 1;
 		gettimeofday(&who->data->hit_time, NULL);
 	}
 	else
 	{
 		// printf("HIT SPRITE\n");
-		who->data->state = HIT;
+		who->data->hit = 1;
 		gettimeofday(&who->data->hit_time, NULL);
-		what->data->state = HIT;
+		what->data->hit = 1;
 		gettimeofday(&what->data->hit_time, NULL);
 		what->data->hp -= box->player.dmg;
 		if (what->data->hp < 1)
@@ -141,26 +142,52 @@ void	cal_sprite_move(t_box *box)
 	// sprites = box->sprites;
 	// while (sprites)
 	// {
-	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state);
+	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit);
 	// 	sprites = sprites->next;
 	// }
 	sprites = box->sprites;
-	printf("Dir_x %f | Dir_y %f\n", box->info.dir_x, box->info.dir_y);
+	// printf("Dir_x %f | Dir_y %f\n", box->info.dir_x, box->info.dir_y);
 	while (sprites)
 	{
+		if (sprites->data->texture == BABY && sprites->data->state == AWAKE)
+		{
+			if (sprites->data->x < box->info.pos_x)
+				sprites->data->x += 0.1 * box->info.ene_move_speed;
+			if (sprites->data->x > box->info.pos_x)
+				sprites->data->x -= 0.1 * box->info.ene_move_speed;
+			if (sprites->data->y < box->info.pos_y)
+				sprites->data->y += 0.1 * box->info.ene_move_speed;
+			if (sprites->data->y > box->info.pos_y)
+				sprites->data->y -= 0.1 * box->info.ene_move_speed;
 
-		// if (sprites->data->texture == BABY)
-		// {
-		// 	if (sprites->data->x < box->info.pos_x)
-		// 		sprites->data->x += 0.01;
-		// 	if (sprites->data->x > box->info.pos_x)
-		// 		sprites->data->x -= 0.01;
-		// 	if (sprites->data->y < box->info.pos_y)
-		// 		sprites->data->y += 0.01;
-		// 	if (sprites->data->y > box->info.pos_y)
-		// 		sprites->data->y -= 0.01;
-		// }
-
+			// if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0'
+			// 		&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
+			// {
+			// 	sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
+			// 	sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
+			// }
+			// else
+			// {
+			// 	box->info.old_dir_x = sprites->data->dir_x;
+			// 	sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed) - sprites->data->dir_y * sin(box->info.rot_speed);
+			// 	sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed) + sprites->data->dir_y * cos(box->info.rot_speed);
+			// }
+		}
+		if (sprites->data->texture < TEAR)
+		{
+			if (box->player.hit)
+			{
+				box->player.frame = ((((box->time.tv_sec - box->player.hit_time.tv_sec) + ((box->time.tv_usec - box->player.hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+				if (box->player.frame > 20)
+					box->player.hit = 0;
+			}
+			else if (sprites->data->dist < 0.1)
+			{
+				box->player.hit = 1;
+				box->player.hp -= 1;
+				gettimeofday(&box->player.hit_time, NULL);
+			}
+		}
 
 		if (sprites->data->texture == LEECH)
 		{
@@ -168,13 +195,13 @@ void	cal_sprite_move(t_box *box)
 			sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed) - sprites->data->dir_y * sin(box->info.rot_speed);
 			sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed) + sprites->data->dir_y * cos(box->info.rot_speed);
 
-			sprites->data->x += sprites->data->dir_x * 0.01;
-			sprites->data->y += sprites->data->dir_y * 0.01;
+			sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
+			sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
 		}
 
 		if (sprites->data->texture == TEAR)
 		{
-			if (sprites->data->state == HIT)
+			if (sprites->data->hit)
 			{
 				sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
 				// printf("FRAME: %i | HIT TIME: %li\n", sprites->data->frame, sprites->data->hit_time.tv_sec);
@@ -199,7 +226,7 @@ void	cal_sprite_move(t_box *box)
 							* (obj->data->x - sprites->data->x)
 							+ (obj->data->y - sprites->data->y)
 							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture != TEAR
-							&& obj->data->state == IDLE)
+							&& obj->data->hit == 0)
 						sprite_hit(box, sprites, obj);
 					obj = obj->next;
 				}

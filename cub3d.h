@@ -48,7 +48,6 @@ typedef struct s_ray
 
 typedef struct s_info
 {
-
 	int		move_y;
 	int		move_x;
 	int		rotate;
@@ -82,6 +81,7 @@ typedef struct s_info
 	int		draw;
 	double	frame_time;
 	double	move_speed;
+	double	ene_move_speed;
 	double	rot_speed;
 	double	old_dir_x;
 	double	old_plane_x;
@@ -152,7 +152,7 @@ typedef struct s_image
 }				t_image;
 
 # define IDLE 0
-# define HIT 1
+# define AWAKE 1
 
 # define UP 0
 # define DOWN 1
@@ -175,6 +175,7 @@ typedef struct s_data
 	int				hp;
 	int				n_segments;
 	int				seg;
+	int				hit;
 	struct timeval	hit_time;
 }				t_data;
 
@@ -183,9 +184,9 @@ typedef struct s_data
 # define NERVE_ENDING 11
 # define LEECH 12
 # define ISAAC 20
-# define TEAR 30
-# define LARRY_JR_HEAD 40
-# define LARRY_JR_BODY 41
+# define LARRY_JR_HEAD 30
+# define LARRY_JR_BODY 31
+# define TEAR 40
 
 typedef struct s_sprite
 {
@@ -196,13 +197,19 @@ typedef struct s_sprite
 
 typedef struct s_player
 {
+	int				hp;
+	int				max_hp;
 	int				speed;
 	int				range;
 	int				fire_rate;
 	int				shot_speed;
 	int				dmg;
 	int				cry;
+	int				state;
+	int				frame;
+	int				hit;
 	struct timeval	last_tear;
+	struct timeval	hit_time;
 }				t_player;
 
 typedef struct s_mouse

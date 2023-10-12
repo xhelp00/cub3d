@@ -35,6 +35,7 @@ t_sprite	*new_sprite(void)
 	new->data->frame = 0;
 	new->data->n_segments = 0;
 	new->data->seg = 0;
+	new->data->hit = 0;
 	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;
