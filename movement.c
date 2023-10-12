@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/11 15:42:39 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 13:50:50 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	cal_move(t_box *box)
 		{
 			gettimeofday(&box->player.last_tear, NULL);
 			sprite_append(box, box->info.pos_x, box->info.pos_y, TEAR);
+			box->p = music(box->env, "sounds/shot.wav");
 		}
 	}
 
