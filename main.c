@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/12 14:44:22 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:00:18 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,48 @@ void	menu(t_box *box)
 		printf("1. Choose map 1\n");
 		printf("2. Choose map 2\n");
 		printf("3. Exit\n");
-		printf("Enter your choice (1-3): ");
+		printf("4. Toggle Music On/Off\n");
+        printf("Enter your choice (1-4): ");
 
-		if (scanf("%d", &choice) != 1)
-		{
-			// Clear the input buffer if scanf() failed
-			while (getchar() != '\n');
-		}
-		switch(choice)
-		{
-			case 1:
-				box->map_filename = "maps/arena.cub";
-				return;
-			case 2:
-				box->map_filename = "maps/exampleTexture.cub";
-				return;
-			case 3:
-				printf("Exiting...\n");
-				exit(0);
-				break;
-			default:
-				printf("Invalid choice. Please enter a number between 1 and 3.\n");
-		}
-	} while(choice != 3);
+        if (scanf("%d", &choice) != 1)
+        {
+            // Clear the input buffer if scanf() failed
+            while (getchar() != '\n');
+            continue; // Continue to the next iteration to re-display the menu
+        }
+
+        switch(choice)
+        {
+            case 1:
+                box->map_filename = "maps/arena.cub";
+                return;
+            case 2:
+                box->map_filename = "maps/exampleTexture.cub";
+                return;
+            case 3:
+                printf("Exiting...\n");
+                exit(0);
+                break;
+            case 4:
+                if (box->music)
+                {
+                    // Stop the music. You need a function to handle this.
+                    box->music = 0;
+                    printf("Music turned off.\n");
+                }
+                else
+                {
+                    // Start the music
+                    box->music = 1;
+                    printf("Music turned on.\n");
+                }
+                break;
+            default:
+                printf("Invalid choice. Please enter a number between 1 and 4.\n");
+        }
+    } while(1); // Infinite loop, since we handle exit explicitly with options.
 }
+
 
 /* Count_sprites
 
@@ -193,7 +211,8 @@ int	main(int argc, char **argv, char **env)
 			&box.image.bits_pp, &box.image.line_len, &box.image.endian);
 	redraw(&box);
 	box.env = env;
-	box.pid = music(env, "sounds/Isaac.mp3");
+	if (box.music)
+		box.pid = music(env, "sounds/Isaac.mp3");
 	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	mlx_mouse_hide(box.mlx, box.win);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);

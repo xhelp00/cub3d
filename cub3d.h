@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/12 14:33:57 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:00:20 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,7 @@ typedef struct s_mouse
 
 typedef struct s_box
 {
+	int 			music;
 	char			*map_filename;
 	int				pid;
 	int				p;
