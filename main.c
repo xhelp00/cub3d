@@ -6,12 +6,65 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/11 16:35:06 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 11:06:24 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "cub3d.h"
+
+char	*menu()
+{
+	int		choice;
+	char	*map_filename = NULL;
+
+	do
+	{
+		printf("                                                     \n");
+		printf("                       _|         _|_|_|     _|_|_|  \n");
+		printf("   _|_|_|   _|    _|   _|_|_|           _|   _|    _|\n");
+		printf(" _|         _|    _|   _|    _|     _|_|     _|    _|\n");
+		printf(" _|         _|    _|   _|    _|         _|   _|    _|\n");
+		printf("   _|_|_|     _|_|_|   _|_|_|     _|_|_|     _|_|_|  \n");
+		printf("                                                     \n");
+		printf("    42 project presented by jbartosi & phelebra      \n");
+		printf("                                                     \n");
+		printf("        ██╗███████╗ █████╗  █████╗  ██████╗          \n");
+		printf("        ██║██╔════╝██╔══██╗██╔══██╗██╔════╝          \n");
+		printf("        ██║███████╗███████║███████║██║               \n");
+		printf("        ██║╚════██║██╔══██║██╔══██║██║               \n");
+		printf("        ██║███████║██║  ██║██║  ██║╚██████╗          \n");
+		printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝          \n");
+		printf("                                                     \n");
+		printf("Terminal Menu:\n");
+		printf("1. Choose map 1\n");
+		printf("2. Choose map 2\n");
+		printf("3. Exit\n");
+		printf("Enter your choice (1-3): ");
+
+		if (scanf("%d", &choice) != 1)
+		{
+			// Clear the input buffer if scanf() failed
+			while (getchar() != '\n');
+		}
+		switch(choice)
+		{
+			case 1:
+				map_filename = "maps/arena.cub";
+				return map_filename;
+			case 2:
+				map_filename = "maps/exampleTexture.cub";
+				return map_filename;
+			case 3:
+				printf("Exiting...\n");
+				exit(0);
+				break;
+			default:
+				printf("Invalid choice. Please enter a number between 1 and 3.\n");
+		}
+	} while(choice != 3);
+	return NULL;
+}
 
 /* Count_sprites
 
@@ -41,15 +94,36 @@ int	count_sprites(t_box *box)
 void	check(t_box *box, int argc, char **argv)
 {
 	int	fd;
+	char* map_path;
 
-	if (argc != 2)
-		return (printf("Error\nNo argument supplied.\n"), exit(1));
-	fd = open(argv[1], O_RDONLY);
-	if (!fd)
-		return (printf("Error\nCannot open file.\n"), exit(1));
-	init_vals(box);
-	parser(box, fd);
-	close(fd);
+	if (argc == 1)
+	{
+		map_path = menu();
+		if (!map_path)
+		{
+			printf("Error\nNo map selected.\n");
+			exit(1);
+		}
+	}
+	else if (argc == 2)
+	{
+		map_path = argv[1];
+	}
+	else 
+	{
+		printf("Error\nInvalid number of arguments.\n");
+		exit(1);
+	}
+
+	fd = open(map_path, O_RDONLY);
+	if (fd == -1)
+	{
+		printf("Error\nCannot open map file.\n");
+		exit(1);
+	}
+		init_vals(box);
+		parser(box, fd);
+		close(fd);
 }
 
 /*	Timer
