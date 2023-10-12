@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/11 16:43:44 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:06:29 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,20 @@ void	cast_floor(t_box *box)
 
 			box->info.distance = (int)((box->info.pos_x - box->info.floor_x) * (box->info.pos_x - box->info.floor_x) + (box->info.pos_y - box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
 
-			box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
-			box->info.color = (box->info.color >> 1) & 8355711;
-			apply_fog(box, box->info.distance);
-			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			if (box->info.is_floor)
+			{
+				box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
+				box->info.color = (box->info.color >> 1) & 8355711;
+				apply_fog(box, box->info.distance);
+				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			}
+			else
+			{
+				box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
+				box->info.color = (box->info.color >> 1) & 8355711;
+				apply_fog(box, box->info.distance);
+				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			}
 		}
 	}
 }
