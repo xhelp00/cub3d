@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 15:18:31 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:33:22 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,26 +158,6 @@ typedef struct s_image
 
 # define IDLE 0
 # define AWAKE 1
-
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
-
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
-
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
-
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
 
 # define UP 0
 # define DOWN 1
