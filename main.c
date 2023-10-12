@@ -6,17 +6,16 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/12 14:28:25 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:44:22 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "cub3d.h"
 
-char	*menu()
+void	menu(t_box *box)
 {
 	int		choice;
-	char	*map_filename = NULL;
 
 	do
 	{
@@ -50,11 +49,11 @@ char	*menu()
 		switch(choice)
 		{
 			case 1:
-				map_filename = "maps/arena.cub";
-				return map_filename;
+				box->map_filename = "maps/arena.cub";
+				return;
 			case 2:
-				map_filename = "maps/exampleTexture.cub";
-				return map_filename;
+				box->map_filename = "maps/exampleTexture.cub";
+				return;
 			case 3:
 				printf("Exiting...\n");
 				exit(0);
@@ -63,7 +62,6 @@ char	*menu()
 				printf("Invalid choice. Please enter a number between 1 and 3.\n");
 		}
 	} while(choice != 3);
-	return NULL;
 }
 
 /* Count_sprites
@@ -98,12 +96,13 @@ void	check(t_box *box, int argc, char **argv)
 
 	if (argc == 1)
 	{
-		map_path = menu();
-		if (!map_path)
+		menu(box);
+		if (!box->map_filename)
 		{
 			printf("Error\nNo map selected.\n");
 			exit(1);
 		}
+		map_path = box->map_filename;
 	}
 	else if (argc == 2)
 	{
