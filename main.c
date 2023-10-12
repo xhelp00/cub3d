@@ -126,7 +126,7 @@ void	check(t_box *box, int argc, char **argv)
 	{
 		map_path = argv[1];
 	}
-	else 
+	else
 	{
 		printf("Error\nInvalid number of arguments.\n");
 		exit(1);
