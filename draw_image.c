@@ -33,14 +33,14 @@ void	apply_fog(t_box *box, double dist)
 
 void	hit_mark(t_box *box, t_sprite *sprite)
 {
-	if (sprite->data->state == HIT && sprite->data->texture != 30)
+	if (sprite->data->hit && sprite->data->texture != TEAR)
 	{
 		sprite->data->frame = (((box->time.tv_sec - sprite->data->hit_time.tv_sec) + ((box->time.tv_usec - sprite->data->hit_time.tv_usec) / 1000000.0)) * 10);
 		//printf("FRAME: %i\n", sprite->data->frame);
 		if (sprite->data->frame < 1)
 				box->info.color = 0x00FF0000;
 		else
-			sprite->data->state = IDLE;
+			sprite->data->hit = 0;
 	}
 }
 
@@ -52,21 +52,30 @@ int	extract_color(unsigned char *pixel)
 void	draw_hud(t_box *box)
 {
 	char	*str;
+	char	*nbr;
 
-	str = ft_strjoin("SPEED: ", ft_itoa(box->player.speed));
+	nbr = ft_itoa(box->player.hp);
+	str = ft_strjoin("HP: ", nbr);
+	if (box->player.hit && box->player.frame % 2 == 0)
+		mlx_string_put(box->mlx, box->win, 50, 20, 0x00FF0000, str);
+	else
+		mlx_string_put(box->mlx, box->win, 50, 20, 0x00FFFFFF, str);
+	str = (free(str), free(nbr), nbr = ft_itoa(box->player.max_hp), ft_strjoin("/", nbr));
+	if (box->player.hit && box->player.frame % 2 == 0)
+		mlx_string_put(box->mlx, box->win, 80, 20, 0x00FF0000, str);
+	else
+		mlx_string_put(box->mlx, box->win, 80, 20, 0x00FFFFFF, str);
+	str = (free(str), free(nbr), nbr = ft_itoa(box->player.speed), ft_strjoin("SPEED:", nbr));
 	mlx_string_put(box->mlx, box->win, 20, 200, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("RANGE: ", ft_itoa(box->player.range));
+	str = (free(str), free(nbr), nbr = ft_itoa(box->player.range), ft_strjoin("RANGE:", nbr));
 	mlx_string_put(box->mlx, box->win, 20, 240, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("FIRE RATE: ", ft_itoa(box->player.fire_rate));
+	str = (free(str), free(nbr), nbr = ft_itoa(box->player.fire_rate), ft_strjoin("FIRE RATE:", nbr));
 	mlx_string_put(box->mlx, box->win, 20, 280, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("SHOT SPEED: ", ft_itoa(box->player.shot_speed));
+	str = (free(str), free(nbr), nbr = ft_itoa(box->player.shot_speed), ft_strjoin("SHOT SPEED:", nbr));
 	mlx_string_put(box->mlx, box->win, 20, 320, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("DMG: ", ft_itoa(box->player.dmg));
+	str = (free(str), free(nbr), nbr = ft_itoa(box->player.dmg), ft_strjoin("DMG:", nbr));
 	mlx_string_put(box->mlx, box->win, 20, 360, 0x00FFFFFF, str);
+	free(nbr);
 	free(str);
 }
 
@@ -88,7 +97,7 @@ void	redraw(t_box *box)
 	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
 	cast_floor(box);
 	cast_wall(box);
-	
+
 	cast_obj(box);
 	cal_move(box);
 	cal_sprite_move(box);

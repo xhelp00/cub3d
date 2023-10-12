@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/13 10:41:58 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/14 16:47:47 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,11 @@ int	timer(t_box *box)
 {
 	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	/* while (box->info.angry && !box->info.sound)
+	if (box->player.hp < 1)
 	{
-		box->info.sound = 1;
-		box->info.angry = 0;
-		box->p = music(box->env, "sounds/angry.wav");
-	} */
+		printf("YOU ARE DEAD!!!\n");
+		exit(0);
+	}
 	redraw(box);
 	return (0);
 }
