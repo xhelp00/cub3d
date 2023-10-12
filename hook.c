@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:52:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 14:08:18 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 14:10:51 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ int	mouse_press(int keycode, int x, int y, t_box *box)
 	(void)x;
 	(void)y;
 	if (keycode == 1)
-	{
 		box->player.cry = 1;
-		box->p = music(box->env, "sounds/shot.wav");
-	}
 	return (0);
 }
 
