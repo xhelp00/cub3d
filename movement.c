@@ -159,11 +159,6 @@ void	cal_sprite_move(t_box *box)
 	{
 		if (sprites->data->texture == LARRY_JR_HEAD)
 		{
-			if (sprites->data->n_seg == 0)
-			{
-				printf("BOSS BEFEATED!!!\n");
-				sprite_remove(box, sprites);
-			}
 			box->info.t_angle = atan2(sprites->data->y - box->info.pos_y, sprites->data->x - box->info.pos_x);
 			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
 			if (box->info.t_angle < 0)
@@ -192,11 +187,6 @@ void	cal_sprite_move(t_box *box)
 		}
 		if (sprites->data->texture == LARRY_JR_BODY)
 		{
-			if (sprites->data->n_seg == 0)
-			{
-				printf("BOSS BEFEATED!!!\n");
-				sprite_remove(box, sprites);
-			}
 			// printf("YOU %i,%i | FOLLOW %i,%i\n", sprites->data->seg, sprites->data->texture, find_seg(box, sprites->data->seg - 1)->data->seg, find_seg(box, sprites->data->seg - 1)->data->texture);
 			box->info.t_angle = atan2(sprites->data->y - find_seg(box, sprites->data->seg - 1)->data->y, sprites->data->x - find_seg(box, sprites->data->seg - 1)->data->x);
 			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);

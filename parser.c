@@ -132,8 +132,8 @@ void	remove_seg(t_box *box, t_sprite *to_rem)
 			{
 				if (sprites->data->texture == LARRY_JR_BODY && sprites->data->seg > to_rem->data->seg)
 				{
-					sprites->data->x = find_seg(box, sprites->data->seg - 1)->data->x;
-					sprites->data->y = find_seg(box, sprites->data->seg - 1)->data->y;
+					// sprites->data->x = find_seg(box, sprites->data->seg - 1)->data->x;
+					// sprites->data->y = find_seg(box, sprites->data->seg - 1)->data->y;
 					sprites->data->seg--;
 				}
 				sprites = sprites->next;
