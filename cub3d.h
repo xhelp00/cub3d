@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/12 15:00:20 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/13 11:35:34 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define CUB3D_H
 
 # include <stdio.h>
+# include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/types.h>
@@ -227,6 +228,8 @@ typedef struct s_box
 	struct timeval	time;
 	struct timeval	old_time;
 	t_mouse			mouse;
+	char			input_buffer[6];  // to store "iddqd" + '\0'
+	int				input_index;
 }				t_box;
 
 //shape rect used for drawing minimap
