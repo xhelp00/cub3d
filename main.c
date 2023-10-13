@@ -131,12 +131,12 @@ void	check(t_box *box, int argc, char **argv)
 		printf("Error\nInvalid number of arguments.\n");
 		exit(1);
 	}
-
-	if (argc != 2)
-		return (printf("Error\nNo argument supplied.\n"), exit(1));
-	fd = open(argv[1], O_RDONLY);
-	if (!fd)
-		return (printf("Error\nCannot open file.\n"), exit(1));
+	fd = open(map_path, O_RDONLY);
+	if (fd == -1)
+	{
+		printf("Error\nCannot open map file.\n");
+		exit(1);
+	}
 	init_vals(box);
 	parser(box, fd);
 	close(fd);
