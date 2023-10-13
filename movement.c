@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/09/25 18:01:34 by jbartosi         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:29:19 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	cal_move(t_box *box)
 		{
 			gettimeofday(&box->player.last_tear, NULL);
 			sprite_append(box, box->info.pos_x, box->info.pos_y, TEAR);
+			box->p = music(box->env, "sounds/shot.mp3");
 		}
 	}
 
@@ -112,6 +113,7 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 	if (what == NULL)
 	{
 		who->data->state = HIT;
+		box->p = music(box->env, "sounds/splash.mp3");
 		gettimeofday(&who->data->hit_time, NULL);
 	}
 	else
@@ -120,10 +122,15 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 		who->data->state = HIT;
 		gettimeofday(&who->data->hit_time, NULL);
 		what->data->state = HIT;
+		box->p = music(box->env, "sounds/splash.mp3");
 		gettimeofday(&what->data->hit_time, NULL);
 		what->data->hp -= box->player.dmg;
+		box->p = music(box->env, "sounds/pain.mp3");
 		if (what->data->hp < 1)
+		{
+			box->p = music(box->env, "sounds/die.mp3");
 			sprite_remove(box, what);
+		}
 	}
 	// printf("\e[0;31mDestroing tear of index %i\e[0m\n", index);
 	// if (10 < (box->time.tv_sec - box->old_time.tv_sec) +

@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 15:51:37 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/11 15:35:33 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	init_vals(t_box *box)
 	box->player.dmg = 35;
 	box->player.cry = 0;
 	gettimeofday(&box->player.last_tear, NULL);
+	box->info.angry = 0;
 }
 
 void	reset_vals(t_box *box)

@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 16:15:01 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/12 14:06:29 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,20 @@ void	cast_floor(t_box *box)
 
 			box->info.distance = (int)((box->info.pos_x - box->info.floor_x) * (box->info.pos_x - box->info.floor_x) + (box->info.pos_y - box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
 
-			box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
-			box->info.color = (box->info.color >> 1) & 8355711;
-			apply_fog(box, box->info.distance);
-			my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			if (box->info.is_floor)
+			{
+				box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
+				box->info.color = (box->info.color >> 1) & 8355711;
+				apply_fog(box, box->info.distance);
+				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			}
+			else
+			{
+				box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
+				box->info.color = (box->info.color >> 1) & 8355711;
+				apply_fog(box, box->info.distance);
+				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			}
 		}
 	}
 }
@@ -261,9 +271,16 @@ void	cast_obj(t_box *box)
 						if (box->info.tex_y < 47 && box->info.tex_y > 15)
 						{
 							if (sprites->data->dist < 2)
+							{
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
+								if (!box->info.sound)
+									box->info.angry = 1; //not sure if this is good place to check distance - probably not
+							}
 							else
+							{
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
+								box->info.sound = 0;
+							}
 						}
 						else
 							box->info.color = 0;

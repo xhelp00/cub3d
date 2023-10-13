@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 10:43:58 by phelebra          #+#    #+#             */
-/*   Updated: 2023/10/11 13:08:52 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/13 10:43:01 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,19 @@ int music(char **env, char *track)
 	char *player;
 
 	#ifdef __linux__
-		player = "/usr/bin/paplay";
+		player = "/usr/bin/mpg123";
 	#elif __APPLE__
-		player = "/Users/helebrant/.brew/bin/paplay";
+		player = "/Users/helebrant/.brew/bin/mpg123";
 	#endif
 
 	pid_t	pid;
-	char	*argv[3];
+	char	*argv[4];
 
 	pid = fork();
 	argv[0] = player;
-	argv[1] = track;
-	argv[2] = NULL;
+	argv[1] = "-q";
+	argv[2] = track;
+	argv[3] = NULL;
 	if (pid == 0)
 	{
 		execve(argv[0], argv, env);
