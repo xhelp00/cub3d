@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 15:33:51 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:37:00 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ int	timer(t_box *box)
 	{
 		printf("YOU ARE DEAD!!!\n");
 		exit(0);
-	}
+	}*/
 	redraw(box);
 	return (0);
 }
