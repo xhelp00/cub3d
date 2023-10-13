@@ -40,6 +40,7 @@
 # define VDIV 1
 # define VMOVE 0.0
 # define MINIMAP_OFFSET 10
+# define PI (atan(1) * 4)
 
 typedef struct s_ray
 {
@@ -133,6 +134,7 @@ typedef struct s_info
 	double	dx;
 	double	dy;
 	double	t_angle;
+	double	now_angle;
 	int		text_n;
 	double	pitch;
 	int		is_floor;
@@ -176,7 +178,8 @@ typedef struct s_data
 	int				state;
 	int				frame;
 	int				hp;
-	int				n_segments;
+	int				n_seg;
+	int				start_n_seg;
 	int				seg;
 	int				hit;
 	struct timeval	hit_time;
@@ -272,60 +275,61 @@ typedef struct	s_line
 }				t_line;
 
 //Hook.c
-int		exit_hook(t_box *box);
-int		key_press(int key, t_box *box);
-int		key_release(int key, t_box *box);
-int		mouse_press(int keycode, int x, int y, t_box *box);
-int		mouse_release(int keycode, int x, int y, t_box *box);
+int			exit_hook(t_box *box);
+int			key_press(int key, t_box *box);
+int			key_release(int key, t_box *box);
+int			mouse_press(int keycode, int x, int y, t_box *box);
+int			mouse_release(int keycode, int x, int y, t_box *box);
 
 //Parser.c
-void	parser(t_box *box, int fd);
-void	sprite_append(t_box *box, float x, float y, int texture);
-void	sprite_remove(t_box *box, t_sprite *to_rem);
+void		parser(t_box *box, int fd);
+void		sprite_append(t_box *box, float x, float y, int texture);
+void		sprite_remove(t_box *box, t_sprite *to_rem);
+t_sprite	*find_seg(t_box *box, int seg);
 
 //Values.c
-void	init_vals(t_box *box);
-void	init_textures(t_box *box);
-void	reset_vals(t_box *box);
-void	bubble_sort_sprites(t_box *box);
+void		init_vals(t_box *box);
+void		init_textures(t_box *box);
+void		reset_vals(t_box *box);
+void		bubble_sort_sprites(t_box *box);
 
 //Draw_image.c
-void	redraw(t_box *box);
-int		extract_color(unsigned char *pixel);
-void	my_mlx_pyxel_put(t_image *image, int x, int y, int color);
-void	apply_fog(t_box *box, double dist);
-void	hit_mark(t_box *box, t_sprite *sprite);
+void		redraw(t_box *box);
+int			extract_color(unsigned char *pixel);
+void		my_mlx_pyxel_put(t_image *image, int x, int y, int color);
+void		apply_fog(t_box *box, double dist);
+void		hit_mark(t_box *box, t_sprite *sprite);
 
 //Casting.c
-void	cast_floor(t_box *box);
-void	cast_wall(t_box *box);
-void	cast_obj(t_box *box);
+void		cast_floor(t_box *box);
+void		cast_wall(t_box *box);
+void		cast_obj(t_box *box);
 
 //Minimap.c
-void	drawMinimap(t_box *box);
-void	draw_map(t_box *box);
-int		get_fill_color(char grid_item);
-void	draw_player(t_box *box);
-void	draw_rays(t_box *box);
+void		drawMinimap(t_box *box);
+void		draw_map(t_box *box);
+int			get_fill_color(char grid_item);
+void		draw_player(t_box *box);
+void		draw_rays(t_box *box);
 
 //Graphics.c
-void	draw_rect(t_rect *rect, t_box *box);
-void	draw_line(t_line *line, t_box *box);
+void		draw_rect(t_rect *rect, t_box *box);
+void		draw_line(t_line *line, t_box *box);
 
 //Sound.c
-int		music(char **env, char *track);
+int			music(char **env, char *track);
 
 //testing
-void	print_map_contents(t_box *box);
-void	fill_buffer_with_color(unsigned char *buffer, int width,
-			int height, int color);
-void	single_square_test(t_box *box);
+void		print_map_contents(t_box *box);
+void		fill_buffer_with_color(unsigned char *buffer, int width,
+				int height, int color);
+void		single_square_test(t_box *box);
 
 //Movement.c
-void	cal_move(t_box *box);
-void	cal_sprite_move(t_box *box);
+void		cal_move(t_box *box);
+void		cal_sprite_move(t_box *box);
 
 //Main.c
-int		count_sprites(t_box *box);
+int			count_sprites(t_box *box);
 
 #endif
