@@ -142,36 +142,80 @@ void	cal_sprite_move(t_box *box)
 	// sprites = box->sprites;
 	// while (sprites)
 	// {
-	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit);
+	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
 	// 	sprites = sprites->next;
 	// }
+
 	sprites = box->sprites;
 	// printf("Dir_x %f | Dir_y %f\n", box->info.dir_x, box->info.dir_y);
 	while (sprites)
 	{
-		if (sprites->data->texture == BABY && sprites->data->state == AWAKE)
+		if (sprites->data->texture == LARRY_JR_HEAD)
 		{
-			if (sprites->data->x < box->info.pos_x)
-				sprites->data->x += 0.1 * box->info.ene_move_speed;
-			if (sprites->data->x > box->info.pos_x)
-				sprites->data->x -= 0.1 * box->info.ene_move_speed;
-			if (sprites->data->y < box->info.pos_y)
-				sprites->data->y += 0.1 * box->info.ene_move_speed;
-			if (sprites->data->y > box->info.pos_y)
-				sprites->data->y -= 0.1 * box->info.ene_move_speed;
-
-			// if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0'
-			// 		&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-			// {
-			// 	sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
-			// 	sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
-			// }
-			// else
-			// {
-			// 	box->info.old_dir_x = sprites->data->dir_x;
-			// 	sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed) - sprites->data->dir_y * sin(box->info.rot_speed);
-			// 	sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed) + sprites->data->dir_y * cos(box->info.rot_speed);
-			// }
+			if (sprites->data->n_seg == 0)
+			{
+				printf("BOSS BEFEATED!!!\n");
+				sprite_remove(box, sprites);
+			}
+			box->info.t_angle = atan2(sprites->data->y - box->info.pos_y, sprites->data->x - box->info.pos_x);
+			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
+			if (box->info.t_angle < 0)
+				box->info.t_angle += 2 * PI;
+			if (box->info.now_angle < 0)
+				box->info.now_angle += 2 * PI;
+			// printf("NOW_ANGLE: %f NOW_DIR_X %f NOW_DIR_Y %f | T_ANGLE: %f T_DIR_X %f T_DIR_Y %f\n", box->info.now_angle * (180 / PI), sprites->data->dir_x, sprites->data->dir_y, box->info.t_angle * (180 / PI), box->info.dir_x, box->info.dir_y);
+			if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle * (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
+			{
+				box->info.old_dir_x = sprites->data->dir_x;
+				sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(box->info.rot_speed * 0.5);
+				sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(box->info.rot_speed * 0.5);
+			}
+			else
+			{
+				box->info.old_dir_x = sprites->data->dir_x;
+				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
+				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
+			}
+			if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0'
+					&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
+			{
+				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
+				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
+			}
+		}
+		if (sprites->data->texture == LARRY_JR_BODY)
+		{
+			if (sprites->data->n_seg == 0)
+			{
+				printf("BOSS BEFEATED!!!\n");
+				sprite_remove(box, sprites);
+			}
+			// printf("YOU %i,%i | FOLLOW %i,%i\n", sprites->data->seg, sprites->data->texture, find_seg(box, sprites->data->seg - 1)->data->seg, find_seg(box, sprites->data->seg - 1)->data->texture);
+			box->info.t_angle = atan2(sprites->data->y - find_seg(box, sprites->data->seg - 1)->data->y, sprites->data->x - find_seg(box, sprites->data->seg - 1)->data->x);
+			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
+			if (box->info.t_angle < 0)
+				box->info.t_angle += 2 * PI;
+			if (box->info.now_angle < 0)
+				box->info.now_angle += 2 * PI;
+			// printf("\nSEG %i NOW_ANGLE: %f NOW_DIR_X %f NOW_DIR_Y %f | T_ANGLE: %f\n", sprites->data->seg, box->info.now_angle * (180 / PI), sprites->data->dir_x, sprites->data->dir_y, box->info.t_angle * (180 / PI));
+			if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle * (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
+			{
+				box->info.old_dir_x = sprites->data->dir_x;
+				sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(box->info.rot_speed * 0.5);
+				sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(box->info.rot_speed * 0.5);
+			}
+			else
+			{
+				box->info.old_dir_x = sprites->data->dir_x;
+				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
+				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
+			}
+			if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0'
+					&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
+			{
+				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
+				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
+			}
 		}
 		if (sprites->data->texture < TEAR)
 		{
@@ -189,14 +233,33 @@ void	cal_sprite_move(t_box *box)
 			}
 		}
 
-		if (sprites->data->texture == LEECH)
+		if (sprites->data->texture == LEECH || (sprites->data->texture == BABY && sprites->data->state == AWAKE))
 		{
-			box->info.old_dir_x = sprites->data->dir_x;
-			sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed) - sprites->data->dir_y * sin(box->info.rot_speed);
-			sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed) + sprites->data->dir_y * cos(box->info.rot_speed);
-
-			sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
-			sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
+			box->info.t_angle = atan2(sprites->data->y - box->info.pos_y, sprites->data->x - box->info.pos_x);
+			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
+			if (box->info.t_angle < 0)
+				box->info.t_angle += 2 * PI;
+			if (box->info.now_angle < 0)
+				box->info.now_angle += 2 * PI;
+			// printf("NOW_ANGLE: %f NOW_DIR_X %f NOW_DIR_Y %f | T_ANGLE: %f T_DIR_X %f T_DIR_Y %f\n", box->info.now_angle * (180 / PI), sprites->data->dir_x, sprites->data->dir_y, box->info.t_angle * (180 / PI), box->info.dir_x, box->info.dir_y);
+			if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle * (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
+			{
+				box->info.old_dir_x = sprites->data->dir_x;
+				sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(box->info.rot_speed * 0.5);
+				sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(box->info.rot_speed * 0.5);
+			}
+			else
+			{
+				box->info.old_dir_x = sprites->data->dir_x;
+				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
+				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
+			}
+			if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0'
+					&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
+			{
+				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
+				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
+			}
 		}
 
 		if (sprites->data->texture == TEAR)

@@ -63,7 +63,7 @@ int	timer(t_box *box)
 	if (box->player.hp < 1)
 	{
 		printf("YOU ARE DEAD!!!\n");
-		exit(0);
+		exit_hook(box);
 	}
 	redraw(box);
 	return (0);
