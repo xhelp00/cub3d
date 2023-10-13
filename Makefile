@@ -6,13 +6,13 @@
 #    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
-#    Updated: 2023/10/16 15:05:18 by phelebra         ###   ########.fr        #
+#    Updated: 2023/10/16 15:06:11 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = cub3d
-CFLAGS = -Wall -Wextra -Werror -g #fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 LIBFT = Libft
 MLX = minilibx
 UNAME_S := $(shell uname -s)
