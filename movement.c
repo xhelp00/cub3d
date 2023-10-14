@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 15:11:38 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:14:01 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 		box->p = music(box->env, "sounds/splash.mp3");
 		what->data->hit = 1;
 		box->p = music(box->env, "sounds/splash.mp3");
+		who->data->hit = 1;
 		gettimeofday(&what->data->hit_time, NULL);
 		what->data->hp -= box->player.dmg;
 		box->p = music(box->env, "sounds/pain.mp3");
