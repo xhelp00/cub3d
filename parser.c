@@ -33,8 +33,10 @@ t_sprite	*new_sprite(void)
 	new->data->dir_y = 0;
 	new->data->state = 0;
 	new->data->frame = 0;
-	new->data->n_segments = 0;
+	new->data->n_seg = 0;
+	new->data->start_n_seg = 0;
 	new->data->seg = 0;
+	new->data->hit = 0;
 	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;
@@ -53,7 +55,10 @@ t_sprite	*last_sprite(t_sprite *s)
 void	sprite_add_back(t_box *box, t_sprite *new)
 {
 	if (new->data->texture == LARRY_JR_HEAD)
-		new->data->n_segments = 5;
+	{
+		new->data->n_seg = 5;
+		new->data->start_n_seg = 5;
+	}
 	if (box->sprites == NULL)
 		box->sprites = new;
 	else
@@ -78,8 +83,77 @@ void	sprite_append(t_box *box, float x, float y, int texture)
 	sprite_add_back(box, new);
 }
 
+t_sprite	*find_seg(t_box *box, int seg)
+{
+	t_sprite	*sprites;
+
+	sprites = box->sprites;
+	while (sprites)
+	{
+		if (sprites->data->seg == seg && (sprites->data->texture == LARRY_JR_BODY || sprites->data->texture == LARRY_JR_HEAD))
+			return (sprites);
+		sprites = sprites->next;
+	}
+	return (sprites);
+}
+
+void	remove_seg(t_box *box, t_sprite *to_rem)
+{
+	t_sprite	*sprites;
+
+	if (to_rem->data->texture == LARRY_JR_BODY || to_rem->data->texture == LARRY_JR_HEAD)
+	{
+		if (to_rem->data->seg == 0)
+		{
+			// printf("KILLED HEAD: %i\n", to_rem->data->seg);
+			sprites = box->sprites;
+			while (sprites)
+			{
+				if (sprites->data->seg == to_rem->data->seg + 1)
+				{
+					sprites->data->texture = LARRY_JR_HEAD;
+					break;
+				}
+				sprites = sprites->next;
+			}
+			sprites = box->sprites;
+			while (sprites)
+			{
+				if (sprites->data->texture == LARRY_JR_HEAD || sprites->data->texture == LARRY_JR_BODY)
+					sprites->data->seg--;
+				sprites = sprites->next;
+			}
+		}
+		else
+		{
+			// printf("KILLED SEGMENT: %i\n", to_rem->data->seg);
+			sprites = box->sprites;
+			while (sprites)
+			{
+				if (sprites->data->texture == LARRY_JR_BODY && sprites->data->seg > to_rem->data->seg)
+				{
+					// sprites->data->x = find_seg(box, sprites->data->seg - 1)->data->x;
+					// sprites->data->y = find_seg(box, sprites->data->seg - 1)->data->y;
+					sprites->data->seg--;
+				}
+				sprites = sprites->next;
+			}
+
+		}
+		sprites = box->sprites;
+		while (sprites)
+		{
+			if (sprites->data->texture == LARRY_JR_HEAD || sprites->data->texture == LARRY_JR_BODY)
+				sprites->data->n_seg = sprites->data->n_seg - 1;
+			sprites = sprites->next;
+		}
+
+	}
+}
+
 void	sprite_remove(t_box *box, t_sprite *to_rem)
 {
+	remove_seg(box, to_rem);
 	if (to_rem == box->sprites)
 		box->sprites = box->sprites->next;
 	else
@@ -191,12 +265,15 @@ void	parser(t_box *box, int fd)
 		if (last->data->texture == LARRY_JR_HEAD)
 		{
 			// printf("JARRY LUNIOR\n");
-			while (last->data->seg++ < last->data->n_segments)
+			while (last->data->seg++ < last->data->n_seg)
 			{
-				last_sprite(box->sprites)->data->seg = last->data->seg;
 				// printf("JARRY BODY SEG %i\n", last->data->seg);
-				sprite_append(box, x + last->data->seg / 3.0, y, LARRY_JR_BODY);
+				sprite_append(box, x + last->data->seg / 3.0, y + last->data->seg / 3.0, LARRY_JR_BODY);
+				last_sprite(box->sprites)->data->seg = last->data->seg;
+				last_sprite(box->sprites)->data->n_seg = last->data->n_seg;
+				last_sprite(box->sprites)->data->start_n_seg = last->data->start_n_seg;
 			}
+			last->data->seg = 0;
 		}
 		// i = -1;
 		// printf("\nDUMP:\n");

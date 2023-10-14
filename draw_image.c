@@ -33,14 +33,14 @@ void	apply_fog(t_box *box, double dist)
 
 void	hit_mark(t_box *box, t_sprite *sprite)
 {
-	if (sprite->data->state == HIT && sprite->data->texture != 30)
+	if (sprite->data->hit && sprite->data->texture != TEAR)
 	{
 		sprite->data->frame = (((box->time.tv_sec - sprite->data->hit_time.tv_sec) + ((box->time.tv_usec - sprite->data->hit_time.tv_usec) / 1000000.0)) * 10);
 		//printf("FRAME: %i\n", sprite->data->frame);
 		if (sprite->data->frame < 1)
 				box->info.color = 0x00FF0000;
 		else
-			sprite->data->state = IDLE;
+			sprite->data->hit = 0;
 	}
 }
 
@@ -51,23 +51,63 @@ int	extract_color(unsigned char *pixel)
 
 void	draw_hud(t_box *box)
 {
-	char	*str;
+	char	*nbr;
+	int		x;
+	int		y;
+	int		i;
 
-	str = ft_strjoin("SPEED: ", ft_itoa(box->player.speed));
-	mlx_string_put(box->mlx, box->win, 20, 200, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("RANGE: ", ft_itoa(box->player.range));
-	mlx_string_put(box->mlx, box->win, 20, 240, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("FIRE RATE: ", ft_itoa(box->player.fire_rate));
-	mlx_string_put(box->mlx, box->win, 20, 280, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("SHOT SPEED: ", ft_itoa(box->player.shot_speed));
-	mlx_string_put(box->mlx, box->win, 20, 320, 0x00FFFFFF, str);
-	free(str);
-	str = ft_strjoin("DMG: ", ft_itoa(box->player.dmg));
-	mlx_string_put(box->mlx, box->win, 20, 360, 0x00FFFFFF, str);
-	free(str);
+	if (box->player.hit && box->player.frame % 2 == 0)
+		box->info.color = 0x00FF0000;
+	else
+		box->info.color = 0x00FFFFFF;
+	nbr = ft_itoa(box->player.speed);
+	mlx_string_put(box->mlx, box->win, 65, 203, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.range));
+	mlx_string_put(box->mlx, box->win, 65, 245, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.fire_rate));
+	mlx_string_put(box->mlx, box->win, 65, 287, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.shot_speed));
+	mlx_string_put(box->mlx, box->win, 65, 329, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.dmg));
+	mlx_string_put(box->mlx, box->win, 65, 371, box->info.color, nbr);
+	free(nbr);
+	y = -1;
+	while (++y < SCREENHEIGHT)
+	{
+		x = -1;
+		while (++x < SCREENWIDTH)
+		{
+			box->info.color = 0;
+			if (y > 185 && y < 215 && x > 20 && x < 50)
+				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 185 - ((y - 185) / 2))]);
+			else if (y > 225 && y < 255 && x > 20 && x < 50)
+				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 210 - ((y - 225) / 2))]);
+			else if (y > 268 && y < 298 && x > 20 && x < 60)
+				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x + 10 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 268 - ((y - 268) / 2))]);
+			else if (y > 305 && y < 335 && x > 20 && x < 50)
+				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 290 - ((y - 305) / 2))]);
+			else if (y > 350 && y < 380 && x > 20 && x < 50)
+				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 350 - ((y - 350) / 2))]);
+			if ((box->info.color & 0x00FFFFFF) != 0)
+				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			box->info.color = 0;
+			i = -1;
+			while (++i < ((box->player.max_hp + 1) / 2))
+			{
+				if (y > 15 && y < 45 && x > 50 + (i * 32) && x < 82 + (i * 32))
+				{
+					if (i < (box->player.hp / 2))
+						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 50) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
+					else if (box->player.hp % 2 == 1 && i == (box->player.hp / 2))
+						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 34) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
+					else
+						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 18) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
+					if ((box->info.color & 0x00FFFFFF) != 0)
+							my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+				}
+			}
+		}
+	}
 }
 
 /*	Redraw
@@ -88,7 +128,7 @@ void	redraw(t_box *box)
 	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
 	cast_floor(box);
 	cast_wall(box);
-	
+
 	cast_obj(box);
 	cal_move(box);
 	cal_sprite_move(box);

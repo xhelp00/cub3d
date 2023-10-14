@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   values.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
+/*   By: antess <antess@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 16:15:23 by jbartosi          #+#    #+#             */
 /*   Updated: 2023/10/11 15:35:33 by phelebra         ###   ########.fr       */
@@ -35,6 +35,8 @@ void	init_textures(t_box *box)
 	box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
 	box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
 	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
+	box->textures[UI_HEARTS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_hearts.xpm", &k, &j);
+	box->textures[UI_STATS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_stats.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
@@ -58,6 +60,8 @@ void	init_vals(t_box *box)
 	box->info.pos_z = 0;
 	box->info.dir_x = -1.0;
 	box->info.dir_y = 0;
+	box->info.start_dir_x = -1.0;
+	box->info.start_dir_y = 0;
 	box->info.plane_x = 0;
 	box->info.plane_y = 0.66;
 	gettimeofday(&box->time, NULL);
@@ -90,7 +94,12 @@ void	init_vals(t_box *box)
 	box->player.shot_speed = 10;
 	box->player.dmg = 35;
 	box->player.cry = 0;
+	box->player.state = 0;
+	box->player.hp = 6;
+	box->player.max_hp = 6;
+	box->player.hit = 0;
 	gettimeofday(&box->player.last_tear, NULL);
+	gettimeofday(&box->player.hit_time, NULL);
 	box->info.angry = 0;
 }
 

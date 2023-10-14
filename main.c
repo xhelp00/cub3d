@@ -126,21 +126,20 @@ void	check(t_box *box, int argc, char **argv)
 	{
 		map_path = argv[1];
 	}
-	else 
+	else
 	{
 		printf("Error\nInvalid number of arguments.\n");
 		exit(1);
 	}
-
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
 	{
 		printf("Error\nCannot open map file.\n");
 		exit(1);
 	}
-		init_vals(box);
-		parser(box, fd);
-		close(fd);
+	init_vals(box);
+	parser(box, fd);
+	close(fd);
 }
 
 /*	Timer
@@ -151,6 +150,11 @@ int	timer(t_box *box)
 {
 	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+	if (box->player.hp < 1)
+	{
+		printf("YOU ARE DEAD!!!\n");
+		exit_hook(box);
+	}
 	/* while (box->info.angry && !box->info.sound)
 	{
 		box->info.sound = 1;

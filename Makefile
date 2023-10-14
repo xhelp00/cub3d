@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
+#    By: antess <antess@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/10 16:55:23 by jbartosi          #+#    #+#              #
 #    Updated: 2023/10/11 15:48:53 by phelebra         ###   ########.fr        #
