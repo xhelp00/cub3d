@@ -192,6 +192,8 @@ typedef struct s_data
 # define LARRY_JR_HEAD 30
 # define LARRY_JR_BODY 31
 # define TEAR 40
+# define UI_HEARTS 45
+# define UI_STATS 46
 
 typedef struct s_sprite
 {
