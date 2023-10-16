@@ -341,10 +341,7 @@ void	cal_sprite_move(t_box *box)
 				//printf("FRAME: %i | HIT TIME: %li\n", sprites->data->frame, sprites->data->hit_time.tv_sec);
 				if (sprites->data->frame > 14)
 				{
-				{
 					sprite_remove(box, sprites);
-					break;
-				}
 					break;
 				}
 			}
