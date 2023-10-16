@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:52:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/12 13:50:39 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 14:10:51 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,31 @@ int	key_press(int key, t_box *box)
 		box->info.pos_z = 200;
 	if (key == 65507)
 		box->info.pos_z = -200;
+	
+	//IDDQD for god mode
+	if (key >= 'a' && key <= 'z')  // Assuming ASCII values
+	{
+		// Assign the character to the buffer
+		box->input_buffer[box->input_index] = (char)key;
+		box->input_index++;
+		box->input_buffer[box->input_index] = '\0'; // Null terminate
+
+		// Using strstr to check for "iddqd" in the buffer
+		if (strstr(box->input_buffer, "iddqd"))
+		{
+			printf("GOD MODE active\n");
+			// Reset the buffer after detecting the code
+			ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
+			box->input_index = 0;
+		}
+		else if (box->input_index >= (int)sizeof(box->input_buffer) - 1) // If buffer is full
+		{
+			// Shift the buffer to the left by one character
+			ft_memmove(box->input_buffer, box->input_buffer + 1, sizeof(box->input_buffer) - 1);
+			box->input_index--;
+		}
+	}
+	//printf("Key pressed: %c, Current buffer: %s\n", (char)key, box->input_buffer);	s
 	return (0);
 }
 
