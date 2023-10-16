@@ -68,7 +68,7 @@ void	draw_hud(t_box *box)
 	mlx_string_put(box->mlx, box->win, 65, 287, box->info.color, nbr);
 	nbr = (free(nbr), ft_itoa(box->player.shot_speed));
 	mlx_string_put(box->mlx, box->win, 65, 329, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.dmg));
+	nbr = (free(nbr), ft_itoa(box->player.dmg * box->player.dmg_mult));
 	mlx_string_put(box->mlx, box->win, 65, 371, box->info.color, nbr);
 	free(nbr);
 	y = -1;

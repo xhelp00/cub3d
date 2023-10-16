@@ -126,7 +126,7 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 		what->data->hit = 1;
 		box->p = music(box->env, "sounds/splash.mp3");
 		gettimeofday(&what->data->hit_time, NULL);
-		what->data->hp -= box->player.dmg;
+		what->data->hp -= box->player.dmg * box->player.dmg_mult;
 		box->p = music(box->env, "sounds/pain.mp3");
 		if (what->data->hp < 1)
 		{
@@ -323,7 +323,7 @@ void	cal_sprite_move(t_box *box)
 				{
 					box->player.dmg += 5;
 					if (!find_item(box, 11) && !find_item(box, 3))
-						box->player.dmg *= 1.5;
+						box->player.dmg_mult = 1.5;
 				}
 				else if (sprites->data->id == 5)
 				{
@@ -338,7 +338,7 @@ void	cal_sprite_move(t_box *box)
 					box->player.hp = box->player.max_hp;
 					box->player.dmg += 3;
 					if (!find_item(box, 3) && !find_item(box, 11))
-						box->player.dmg *= 1.5;
+						box->player.dmg_mult = 1.5;
 					box->player.range += 15;
 					box->player.speed += 30;
 				}

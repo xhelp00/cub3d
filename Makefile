@@ -49,6 +49,7 @@ fclean:
 	@rm -f $(OBJ)
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFT)
+	@make clean -C $(MLX)
 
 re:	fclean
 	@make all

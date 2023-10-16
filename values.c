@@ -95,6 +95,7 @@ void	init_vals(t_box *box)
 	box->player.fire_rate = 50;
 	box->player.shot_speed = 10;
 	box->player.dmg = 35;
+	box->player.dmg_mult = 1;
 	box->player.cry = 0;
 	box->player.state = 0;
 	box->player.hp = 6;

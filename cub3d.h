@@ -226,6 +226,7 @@ typedef struct s_player
 	int				fire_rate;
 	int				shot_speed;
 	int				dmg;
+	double			dmg_mult;
 	int				cry;
 	int				state;
 	int				frame;
