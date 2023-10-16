@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 13:34:01 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 13:50:24 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,13 +145,13 @@ void	cal_sprite_move(t_box *box)
 	t_sprite	*sprites;
 	t_sprite	*obj;
 
-	printf("\nDUMP:\n");
-	sprites = box->sprites;
-	while (sprites)
-	{
-		printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
-		sprites = sprites->next;
-	}
+	// printf("\nDUMP:\n");
+	// sprites = box->sprites;
+	// while (sprites)
+	// {
+	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
+	// 	sprites = sprites->next;
+	// }
 
 	sprites = box->sprites;
 	// printf("Dir_x %f | Dir_y %f\n", box->info.dir_x, box->info.dir_y);
@@ -264,7 +264,7 @@ void	cal_sprite_move(t_box *box)
 			if (sprites->data->hit)
 			{
 				sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-				printf("FRAME: %i | HIT TIME: %li\n", sprites->data->frame, sprites->data->hit_time.tv_sec);
+				//printf("FRAME: %i | HIT TIME: %li\n", sprites->data->frame, sprites->data->hit_time.tv_sec);
 				if (sprites->data->frame > 14)
 				{
 					sprite_remove(box, sprites);
