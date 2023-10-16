@@ -171,7 +171,7 @@ typedef struct s_image
 # define LEFT 2
 # define RIGHT 3
 
-typedef struct s_data
+typedef struct s_sprite_data
 {
 	double			x;
 	double			y;
