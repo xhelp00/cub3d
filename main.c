@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 14:13:18 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 16:05:02 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,15 +131,16 @@ void	check(t_box *box, int argc, char **argv)
 		printf("Error\nInvalid number of arguments.\n");
 		exit(1);
 	}
+
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
 	{
 		printf("Error\nCannot open map file.\n");
 		exit(1);
 	}
-	init_vals(box);
-	parser(box, fd);
-	close(fd);
+		init_vals(box);
+		parser(box, fd);
+		close(fd);
 }
 
 /*	Timer
@@ -157,10 +158,9 @@ int	timer(t_box *box)
 	}
 	/* while (box->info.angry && !box->info.sound)
 	{
-		box->info.sound = 1;
-		box->info.angry = 0;
-		box->p = music(box->env, "sounds/angry.wav");
-	} */
+		printf("YOU ARE DEAD!!!\n");
+		exit(0);
+	}*/
 	redraw(box);
 	return (0);
 }
