@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:00:23 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/09 15:04:50 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 14:22:11 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,26 +51,12 @@ int	extract_color(unsigned char *pixel)
 
 void	draw_hud(t_box *box)
 {
-	char	*nbr;
+	//char	*nbr;
 	int		x;
 	int		y;
 	int		i;
 
-	if (box->player.hit && box->player.frame % 2 == 0)
-		box->info.color = 0x00FF0000;
-	else
-		box->info.color = 0x00FFFFFF;
-	nbr = ft_itoa(box->player.speed);
-	mlx_string_put(box->mlx, box->win, 65, 203, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.range));
-	mlx_string_put(box->mlx, box->win, 65, 245, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.fire_rate));
-	mlx_string_put(box->mlx, box->win, 65, 287, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.shot_speed));
-	mlx_string_put(box->mlx, box->win, 65, 329, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.dmg));
-	mlx_string_put(box->mlx, box->win, 65, 371, box->info.color, nbr);
-	free(nbr);
+	
 	y = -1;
 	while (++y < SCREENHEIGHT)
 	{
@@ -116,6 +102,7 @@ void	draw_hud(t_box *box)
 void	redraw(t_box *box)
 {
 	char	*fps;
+	char 	*nbr;
 
 	mlx_destroy_image(box->mlx, box->image.img);
 	box->image.bits_pp = 0;
@@ -136,11 +123,29 @@ void	redraw(t_box *box)
     //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
 
 	drawMinimap(box);
+	draw_hud(box);
 	//single_square_test(box);
+	
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+
 	fps = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, fps);
-	draw_hud(box);
+
+	if (box->player.hit && box->player.frame % 2 == 0)
+		box->info.color = 0x00FF0000;
+	else
+		box->info.color = 0x00FFFFFF;
+	nbr = ft_itoa(box->player.speed);
+	mlx_string_put(box->mlx, box->win, 65, 203, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.range));
+	mlx_string_put(box->mlx, box->win, 65, 245, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.fire_rate));
+	mlx_string_put(box->mlx, box->win, 65, 287, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.shot_speed));
+	mlx_string_put(box->mlx, box->win, 65, 329, box->info.color, nbr);
+	nbr = (free(nbr), ft_itoa(box->player.dmg));
+	mlx_string_put(box->mlx, box->win, 65, 371, box->info.color, nbr);
+	free(nbr);
 
 	free(fps);
 }
