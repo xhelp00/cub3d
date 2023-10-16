@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 14:23:13 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 15:14:08 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 15:14:33 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,13 +147,13 @@ void	cal_sprite_move(t_box *box)
 	t_sprite	*sprites;
 	t_sprite	*obj;
 
-	printf("\nDUMP:\n");
-	sprites = box->sprites;
-	while (sprites)
-	{
-		printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
-		sprites = sprites->next;
-	}
+	// printf("\nDUMP:\n");
+	// sprites = box->sprites;
+	// while (sprites)
+	// {
+	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
+	// 	sprites = sprites->next;
+	// }
 
 	sprites = box->sprites;
 	// printf("Dir_x %f | Dir_y %f\n", box->info.dir_x, box->info.dir_y);
