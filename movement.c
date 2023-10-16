@@ -101,6 +101,7 @@ void	cal_move(t_box *box)
 	box->info.frame_time = (box->time.tv_sec - box->old_time.tv_sec) +
 						((box->time.tv_usec - box->old_time.tv_usec) / 1000000.0);
 	box->info.move_speed = box->info.frame_time * 3.0;
+	box->info.move_speed *= box->player.speed / 100;
 	box->info.ene_move_speed = box->info.frame_time * 3.0;
 	box->info.rot_speed = box->info.frame_time * 1.5;
 	if (box->info.sprint)
@@ -144,6 +145,7 @@ void	cal_sprite_move(t_box *box)
 {
 	t_sprite	*sprites;
 	t_sprite	*obj;
+	// t_item		*items;
 
 	// printf("\nDUMP:\n");
 	// sprites = box->sprites;
@@ -151,6 +153,14 @@ void	cal_sprite_move(t_box *box)
 	// {
 	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
 	// 	sprites = sprites->next;
+	// }
+
+	// printf("\nDUMP:\n");
+	// items = box->items;
+	// while (items)
+	// {
+	// 	printf("Texture: %i | id: %d\n", items->data->texture, items->data->id);
+	// 	items = items->next;
 	// }
 
 	sprites = box->sprites;
@@ -290,7 +300,7 @@ void	cal_sprite_move(t_box *box)
 					if (1 > ((obj->data->x - sprites->data->x)
 							* (obj->data->x - sprites->data->x)
 							+ (obj->data->y - sprites->data->y)
-							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture != TEAR
+							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture < TEAR
 							&& obj->data->hit == 0)
 					{
 						sprite_hit(box, sprites, obj);
@@ -302,6 +312,39 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->y += sprites->data->dir_y * box->info.move_speed * (box->player.shot_speed / 8.0);
 			}
 
+		}
+		if (sprites->data->texture == ITEMS)
+		{
+			if (sprites->data->dist < 0.1)
+			{
+				if (sprites->data->id == 0)
+					box->player.fire_rate -= box->player.fire_rate / 10;
+				else if (sprites->data->id == 3)
+				{
+					box->player.dmg += 5;
+					if (!find_item(box, 11) && !find_item(box, 3))
+						box->player.dmg *= 1.5;
+				}
+				else if (sprites->data->id == 5)
+				{
+					box->player.fire_rate /= 2;
+					box->player.range /= 1.5;
+				}
+				else if (sprites->data->id == 6)
+					box->player.dmg += 10;
+				else if (sprites->data->id == 11)
+				{
+					box->player.max_hp += 2;
+					box->player.hp = box->player.max_hp;
+					box->player.dmg += 3;
+					if (!find_item(box, 3) && !find_item(box, 11))
+						box->player.dmg *= 1.5;
+					box->player.range += 15;
+					box->player.speed += 30;
+				}
+				item_append(box, sprites);
+				break;
+			}
 		}
 		sprites = sprites->next;
 	}

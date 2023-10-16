@@ -37,6 +37,7 @@ void	init_textures(t_box *box)
 	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
 	box->textures[UI_HEARTS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_hearts.xpm", &k, &j);
 	box->textures[UI_STATS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_stats.xpm", &k, &j);
+	box->textures[ITEMS].img = mlx_xpm_file_to_image(box->mlx, "textures/items.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
@@ -55,6 +56,7 @@ void	init_vals(t_box *box)
 {
 	box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 	box->sprites = NULL;
+	box->items = NULL;
 	box->info.pos_x = 4;
 	box->info.pos_y = 5;
 	box->info.pos_z = 0;
@@ -118,7 +120,7 @@ void	reset_vals(t_box *box)
 
 void	swap(t_sprite *x)
 {
-	t_data	*tmp;
+	t_sprite_data	*tmp;
 
 	if (!x || (x->data == NULL && x->next == NULL))
 		return ;

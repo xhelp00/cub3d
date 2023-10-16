@@ -17,7 +17,7 @@ LIBFT = Libft
 MLX = minilibx
 UNAME_S := $(shell uname -s)
 
-SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c movement.c sound.c
+SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c movement.c sound.c items.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
