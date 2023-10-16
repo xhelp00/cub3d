@@ -315,7 +315,7 @@ void	cast_obj(t_box *box)
 						}
 						else
 							box->info.color = 0;
-						
+
 					}
 					else if (sprites->data->texture == NERVE_ENDING)
 					{
