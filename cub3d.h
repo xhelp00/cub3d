@@ -171,13 +171,14 @@ typedef struct s_image
 # define LEFT 2
 # define RIGHT 3
 
-typedef struct s_data
+typedef struct s_sprite_data
 {
 	double			x;
 	double			y;
 	double			start_x;
 	double			start_y;
 	double			travel;
+	int				id;
 	int				texture;
 	double			dist;
 	double			dir_x;
@@ -206,13 +207,27 @@ typedef struct s_data
 # define TEAR 40
 # define UI_HEARTS 45
 # define UI_STATS 46
+# define ITEMS 47
 
 typedef struct s_sprite
 {
-	t_data			*data;
-	struct s_sprite	*prev;
-	struct s_sprite	*next;
+	t_sprite_data		*data;
+	struct s_sprite		*prev;
+	struct s_sprite		*next;
 }				t_sprite;
+
+typedef struct s_item_data
+{
+	int				id;
+	int				texture;
+}				t_item_data;
+
+typedef struct s_item
+{
+	t_item_data			*data;
+	struct s_item		*prev;
+	struct s_item		*next;
+}				t_item;
 
 typedef struct s_player
 {
@@ -251,6 +266,7 @@ typedef struct s_box
 	t_image			image;
 	t_image			*textures;
 	t_sprite		*sprites;
+	t_item			*items;
 	t_player		player;
 	int				n_sprites;
 	char			**map;
@@ -300,7 +316,11 @@ void		parser(t_box *box, int fd);
 void		sprite_append(t_box *box, float x, float y, int texture);
 void		sprite_remove(t_box *box, t_sprite *to_rem);
 t_sprite	*find_seg(t_box *box, int seg);
-t_sprite	*find_door(t_box *box, int x, int y);
+
+//Items.c
+void		item_append(t_box *box, t_sprite *sprite);
+void		item_remove(t_box *box, t_item *to_rem);
+t_item		*find_item(t_box *box, int id);
 
 //Values.c
 void		init_vals(t_box *box);

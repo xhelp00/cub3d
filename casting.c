@@ -607,6 +607,13 @@ void	cast_obj(t_box *box)
 						else
 							box->info.color = 0;
 					}
+					else if (sprites->data->texture == ITEMS)
+					{
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 48 && box->info.tex_y > 16)
+							box->info.color = extract_color(&box->textures[ITEMS].addr[((box->info.tex_x - 16 + ((sprites->data->id % 20) * 32)) * 4) + box->textures[ITEMS].line_len * box->info.tex_y + box->textures[ITEMS].line_len * (-16 + (sprites->data->id / 20) * 32)]);
+						else
+							box->info.color = 0;
+					}
 					else
 						box->info.color = 0;
 					if ((box->info.color & 0x00FFFFFF) != 0)

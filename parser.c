@@ -19,7 +19,7 @@ t_sprite	*new_sprite(void)
 	new = ft_calloc(1, sizeof(t_sprite));
 	if (!new)
 		return (NULL);
-	new->data = ft_calloc(1, sizeof(t_data));
+	new->data = ft_calloc(1, sizeof(t_sprite_data));
 	if (!new->data)
 		return (NULL);
 	new->data->x = 0;
@@ -37,6 +37,7 @@ t_sprite	*new_sprite(void)
 	new->data->start_n_seg = 0;
 	new->data->seg = 0;
 	new->data->hit = 0;
+	new->data->id = 0;
 	new->data->sound = 0;
 	new->data->opening = 0;
 	new->data->state = IDLE;
@@ -79,7 +80,13 @@ void	sprite_append(t_box *box, float x, float y, int texture)
 	new->data->y = y;
 	new->data->start_x = x;
 	new->data->start_y = y;
-	new->data->texture = texture;
+	if (texture > 50)
+	{
+		new->data->id = texture - 100;
+		new->data->texture = ITEMS;
+	}
+	else
+		new->data->texture = texture;
 	new->data->dir_x = box->info.dir_x;
 	new->data->dir_y = box->info.dir_y;
 	sprite_add_back(box, new);
