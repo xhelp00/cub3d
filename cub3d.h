@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:51:55 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 14:21:22 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 16:04:47 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,16 @@ typedef struct s_image
 # define LEFT 2
 # define RIGHT 3
 
+# define UP 0
+# define DOWN 1
+# define LEFT 2
+# define RIGHT 3
+
+# define UP 0
+# define DOWN 1
+# define LEFT 2
+# define RIGHT 3
+
 typedef struct s_data
 {
 	double			x;
@@ -271,7 +281,7 @@ typedef struct s_box
 }				t_box;
 
 //shape rect used for drawing minimap
-typedef struct s_rect
+typedef struct	s_rect
 {
 	int			x;
 	int			y;
