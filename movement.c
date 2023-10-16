@@ -266,13 +266,18 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
 				// printf("FRAME: %i | HIT TIME: %li\n", sprites->data->frame, sprites->data->hit_time.tv_sec);
 				if (sprites->data->frame > 14)
+				{
 					sprite_remove(box, sprites);
+					break;
+				}
 			}
 			else if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '1'
-					|| box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] == '1')
+					|| box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] == '1'
+					|| sprites->data->travel > box->player.range / 5.0)
+			{
 				sprite_hit(box, sprites, NULL);
-			else if (sprites->data->travel > box->player.range / 5.0)
-				sprite_hit(box, sprites, NULL);
+				break;
+			}
 			else
 			{
 				obj = box->sprites;
@@ -287,7 +292,10 @@ void	cal_sprite_move(t_box *box)
 							+ (obj->data->y - sprites->data->y)
 							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture != TEAR
 							&& obj->data->hit == 0)
+					{
 						sprite_hit(box, sprites, obj);
+						break;
+					}
 					obj = obj->next;
 				}
 				sprites->data->x += sprites->data->dir_x * box->info.move_speed * (box->player.shot_speed / 8.0);
