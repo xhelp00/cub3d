@@ -164,16 +164,6 @@ typedef struct s_image
 # define LEFT 2
 # define RIGHT 3
 
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
-
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
-
 typedef struct s_data
 {
 	double			x;
@@ -278,6 +268,7 @@ typedef struct s_box
 	t_mouse			mouse;
 	char			input_buffer[6];  // to store "iddqd" + '\0'
 	int				input_index;
+	int 			god;
 }				t_box;
 
 //shape rect used for drawing minimap

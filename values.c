@@ -101,6 +101,7 @@ void	init_vals(t_box *box)
 	box->player.hp = 6;
 	box->player.max_hp = 6;
 	box->player.hit = 0;
+	box->god = 0;
 	gettimeofday(&box->player.last_tear, NULL);
 	box->info.angry = 0;
 	box->input_index = 0;

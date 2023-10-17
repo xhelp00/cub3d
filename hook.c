@@ -71,6 +71,7 @@ int	key_press(int key, t_box *box)
 		if (strstr(box->input_buffer, "iddqd"))
 		{
 			printf("GOD MODE active\n");
+			box->god = 1;
 			// Reset the buffer after detecting the code
 			ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
 			box->input_index = 0;
