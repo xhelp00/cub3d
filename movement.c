@@ -226,6 +226,7 @@ void	cal_sprite_move(t_box *box)
 			else if (sprites->data->dist < 0.1)
 			{
 				box->player.hit = 1;
+				if (box->god == 0)
 				box->player.hp -= 1;
 				gettimeofday(&box->player.hit_time, NULL);
 			}
