@@ -187,6 +187,7 @@ typedef struct s_data
 }				t_sprite_data;
 
 //Texture numbers
+# define DOOR 2
 # define BABY 10
 # define NERVE_ENDING 11
 # define LEECH 12
@@ -329,6 +330,7 @@ void		hit_mark(t_box *box, t_sprite *sprite);
 void		cast_floor(t_box *box);
 void		cast_wall(t_box *box);
 void		cast_obj(t_box *box);
+void		cast_door(t_box *box);
 
 //Minimap.c
 void		drawMinimap(t_box *box);
