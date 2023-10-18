@@ -144,6 +144,12 @@ typedef struct s_info
 	t_ray		*ray;
 	int		to_destroy;
 	int		flipped;
+	int		door;
+	int		door_x;
+	int		door_y;
+	double	door_dist_x;
+	double	door_dist_y;
+	int		door_side;
 }				t_info;
 
 typedef struct s_image
@@ -308,7 +314,6 @@ void		hit_mark(t_box *box, t_sprite *sprite);
 void		cast_floor(t_box *box);
 void		cast_wall(t_box *box);
 void		cast_obj(t_box *box);
-void		cast_door(t_box *box);
 
 //Minimap.c
 void		drawMinimap(t_box *box);
