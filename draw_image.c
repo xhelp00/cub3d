@@ -115,7 +115,6 @@ void	redraw(t_box *box)
 	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
 	cast_floor(box);
 	cast_wall(box);
-	cast_door(box);
 
 	cast_obj(box);
 	cal_move(box);
