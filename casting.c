@@ -87,50 +87,46 @@ void	cast_floor(t_box *box)
 
 void	draw_door(t_box *box, int x)
 {
-	// printf("DOOR: %i\n", box->info.door);
-		if (!box->info.door_side)
-			box->info.prep_wall_dist = (box->info.door_dist_x - box->info.delta_dist_x);
-		else
-			box->info.prep_wall_dist = (box->info.door_dist_y - box->info.delta_dist_y);
-		box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
-		box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
-		if (box->info.draw_start < 0)
-			box->info.draw_start = 0;
-		box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
-		if (box->info.draw_end >= SCREENHEIGHT)
-			box->info.draw_end = SCREENHEIGHT - 1;
+	t_sprite	*door;
 
-		box->info.text_num = box->map[box->info.door_x][box->info.door_y] - 1 - '0';
-		if (!box->info.door_side)
-			box->info.wall_x = box->info.pos_y + box->info.prep_wall_dist * box->info.ray_dir_y;
-		else
-			box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
-		box->info.wall_x -= floor((box->info.wall_x));
-
+	door = find_door(box, box->info.door_x, box->info.door_y);
+	if (!box->info.door_side)
+		box->info.prep_wall_dist = (box->info.door_dist_x - box->info.delta_dist_x);
+	else
+		box->info.prep_wall_dist = (box->info.door_dist_y - box->info.delta_dist_y);
+	box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
+	box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
+	if (box->info.draw_start < 0)
+		box->info.draw_start = 0;
+	box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
+	if (box->info.draw_end >= SCREENHEIGHT)
+		box->info.draw_end = SCREENHEIGHT - 1;
+	box->info.text_num = box->map[box->info.door_x][box->info.door_y] - 1 - '0';
+	if (!box->info.door_side)
+		box->info.wall_x = box->info.pos_y + box->info.prep_wall_dist * box->info.ray_dir_y;
+	else
+		box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
+	box->info.wall_x -= floor((box->info.wall_x));
 		box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
-		if (!box->info.door_side && box->info.ray_dir_x > 0)
-			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
-		if (box->info.door_side && box->info.ray_dir_y < 0)
-			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
-
-		box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
-		box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
-
-		box->info.draw = box->info.draw_start;
-		while (box->info.draw++ < box->info.draw_end)
+	if (!box->info.door_side && box->info.ray_dir_x > 0)
+		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
+	if (box->info.door_side && box->info.ray_dir_y < 0)
+		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
+	box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
+	box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
+	box->info.draw = box->info.draw_start;
+	while (box->info.draw++ < box->info.draw_end)
+	{
+		box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
+		box->info.tex_pos += box->info.step;
+		box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+		if ((box->info.color & 0x00FFFFFF) != 0)
 		{
-			box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
-			box->info.tex_pos += box->info.step;
-			box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
-			if ((box->info.color & 0x00FFFFFF) != 0)
-			{
-				apply_fog(box, box->info.prep_wall_dist * 9);
-				my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
-			}
+			apply_fog(box, box->info.prep_wall_dist * 9);
+			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
 		}
-		box->info.zbuffer[x] = box->info.prep_wall_dist;
-		//printf("%i: %f\n", x, box->info.zbuffer[x]);
-
+	}
+	box->info.zbuffer[x] = box->info.prep_wall_dist;
 }
 
 void	cast_wall(t_box *box)

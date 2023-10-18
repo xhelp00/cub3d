@@ -37,6 +37,7 @@ t_sprite	*new_sprite(void)
 	new->data->start_n_seg = 0;
 	new->data->seg = 0;
 	new->data->hit = 0;
+	new->data->opening = 0;
 	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;
@@ -95,6 +96,22 @@ t_sprite	*find_seg(t_box *box, int seg)
 		sprites = sprites->next;
 	}
 	return (sprites);
+}
+
+t_sprite	*find_door(t_box *box, int x, int y)
+{
+	t_sprite	*sprites;
+
+	sprites = box->sprites;
+	if (!sprites)
+		return (NULL);
+	while (sprites)
+	{
+		if (sprites->data->x == x && sprites->data->y == y && sprites->data->texture == DOOR)
+			return (sprites);
+		sprites = sprites->next;
+	}
+	return (NULL);
 }
 
 void	remove_seg(t_box *box, t_sprite *to_rem)
@@ -194,6 +211,8 @@ void	parser(t_box *box, int fd)
 		{
 			if (box->map[i][c] == ' ')
 				box->map[i][c] = '1';
+			if (box->map[i][c] == DOOR + 1 + '0')
+				sprite_append(box, i, c, DOOR);
 			if (box->map[i][c] == 'N')
 			{
 				box->info.pos_x = i;

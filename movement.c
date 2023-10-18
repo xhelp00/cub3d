@@ -12,6 +12,35 @@
 
 #include "cub3d.h"
 
+void	action_door(t_box *box)
+{
+	t_sprite	*s;
+
+	s = box->sprites;
+	while (s)
+	{
+		if (s->data->texture == DOOR && s->data->dist < 1 && !s->data->opening)
+		{
+			s->data->opening = 1;
+			if (s->data->state == CLOSE)
+			{
+				s->data->state = OPEN;
+				s->data->opening = 1;
+				gettimeofday(&s->data->action_time, NULL);
+				printf("OPENING DOOR\n");
+			}
+			else if (s->data->state == OPEN)
+			{
+				s->data->state = CLOSE;
+				gettimeofday(&s->data->action_time, NULL);
+				printf("CLOSING DOOR\n");
+			}
+
+		}
+		s = s->next;
+	}
+}
+
 void	cal_move(t_box *box)
 {
 	box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
