@@ -283,8 +283,8 @@ void	cal_sprite_move(t_box *box)
 					break;
 				}
 			}
-			else if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '1'
-					|| box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] == '1')
+			else if (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] > '0'
+					|| box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] > '0')
 			{
 				sprite_hit(box, sprites, NULL);
 				break;
@@ -309,8 +309,8 @@ void	cal_sprite_move(t_box *box)
 							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture < TEAR
 							&& obj->data->hit == 0)
 						{
-						sprite_hit(box, sprites, obj);
-						break;
+							sprite_hit(box, sprites, obj);
+							break;
 						}
 					obj = obj->next;
 				}

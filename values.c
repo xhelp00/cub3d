@@ -80,6 +80,7 @@ void	init_vals(t_box *box)
 	box->info.up_down = 0;
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
+	box->info.door = 0;
 	box->mouse.xdistance = 0;
 	box->mouse.ydistance = 0;
 	box->mouse.x = 0;
@@ -118,6 +119,12 @@ void	reset_vals(t_box *box)
 	box->info.hit = 0;
 	box->info.text_num = 0;
 	box->info.color = 0;
+	box->info.door = 0;
+	box->info.door_x = 0;
+	box->info.door_y = 0;
+	box->info.door_dist_x = 0;
+	box->info.door_dist_y = 0;
+	box->info.door_side = 0;
 	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 }
 
