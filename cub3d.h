@@ -165,6 +165,9 @@ typedef struct s_image
 # define IDLE 0
 # define AWAKE 1
 
+# define CLOSE 0
+# define OPEN 1
+
 # define UP 0
 # define DOWN 1
 # define LEFT 2
@@ -190,6 +193,8 @@ typedef struct s_data
 	int				seg;
 	int				hit;
 	struct timeval	hit_time;
+	int				opening;
+	struct timeval	action_time;
 }				t_sprite_data;
 
 //Texture numbers
@@ -313,6 +318,7 @@ void		parser(t_box *box, int fd);
 void		sprite_append(t_box *box, float x, float y, int texture);
 void		sprite_remove(t_box *box, t_sprite *to_rem);
 t_sprite	*find_seg(t_box *box, int seg);
+t_sprite	*find_door(t_box *box, int x, int y);
 
 //Items.c
 void		item_append(t_box *box, t_sprite *sprite);
@@ -360,6 +366,7 @@ void		single_square_test(t_box *box);
 //Movement.c
 void		cal_move(t_box *box);
 void		cal_sprite_move(t_box *box);
+void		action_door(t_box *box);
 
 //Main.c
 int			count_sprites(t_box *box);

@@ -18,6 +18,8 @@ int	mouse_press(int keycode, int x, int y, t_box *box)
 	(void)y;
 	if (keycode == 1)
 		box->player.cry = 1;
+	if (keycode == 3)
+		action_door(box);
 	return (0);
 }
 
