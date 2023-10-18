@@ -40,7 +40,6 @@ t_sprite	*new_sprite(void)
 	new->data->sound = 0;
 	new->data->id = 0;
 	new->data->opening = 0;
-	new->data->id = 0;
 	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;

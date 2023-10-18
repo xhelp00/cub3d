@@ -87,47 +87,26 @@ void	cast_floor(t_box *box)
 
 void	draw_door(t_box *box, int x)
 {
+	t_sprite	*door;
 
-	int	x;
-	//t_line	line;
-	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
-
-	x = -1;
-	while (++x < SCREENWIDTH)
-	{
-		reset_vals(box);
-		box->info.camera_x = 2 * x / (double)SCREENWIDTH - 1;
-		box->info.ray_dir_x = box->info.dir_x + box->info.plane_x * box->info.camera_x;
-		box->info.ray_dir_y = box->info.dir_y + box->info.plane_y * box->info.camera_x;
-		box->info.map_x = (int)box->info.pos_x;
-		box->info.map_y = (int)box->info.pos_y;
-		box->info.delta_dist_x = fabs(1 / box->info.ray_dir_x);
-		box->info.delta_dist_y = fabs(1 / box->info.ray_dir_y);
-
-
-
-		if (box->info.ray_dir_x < 0)
-		{
-			box->info.step_x = -1;
-			box->info.side_dist_x = (box->info.pos_x - box->info.map_x) * box->info.delta_dist_x;
-		}
-		else
-			box->info.prep_wall_dist = (box->info.door_dist_y - box->info.delta_dist_y);
-		box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
-		box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
-		if (box->info.draw_start < 0)
-			box->info.draw_start = 0;
-		box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
-		if (box->info.draw_end >= SCREENHEIGHT)
-			box->info.draw_end = SCREENHEIGHT - 1;
-
-		box->info.text_num = box->map[box->info.door_x][box->info.door_y] - 1 - '0';
-		if (!box->info.door_side)
-			box->info.wall_x = box->info.pos_y + box->info.prep_wall_dist * box->info.ray_dir_y;
-		else
-			box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
-		box->info.wall_x -= floor((box->info.wall_x));
-
+	door = find_door(box, box->info.door_x, box->info.door_y);
+	if (!box->info.door_side)
+		box->info.prep_wall_dist = (box->info.door_dist_x - box->info.delta_dist_x);
+	else
+		box->info.prep_wall_dist = (box->info.door_dist_y - box->info.delta_dist_y);
+	box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
+	box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
+	if (box->info.draw_start < 0)
+		box->info.draw_start = 0;
+	box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
+	if (box->info.draw_end >= SCREENHEIGHT)
+		box->info.draw_end = SCREENHEIGHT - 1;
+	box->info.text_num = box->map[box->info.door_x][box->info.door_y] - 1 - '0';
+	if (!box->info.door_side)
+		box->info.wall_x = box->info.pos_y + box->info.prep_wall_dist * box->info.ray_dir_y;
+	else
+		box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
+	box->info.wall_x -= floor((box->info.wall_x));
 		box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
 		if (!box->info.door_side && box->info.ray_dir_x > 0)
 			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
@@ -151,7 +130,6 @@ void	draw_door(t_box *box, int x)
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
 		//printf("%i: %f\n", x, box->info.zbuffer[x]);
-	}
 }
 
 void	cast_wall(t_box *box)
