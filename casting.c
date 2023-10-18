@@ -188,15 +188,6 @@ void	cast_wall(t_box *box)
 			}
 			if (box->map[box->info.map_x][box->info.map_y] > '0' && box->map[box->info.map_x][box->info.map_y] != DOOR + 1 + '0')
 				box->info.hit = 1;
-			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door && !(find_door(box, box->info.map_x, box->info.map_y)->data->state == OPEN && !find_door(box, box->info.map_x, box->info.map_y)->data->opening))
-			{
-				box->info.door_side = box->info.side;
-				box->info.door = 1;
-				box->info.door_x = box->info.map_x;
-				box->info.door_y = box->info.map_y;
-				box->info.door_dist_x = box->info.side_dist_x;
-				box->info.door_dist_y = box->info.side_dist_y;
-			}
 		}
 		if (!box->info.side)
 			box->info.prep_wall_dist = (box->info.side_dist_x - box->info.delta_dist_x);
@@ -294,18 +285,13 @@ void	cast_door(t_box *box)
 		{
 			if (box->info.side_dist_x < box->info.side_dist_y)
 			{
-				box->info.side_dist_x += box->info.delta_dist_x;
-				box->info.map_x += box->info.step_x;
-				box->info.side = 0;
+				box->info.door_side = box->info.side;
+				box->info.door = 1;
+				box->info.door_x = box->info.map_x;
+				box->info.door_y = box->info.map_y;
+				box->info.door_dist_x = box->info.side_dist_x;
+				box->info.door_dist_y = box->info.side_dist_y;
 			}
-			else
-			{
-				box->info.side_dist_y += box->info.delta_dist_y;
-				box->info.map_y += box->info.step_y;
-				box->info.side = 1;
-			}
-			if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0')
-				box->info.hit = 1;
 		}
 		if (!box->info.side)
 			box->info.prep_wall_dist = (box->info.side_dist_x - box->info.delta_dist_x);
@@ -340,11 +326,11 @@ void	cast_door(t_box *box)
 		{
 			box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
 			box->info.tex_pos += box->info.step;
-				box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
-				if (box->info.side)
-					box->info.color = (box->info.color >> 1) & 8355711;
-				apply_fog(box, box->info.prep_wall_dist * 9);
-				my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
+			box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			if (box->info.side)
+				box->info.color = (box->info.color >> 1) & 8355711;
+			apply_fog(box, box->info.prep_wall_dist * 9);
+			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
 		if (box->info.door)
