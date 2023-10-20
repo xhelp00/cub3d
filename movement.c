@@ -22,6 +22,7 @@ void	action_door(t_box *box)
 		if (s->data->texture == DOOR && s->data->dist < 1 && !s->data->opening)
 		{
 			s->data->opening = 1;
+			box->p = music(box->env, "sounds/door.mp3");
 			gettimeofday(&s->data->action_time, NULL);
 		}
 		s = s->next;
