@@ -107,7 +107,7 @@ void	draw_door(t_box *box, int x)
 	else
 		box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
 	box->info.wall_x -= floor((box->info.wall_x));
-		box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
+	box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
 	if (!box->info.door_side && box->info.ray_dir_x > 0)
 		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
 	if (box->info.door_side && box->info.ray_dir_y < 0)
@@ -119,7 +119,16 @@ void	draw_door(t_box *box, int x)
 	{
 		box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
 		box->info.tex_pos += box->info.step;
-		box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+		// printf("DOOR OPENING: %i | DOOR STATE %i\n", door->data->opening, door->data->state);
+		if (!door->data->opening)
+				box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+		else if (door->data->opening)
+		{
+			if (door->data->state == CLOSE)
+				box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			else
+				box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x + door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+		}
 		if ((box->info.color & 0x00FFFFFF) != 0)
 		{
 			apply_fog(box, box->info.prep_wall_dist * 9);
@@ -185,7 +194,7 @@ void	cast_wall(t_box *box)
 			}
 			if (box->map[box->info.map_x][box->info.map_y] > '0' && box->map[box->info.map_x][box->info.map_y] != DOOR + 1 + '0')
 				box->info.hit = 1;
-			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door)
+			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door && !(find_door(box, box->info.map_x, box->info.map_y)->data->state == OPEN && !find_door(box, box->info.map_x, box->info.map_y)->data->opening))
 			{
 				box->info.door_side = box->info.side;
 				box->info.door = 1;
