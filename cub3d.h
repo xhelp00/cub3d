@@ -194,7 +194,7 @@ typedef struct s_sprite_data
 	int				opening;
 	struct timeval	action_time;
 	int				sound;
-}				t_data;
+}				t_sprite_data;
 
 //Texture numbers
 # define DOOR 2
@@ -316,6 +316,7 @@ void		parser(t_box *box, int fd);
 void		sprite_append(t_box *box, float x, float y, int texture);
 void		sprite_remove(t_box *box, t_sprite *to_rem);
 t_sprite	*find_seg(t_box *box, int seg);
+t_sprite	*find_door(t_box *box, int x, int y);
 
 //Items.c
 void		item_append(t_box *box, t_sprite *sprite);

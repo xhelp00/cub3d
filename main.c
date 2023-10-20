@@ -231,46 +231,46 @@ int	main(int argc, char **argv, char **env)
 
 //***testing stuff below to be removed***s//
 
-void print_map_contents(t_box *box)
-{
-    for (int i = 0; i < box->map_height; i++)
-    {
-        for (int j = 0; j < box->map_width; j++)
-        {
-            printf("%c ", box->map[i][j]);
-        }
-        printf("\n");
-    }
-}
+// void print_map_contents(t_box *box)
+// {
+//     for (int i = 0; i < box->map_height; i++)
+//     {
+//         for (int j = 0; j < box->map_width; j++)
+//         {
+//             printf("%c ", box->map[i][j]);
+//         }
+//         printf("\n");
+//     }
+// }
 
-void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color)
-{
-    int x, y;
-    for (y = 0; y < height; y++)
-    {
-        for (x = 0; x < width; x++)
-        {
-            int pixel_pos = y * width + x;
-            buffer[pixel_pos * 4] = color & 0xFF;            // Blue channel
-            buffer[pixel_pos * 4 + 1] = (color >> 8) & 0xFF;  // Green channel
-            buffer[pixel_pos * 4 + 2] = (color >> 16) & 0xFF; // Red channel
-            buffer[pixel_pos * 4 + 3] = (color >> 24) & 0xFF; // Alpha channel
-        }
-    }
-}
+// void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color)
+// {
+//     int x, y;
+//     for (y = 0; y < height; y++)
+//     {
+//         for (x = 0; x < width; x++)
+//         {
+//             int pixel_pos = y * width + x;
+//             buffer[pixel_pos * 4] = color & 0xFF;            // Blue channel
+//             buffer[pixel_pos * 4 + 1] = (color >> 8) & 0xFF;  // Green channel
+//             buffer[pixel_pos * 4 + 2] = (color >> 16) & 0xFF; // Red channel
+//             buffer[pixel_pos * 4 + 3] = (color >> 24) & 0xFF; // Alpha channel
+//         }
+//     }
+// }
 
-void single_square_test(t_box *box) {
-    t_rect rect;
+// void single_square_test(t_box *box) {
+//     t_rect rect;
 
-    char grid_item = box->map[0][0];  // Just picking the top-left item as a test
+//     char grid_item = box->map[0][0];  // Just picking the top-left item as a test
 
-    rect.x = 300;
-    rect.y = 400;
-    rect.width = 20;
-    rect.height = 20;
-    rect.border_color = 0x0014213d;
-    rect.border_width = 0;
-    rect.fill_color = get_fill_color(grid_item);
-    printf("Calling single_square_test\n");
-    draw_rect(&rect, box);
-}
+//     rect.x = 300;
+//     rect.y = 400;
+//     rect.width = 20;
+//     rect.height = 20;
+//     rect.border_color = 0x0014213d;
+//     rect.border_width = 0;
+//     rect.fill_color = get_fill_color(grid_item);
+//     printf("Calling single_square_test\n");
+//     draw_rect(&rect, box);
+// }

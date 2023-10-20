@@ -335,6 +335,7 @@ void	cal_sprite_move(t_box *box)
 
 		if (sprites->data->texture == TEAR)
 		{
+			// printf("%c | %i | %i\n", box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)], (int)sprites->data->x, (int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed));
 			if (sprites->data->hit)
 			{
 				sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
@@ -346,11 +347,17 @@ void	cal_sprite_move(t_box *box)
 				}
 			}
 			else if ((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] > '0'
-					&& (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-					&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state != OPEN))
+					&& box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] != '0' + DOOR + 1)
 					|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] > '0'
-					&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] != '0' + DOOR + 1
-					&& find_door(box, (int)sprites->data->x, (int)sprites->data->y + sprites->data->dir_y * box->info.move_speed)->data->state != OPEN))
+					&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] != '0' + DOOR + 1))
+			{
+				sprite_hit(box, sprites, NULL);
+				break;
+			}
+			else if ((find_door(box, (int)sprites->data->x, (int)sprites->data->y + sprites->data->dir_y * box->info.move_speed)
+					&& find_door(box, (int)sprites->data->x, (int)sprites->data->y + sprites->data->dir_y * box->info.move_speed)->data->state != OPEN)
+					|| (find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)
+					&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state != OPEN))
 			{
 				sprite_hit(box, sprites, NULL);
 				break;
