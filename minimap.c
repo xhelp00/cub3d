@@ -61,6 +61,8 @@ int		get_fill_color(char grid_item)
 
 	if (grid_item == '0')
 		color = 0x00757575;
+	else if (grid_item == '3')
+		color = 0x00939D;
 	else
 		color = 0x0014213d;
 	return (color);
