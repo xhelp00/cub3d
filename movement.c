@@ -23,10 +23,6 @@ void	action_door(t_box *box)
 		{
 			s->data->opening = 1;
 			gettimeofday(&s->data->action_time, NULL);
-			if (s->data->state == CLOSE)
-				printf("OPENING DOOR\n");
-			else if (s->data->state == OPEN)
-				printf("CLOSING DOOR\n");
 		}
 		s = s->next;
 	}
@@ -34,8 +30,7 @@ void	action_door(t_box *box)
 
 void	cal_move(t_box *box)
 {
-	// box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
-	box->mouse.x = SCREENWIDTH / 2;
+	box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
 	if (box->mouse.xdistance < 0)
 		box->mouse.xdistance *= -1;
 	else if (box->mouse.xdistance == 0)
@@ -113,8 +108,7 @@ void	cal_move(t_box *box)
 			box->info.pos_y += box->info.dir_x * box->info.move_speed;
 	}
 
-	// box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
-	box->mouse.y = SCREENHEIGHT / 2;
+	box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
 	if (box->mouse.ydistance < 0)
 		box->mouse.ydistance *= -1;
 	if (box->info.up_down == 1 || box->mouse.y < SCREENHEIGHT / 2)
@@ -198,7 +192,7 @@ void	cal_sprite_move(t_box *box)
 	// sprites = box->sprites;
 	// while (sprites)
 	// {
-	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
+	// 	printf("Texture: %i | x: %f | y: %f | dir_x: %f | dir_y: %f | state: %i | frame: %i | hit: %i | seg: %i | n_seg %i\n", sprites->data->texture, sprites->data->x, sprites->data->y, sprites->data->dir_x, sprites->data->dir_y, sprites->data->state, sprites->data->frame, sprites->data->hit, sprites->data->seg, sprites->data->n_seg);
 	// 	sprites = sprites->next;
 	// }
 
@@ -370,19 +364,13 @@ void	cal_sprite_move(t_box *box)
 			if (sprites->data->opening)
 			{
 				sprites->data->frame = ((((box->time.tv_sec - sprites->data->action_time.tv_sec) + ((box->time.tv_usec - sprites->data->action_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-				if (sprites->data->frame > 30)
+				if (sprites->data->frame > 32)
 				{
 					sprites->data->opening = 0;
 					if (sprites->data->state == CLOSE)
-					{
 						sprites->data->state = OPEN;
-						printf("DOOR IS OPEN\n");
-					}
 					else if (sprites->data->state == OPEN)
-					{
 						sprites->data->state = CLOSE;
-						printf("DOOR IS CLOSED\n");
-					}
 				}
 			}
 		}
