@@ -37,6 +37,7 @@ t_sprite	*new_sprite(void)
 	new->data->start_n_seg = 0;
 	new->data->seg = 0;
 	new->data->hit = 0;
+	new->data->sound = 0;
 	new->data->id = 0;
 	new->data->opening = 0;
 	new->data->state = IDLE;

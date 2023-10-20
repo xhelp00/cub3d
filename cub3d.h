@@ -50,8 +50,6 @@ typedef struct s_ray
 
 typedef struct s_info
 {
-	int		angry; //if close to BABY
-	int 	sound; //tracking if played sound
 	int		move_y;
 	int		move_x;
 	int		rotate;
@@ -195,6 +193,7 @@ typedef struct s_data
 	struct timeval	hit_time;
 	int				opening;
 	struct timeval	action_time;
+	int				sound;
 }				t_sprite_data;
 
 //Texture numbers

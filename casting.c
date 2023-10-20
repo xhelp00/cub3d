@@ -381,8 +381,11 @@ void	cast_obj(t_box *box)
 							{
 								sprites->data->state = AWAKE;
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
-								if (!box->info.sound)
-									box->info.angry = 1; //not sure if this is good place to check distance - probably not
+								if (!sprites->data->sound)
+								{
+									sprites->data->sound = 1;
+									box->p = music(box->env, "sounds/angry.mp3"); //not sure if this is good place to check distance - probably not
+								}
 							}
 							else
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
