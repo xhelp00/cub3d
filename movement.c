@@ -278,7 +278,10 @@ void	cal_sprite_move(t_box *box)
 			{
 				box->player.hit = 1;
 				if (box->god == 0)
+				{
 				box->player.hp -= 1;
+				box->p = music(box->env, "sounds/ow.mp3");
+				}
 				gettimeofday(&box->player.hit_time, NULL);
 			}
 		}
