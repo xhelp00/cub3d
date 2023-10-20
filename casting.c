@@ -125,9 +125,19 @@ void	draw_door(t_box *box, int x)
 		else if (door->data->opening)
 		{
 			if (door->data->state == CLOSE)
-				box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			{
+				if (box->info.text_x - door->data->frame * 2 < 64 && box->info.text_x - door->data->frame * 2 > 0)
+					box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+				else
+					box->info.color = 0;
+			}
 			else
-				box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x + door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			{
+				if (box->info.text_x + door->data->frame * 2 < 64 && box->info.text_x + door->data->frame * 2 > 0)
+					box->info.color = 0;
+				else
+					box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x + door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			}
 		}
 		if ((box->info.color & 0x00FFFFFF) != 0)
 		{
