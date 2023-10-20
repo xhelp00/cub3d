@@ -188,7 +188,7 @@ void	cast_wall(t_box *box)
 			}
 			if (box->map[box->info.map_x][box->info.map_y] > '0' && box->map[box->info.map_x][box->info.map_y] != DOOR + 1 + '0')
 				box->info.hit = 1;
-			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door)
+			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door && !(find_door(box, box->info.map_x, box->info.map_y)->data->state == OPEN && !find_door(box, box->info.map_x, box->info.map_y)->data->opening))
 			{
 				box->info.door_side = box->info.side;
 				box->info.door = 1;
