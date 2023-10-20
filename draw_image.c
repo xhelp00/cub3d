@@ -56,7 +56,7 @@ void	draw_hud(t_box *box)
 	int		y;
 	int		i;
 
-	
+
 	y = -1;
 	while (++y < SCREENHEIGHT)
 	{
@@ -125,7 +125,7 @@ void	redraw(t_box *box)
 	drawMinimap(box);
 	draw_hud(box);
 	//single_square_test(box);
-	
+
 	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 
 	fps = ft_itoa(1.0 / box->info.frame_time);

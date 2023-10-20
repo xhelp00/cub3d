@@ -39,7 +39,7 @@ void	draw_map(t_box *box)
 			rect.height = 10;
 			rect.border_color = 0x0014213d;
 			rect.border_width = 0;
-			rect.fill_color = get_fill_color(grid_item);
+			rect.fill_color = get_fill_color(grid_item, box, i, j);
 			draw_rect(&rect, box);
 		}
 	}
@@ -55,12 +55,17 @@ void	draw_player(t_box *box)
 	draw_rect(&rect, box);
 }
 
-int		get_fill_color(char grid_item)
+int		get_fill_color(char grid_item, t_box *box, int i, int j)
 {
 	int	color;
 
 	if (grid_item == '0')
 		color = 0x00757575;
+	else if (grid_item == '3')
+		if (find_door(box, i, j)->data->state)
+			color = 0x00939D;
+		else
+			color = 0x00666d;
 	else
 		color = 0x0014213d;
 	return (color);

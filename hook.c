@@ -18,6 +18,8 @@ int	mouse_press(int keycode, int x, int y, t_box *box)
 	(void)y;
 	if (keycode == 1)
 		box->player.cry = 1;
+	if (keycode == 3)
+		action_door(box);
 	return (0);
 }
 
@@ -58,7 +60,7 @@ int	key_press(int key, t_box *box)
 		box->info.pos_z = 200;
 	if (key == 65507)
 		box->info.pos_z = -200;
-	
+
 	//IDDQD for god mode
 	if (key >= 'a' && key <= 'z')  // Assuming ASCII values
 	{

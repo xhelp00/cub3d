@@ -28,7 +28,7 @@ void	init_textures(t_box *box)
 		box->textures[i].img = 0;
 	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
 	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
-	box->textures[2].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
+	box->textures[DOOR].img = mlx_xpm_file_to_image(box->mlx, "textures/bars.xpm", &k, &j);
 	box->textures[BABY].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
 	box->textures[NERVE_ENDING].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
 	box->textures[LEECH].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
@@ -78,6 +78,7 @@ void	init_vals(t_box *box)
 	box->info.up_down = 0;
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
+	box->info.door = 0;
 	box->mouse.xdistance = 0;
 	box->mouse.ydistance = 0;
 	box->mouse.x = 0;
@@ -100,7 +101,6 @@ void	init_vals(t_box *box)
 	box->player.hit = 0;
 	box->god = 0;
 	gettimeofday(&box->player.last_tear, NULL);
-	box->info.angry = 0;
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
 }
@@ -115,6 +115,12 @@ void	reset_vals(t_box *box)
 	box->info.hit = 0;
 	box->info.text_num = 0;
 	box->info.color = 0;
+	box->info.door = 0;
+	box->info.door_x = 0;
+	box->info.door_y = 0;
+	box->info.door_dist_x = 0;
+	box->info.door_dist_y = 0;
+	box->info.door_side = 0;
 	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 }
 

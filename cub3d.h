@@ -50,8 +50,6 @@ typedef struct s_ray
 
 typedef struct s_info
 {
-	int		angry; //if close to BABY
-	int 	sound; //tracking if played sound
 	int		move_y;
 	int		move_x;
 	int		rotate;
@@ -144,6 +142,12 @@ typedef struct s_info
 	t_ray		*ray;
 	int		to_destroy;
 	int		flipped;
+	int		door;
+	int		door_x;
+	int		door_y;
+	double	door_dist_x;
+	double	door_dist_y;
+	int		door_side;
 }				t_info;
 
 typedef struct s_image
@@ -158,6 +162,9 @@ typedef struct s_image
 
 # define IDLE 0
 # define AWAKE 1
+
+# define CLOSE 0
+# define OPEN 1
 
 # define UP 0
 # define DOWN 1
@@ -183,9 +190,13 @@ typedef struct s_data
 	int				seg;
 	int				hit;
 	struct timeval	hit_time;
+	int				opening;
+	struct timeval	action_time;
+	int				sound;
 }				t_data;
 
 //Texture numbers
+# define DOOR 2
 # define BABY 10
 # define NERVE_ENDING 11
 # define LEECH 12
@@ -289,6 +300,7 @@ void		parser(t_box *box, int fd);
 void		sprite_append(t_box *box, float x, float y, int texture);
 void		sprite_remove(t_box *box, t_sprite *to_rem);
 t_sprite	*find_seg(t_box *box, int seg);
+t_sprite	*find_door(t_box *box, int x, int y);
 
 //Values.c
 void		init_vals(t_box *box);
@@ -311,7 +323,7 @@ void		cast_obj(t_box *box);
 //Minimap.c
 void		drawMinimap(t_box *box);
 void		draw_map(t_box *box);
-int			get_fill_color(char grid_item);
+int			get_fill_color(char grid_item, t_box *box, int i, int j);
 void		draw_player(t_box *box);
 void		draw_rays(t_box *box);
 
@@ -331,6 +343,7 @@ void		single_square_test(t_box *box);
 //Movement.c
 void		cal_move(t_box *box);
 void		cal_sprite_move(t_box *box);
+void		action_door(t_box *box);
 
 //Main.c
 int			count_sprites(t_box *box);

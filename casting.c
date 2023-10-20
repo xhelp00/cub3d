@@ -85,6 +85,69 @@ void	cast_floor(t_box *box)
 	}
 }
 
+void	draw_door(t_box *box, int x)
+{
+	t_sprite	*door;
+
+	door = find_door(box, box->info.door_x, box->info.door_y);
+	if (!box->info.door_side)
+		box->info.prep_wall_dist = (box->info.door_dist_x - box->info.delta_dist_x);
+	else
+		box->info.prep_wall_dist = (box->info.door_dist_y - box->info.delta_dist_y);
+	box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
+	box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
+	if (box->info.draw_start < 0)
+		box->info.draw_start = 0;
+	box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
+	if (box->info.draw_end >= SCREENHEIGHT)
+		box->info.draw_end = SCREENHEIGHT - 1;
+	box->info.text_num = box->map[box->info.door_x][box->info.door_y] - 1 - '0';
+	if (!box->info.door_side)
+		box->info.wall_x = box->info.pos_y + box->info.prep_wall_dist * box->info.ray_dir_y;
+	else
+		box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
+	box->info.wall_x -= floor((box->info.wall_x));
+	box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
+	if (!box->info.door_side && box->info.ray_dir_x > 0)
+		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
+	if (box->info.door_side && box->info.ray_dir_y < 0)
+		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
+	box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
+	box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
+	box->info.draw = box->info.draw_start;
+	while (box->info.draw++ < box->info.draw_end)
+	{
+		box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
+		box->info.tex_pos += box->info.step;
+		// printf("DOOR OPENING: %i | DOOR STATE %i\n", door->data->opening, door->data->state);
+		if (!door->data->opening)
+				box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+		else if (door->data->opening)
+		{
+			if (door->data->state == CLOSE)
+			{
+				if (box->info.text_x - door->data->frame * 2 < 64 && box->info.text_x - door->data->frame * 2 > 0)
+					box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+				else
+					box->info.color = 0;
+			}
+			else
+			{
+				if (box->info.text_x + door->data->frame * 2 < 64 && box->info.text_x + door->data->frame * 2 > 0)
+					box->info.color = 0;
+				else
+					box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x + door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			}
+		}
+		if ((box->info.color & 0x00FFFFFF) != 0)
+		{
+			apply_fog(box, box->info.prep_wall_dist * 9);
+			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
+		}
+	}
+	box->info.zbuffer[x] = box->info.prep_wall_dist;
+}
+
 void	cast_wall(t_box *box)
 {
 	int	x;
@@ -139,8 +202,17 @@ void	cast_wall(t_box *box)
 				box->info.map_y += box->info.step_y;
 				box->info.side = 1;
 			}
-			if (box->map[box->info.map_x][box->info.map_y] > '0')
+			if (box->map[box->info.map_x][box->info.map_y] > '0' && box->map[box->info.map_x][box->info.map_y] != DOOR + 1 + '0')
 				box->info.hit = 1;
+			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door && !(find_door(box, box->info.map_x, box->info.map_y)->data->state == OPEN && !find_door(box, box->info.map_x, box->info.map_y)->data->opening))
+			{
+				box->info.door_side = box->info.side;
+				box->info.door = 1;
+				box->info.door_x = box->info.map_x;
+				box->info.door_y = box->info.map_y;
+				box->info.door_dist_x = box->info.side_dist_x;
+				box->info.door_dist_y = box->info.side_dist_y;
+			}
 		}
 		if (!box->info.side)
 			box->info.prep_wall_dist = (box->info.side_dist_x - box->info.delta_dist_x);
@@ -182,6 +254,8 @@ void	cast_wall(t_box *box)
 			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
+		if (box->info.door)
+			draw_door(box, x);
 		//printf("%i: %f\n", x, box->info.zbuffer[x]);
 
 		//this part is updating array of rays (their endings)
@@ -307,15 +381,18 @@ void	cast_obj(t_box *box)
 							{
 								sprites->data->state = AWAKE;
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 16]);
-								if (!box->info.sound)
-									box->info.angry = 1; //not sure if this is good place to check distance - probably not
+								if (!sprites->data->sound)
+								{
+									sprites->data->sound = 1;
+									box->p = music(box->env, "sounds/angry.mp3"); //not sure if this is good place to check distance - probably not
+								}
 							}
 							else
 								box->info.color = extract_color(&box->textures[sprites->data->texture].addr[(box->info.tex_x * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -16]);
 						}
 						else
 							box->info.color = 0;
-						
+
 					}
 					else if (sprites->data->texture == NERVE_ENDING)
 					{
