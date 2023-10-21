@@ -35,9 +35,13 @@ void	init_textures(t_box *box)
 	box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
 	box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
 	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
+	box->textures[UI_PICKUPS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_pickups.xpm", &k, &j);
 	box->textures[UI_HEARTS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_hearts.xpm", &k, &j);
 	box->textures[UI_STATS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_stats.xpm", &k, &j);
 	box->textures[ITEMS].img = mlx_xpm_file_to_image(box->mlx, "textures/items.xpm", &k, &j);
+	box->textures[ITEM_ALTAR].img = mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
+	box->textures[KEY].img = mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);
+	box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
@@ -101,6 +105,7 @@ void	init_vals(t_box *box)
 	box->player.hp = 6;
 	box->player.max_hp = 6;
 	box->player.hit = 0;
+	box->player.n_key = 0;
 	box->god = 0;
 	gettimeofday(&box->player.last_tear, NULL);
 	box->input_index = 0;

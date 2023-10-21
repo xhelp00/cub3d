@@ -205,9 +205,13 @@ typedef struct s_sprite_data
 # define LARRY_JR_HEAD 30
 # define LARRY_JR_BODY 31
 # define TEAR 40
+# define KEY 43
+# define UI_PICKUPS 44
 # define UI_HEARTS 45
 # define UI_STATS 46
 # define ITEMS 47
+# define ITEM_ALTAR 48
+# define TROPHY 49
 
 typedef struct s_sprite
 {
@@ -233,6 +237,7 @@ typedef struct s_player
 {
 	int				hp;
 	int				max_hp;
+	int				n_key;
 	int				speed;
 	int				range;
 	int				fire_rate;

@@ -19,8 +19,9 @@ void	action_door(t_box *box)
 	s = box->sprites;
 	while (s)
 	{
-		if (s->data->texture == DOOR && s->data->dist < 1 && !s->data->opening)
+		if (s->data->texture == DOOR && s->data->dist < 1 && !s->data->opening && s->data->state == CLOSE && box->player.n_key > 0)
 		{
+			box->player.n_key--;
 			s->data->opening = 1;
 			box->p = music(box->env, "sounds/door.mp3");
 			gettimeofday(&s->data->action_time, NULL);
@@ -31,7 +32,8 @@ void	action_door(t_box *box)
 
 void	cal_move(t_box *box)
 {
-	box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
+	// box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
+	box->mouse.x = SCREENWIDTH / 2;
 	if (box->mouse.xdistance < 0)
 		box->mouse.xdistance *= -1;
 	else if (box->mouse.xdistance == 0)
@@ -59,57 +61,50 @@ void	cal_move(t_box *box)
 	if (box->info.move_x == 1)
 	{
 		if ((box->map[(int)(box->info.pos_x + box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			|| ((box->map[(int)(box->info.pos_x + box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x + box->info.dir_x * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x + box->info.dir_x * box->info.move_speed), (int)box->info.pos_y)->data->opening))
+			|| (box->map[(int)(box->info.pos_x + box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x + box->info.dir_x * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN))
 			box->info.pos_x += box->info.dir_x * box->info.move_speed;
 		if ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_y * box->info.move_speed)] == '0')
-			|| ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_y * box->info.move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y + box->info.dir_y * box->info.move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y + box->info.dir_y * box->info.move_speed))->data->opening))
+			|| (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_y * box->info.move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y + box->info.dir_y * box->info.move_speed))->data->state == OPEN))
 			box->info.pos_y += box->info.dir_y * box->info.move_speed;
 	}
 	else if (box->info.move_x == -1)
 	{
 		if ((box->map[(int)(box->info.pos_x - box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			|| ((box->map[(int)(box->info.pos_x - box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x - box->info.dir_x * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x - box->info.dir_x * box->info.move_speed), (int)box->info.pos_y)->data->opening))
+			|| (box->map[(int)(box->info.pos_x - box->info.dir_x * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x - box->info.dir_x * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN))
 			box->info.pos_x -= box->info.dir_x * box->info.move_speed;
 		if ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_y * box->info.move_speed)] == '0')
-			|| ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_y * box->info.move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y - box->info.dir_y * box->info.move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y - box->info.dir_y * box->info.move_speed))->data->opening))
+			|| (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_y * box->info.move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y - box->info.dir_y * box->info.move_speed))->data->state == OPEN))
 			box->info.pos_y -= box->info.dir_y * box->info.move_speed;
 	}
 	if (box->info.move_y == 1)
 	{
 		if ((box->map[(int)(box->info.pos_x + box->info.dir_y * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			|| ((box->map[(int)(box->info.pos_x + box->info.dir_y * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x + box->info.dir_y * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x + box->info.dir_y * box->info.move_speed), (int)box->info.pos_y)->data->opening))
+			|| (box->map[(int)(box->info.pos_x + box->info.dir_y * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x + box->info.dir_y * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN))
 			box->info.pos_x += box->info.dir_y * box->info.move_speed;
 		if ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_x * box->info.move_speed)] == '0')
-			|| ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_x * box->info.move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y - box->info.dir_x * box->info.move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y - box->info.dir_x * box->info.move_speed))->data->opening))
+			|| (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y - box->info.dir_x * box->info.move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y - box->info.dir_x * box->info.move_speed))->data->state == OPEN))
 			box->info.pos_y -= box->info.dir_x * box->info.move_speed;
 	}
 	else if (box->info.move_y == -1)
 	{
 		if ((box->map[(int)(box->info.pos_x - box->info.dir_y * box->info.move_speed)][(int)box->info.pos_y] == '0')
-			|| ((box->map[(int)(box->info.pos_x - box->info.dir_y * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x - box->info.dir_y * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x - box->info.dir_y * box->info.move_speed), (int)box->info.pos_y)->data->opening))
+			|| (box->map[(int)(box->info.pos_x - box->info.dir_y * box->info.move_speed)][(int)box->info.pos_y] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x - box->info.dir_y * box->info.move_speed), (int)box->info.pos_y)->data->state == OPEN))
 			box->info.pos_x -= box->info.dir_y * box->info.move_speed;
 		if ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_x * box->info.move_speed)] == '0')
-			|| ((box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_x * box->info.move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y + box->info.dir_x * box->info.move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y + box->info.dir_x * box->info.move_speed))->data->opening))
+			|| (box->map[(int)(box->info.pos_x)][(int)(box->info.pos_y + box->info.dir_x * box->info.move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(box->info.pos_x), (int)(box->info.pos_y + box->info.dir_x * box->info.move_speed))->data->state == OPEN))
 			box->info.pos_y += box->info.dir_x * box->info.move_speed;
 	}
 
-	box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
+	// box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
+	box->mouse.y = SCREENHEIGHT / 2;
 	if (box->mouse.ydistance < 0)
 		box->mouse.ydistance *= -1;
 	if (box->info.up_down == 1 || box->mouse.y < SCREENHEIGHT / 2)
@@ -173,6 +168,8 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 		if (what->data->hp < 1)
 		{
 			box->p = music(box->env, "sounds/die.mp3");
+			if (what->data->texture > DOOR && what->data->texture <= ISAAC)
+				sprite_append(box, what->data->x, what->data->y, KEY);
 			sprite_remove(box, what);
 		}
 	}
@@ -231,13 +228,11 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
 			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| ((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN)
-				&& !find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->opening))
+				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
 				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-				|| ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->opening)))
+				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
 			{
 				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
 				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
@@ -266,13 +261,11 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
 			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| ((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN)
-				&& !find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->opening))
+				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
 				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-				|| ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->opening)))
+				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
 			{
 				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
 				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
@@ -320,13 +313,11 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
 			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| ((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN)
-				&& !find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->opening))
+				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
 				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-				|| ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)
-				&& !find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->opening)))
+				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
 			{
 				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
 				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
@@ -425,6 +416,19 @@ void	cal_sprite_move(t_box *box)
 				break;
 			}
 		}
+		if (sprites->data->texture == KEY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
+		{
+			// KEY SOUND
+			box->player.n_key++;
+			sprite_remove(box, sprites);
+			break;
+		}
+		if (sprites->data->texture == TROPHY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
+		{
+			// WIN SOUND
+			printf("YOU WIN!!!\n");
+			exit_hook(box);
+		}
 		if (sprites->data->texture == DOOR)
 		{
 			if (sprites->data->opening)
@@ -435,8 +439,6 @@ void	cal_sprite_move(t_box *box)
 					sprites->data->opening = 0;
 					if (sprites->data->state == CLOSE)
 						sprites->data->state = OPEN;
-					else if (sprites->data->state == OPEN)
-						sprites->data->state = CLOSE;
 				}
 			}
 		}

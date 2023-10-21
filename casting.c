@@ -121,23 +121,13 @@ void	draw_door(t_box *box, int x)
 		box->info.tex_pos += box->info.step;
 		// printf("DOOR OPENING: %i | DOOR STATE %i\n", door->data->opening, door->data->state);
 		if (!door->data->opening)
-				box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
 		else if (door->data->opening)
 		{
-			if (door->data->state == CLOSE)
-			{
-				if (box->info.text_x - door->data->frame * 2 < 64 && box->info.text_x - door->data->frame * 2 > 0)
-					box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
-				else
-					box->info.color = 0;
-			}
+			if (box->info.text_x - door->data->frame * 2 < 64 && box->info.text_x - door->data->frame * 2 > 0)
+				box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
 			else
-			{
-				if (box->info.text_x + door->data->frame * 2 < 64 && box->info.text_x + door->data->frame * 2 > 0)
-					box->info.color = 0;
-				else
-					box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x + door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
-			}
+				box->info.color = 0;
 		}
 		if ((box->info.color & 0x00FFFFFF) != 0)
 		{
@@ -611,6 +601,20 @@ void	cast_obj(t_box *box)
 					{
 						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 48 && box->info.tex_y > 16)
 							box->info.color = extract_color(&box->textures[ITEMS].addr[((box->info.tex_x - 16 + ((sprites->data->id % 20) * 32)) * 4) + box->textures[ITEMS].line_len * box->info.tex_y + box->textures[ITEMS].line_len * (-16 + (sprites->data->id / 20) * 32)]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == TROPHY)
+					{
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 8)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -8]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == KEY)
+					{
+						if (box->info.tex_x < 32 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 32)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -32]);
 						else
 							box->info.color = 0;
 					}

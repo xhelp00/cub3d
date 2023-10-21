@@ -3,7 +3,7 @@ static char *ui_hearts1697285528[] = {
 /* columns rows colors chars-per-pixel */
 "112 64 46 1 ",
 "  c None",
-". c black",
+". c #0a0a0a",
 "X c gray1",
 "o c #070000",
 "O c #060100",

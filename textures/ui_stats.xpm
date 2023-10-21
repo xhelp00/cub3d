@@ -3,7 +3,7 @@ static char *hudstats21697285528[] = {
 /* columns rows colors chars-per-pixel */
 "64 64 24 1 ",
 "  c None",
-". c black",
+". c #0a0a0a",
 "X c #252525",
 "o c #2B2E38",
 "O c gray21",
