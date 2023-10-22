@@ -31,7 +31,7 @@
 # include <signal.h>
 # include <sys/wait.h>
 
-
+# define MOUSE_CONTROL 1
 # define SCREENWIDTH 1280
 # define SCREENHEIGHT 720
 # define TEXTUREWIDTH 64

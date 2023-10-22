@@ -32,8 +32,10 @@ void	action_door(t_box *box)
 
 void	cal_move(t_box *box)
 {
-	// box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
-	box->mouse.x = SCREENWIDTH / 2;
+	if (MOUSE_CONTROL)
+		box->mouse.xdistance = (box->mouse.x - (SCREENWIDTH / 2));
+	else
+		box->mouse.x = SCREENWIDTH / 2;
 	if (box->mouse.xdistance < 0)
 		box->mouse.xdistance *= -1;
 	else if (box->mouse.xdistance == 0)
@@ -103,8 +105,10 @@ void	cal_move(t_box *box)
 			box->info.pos_y += box->info.dir_x * box->info.move_speed;
 	}
 
-	// box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
-	box->mouse.y = SCREENHEIGHT / 2;
+	if (MOUSE_CONTROL)
+		box->mouse.ydistance = (box->mouse.y - (SCREENHEIGHT / 2));
+	else
+		box->mouse.y = SCREENHEIGHT / 2;
 	if (box->mouse.ydistance < 0)
 		box->mouse.ydistance *= -1;
 	if (box->info.up_down == 1 || box->mouse.y < SCREENHEIGHT / 2)
