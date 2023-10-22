@@ -284,6 +284,7 @@ typedef struct s_box
 	char			input_buffer[6];  // to store "iddqd" + '\0'
 	int				input_index;
 	int 			god;
+	int				hud;
 }				t_box;
 
 //shape rect used for drawing minimap

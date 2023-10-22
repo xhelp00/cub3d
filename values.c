@@ -107,6 +107,7 @@ void	init_vals(t_box *box)
 	box->player.hit = 0;
 	box->player.n_key = 0;
 	box->god = 0;
+	box->hud = 1;
 	gettimeofday(&box->player.last_tear, NULL);
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));

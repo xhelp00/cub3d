@@ -385,6 +385,7 @@ void	cal_sprite_move(t_box *box)
 		}
 		if (sprites->data->texture == ITEMS)
 		{
+			sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
 			if (sprites->data->dist < 0.1)
 			{
 				if (sprites->data->id == 0)

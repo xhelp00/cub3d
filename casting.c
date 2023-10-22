@@ -599,8 +599,11 @@ void	cast_obj(t_box *box)
 					}
 					else if (sprites->data->texture == ITEMS)
 					{
-						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 48 && box->info.tex_y > 16)
-							box->info.color = extract_color(&box->textures[ITEMS].addr[((box->info.tex_x - 16 + ((sprites->data->id % 20) * 32)) * 4) + box->textures[ITEMS].line_len * box->info.tex_y + box->textures[ITEMS].line_len * (-16 + (sprites->data->id / 20) * 32)]);
+						sprites->data->frame = ((int)((box->time.tv_usec / 100000.0) * 4) / 5);
+						if (sprites->data->frame > 4)
+							sprites->data->frame = 8 - sprites->data->frame;
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 48 - 1 * sprites->data->frame && box->info.tex_y > 16 - 1 * sprites->data->frame)
+							box->info.color = extract_color(&box->textures[ITEMS].addr[((box->info.tex_x - 16 + ((sprites->data->id % 20) * 32)) * 4) + box->textures[ITEMS].line_len * box->info.tex_y + box->textures[ITEMS].line_len * ((-16 + sprites->data->frame) + (sprites->data->id / 20) * 32)]);
 						else
 							box->info.color = 0;
 					}
@@ -615,6 +618,13 @@ void	cast_obj(t_box *box)
 					{
 						if (box->info.tex_x < 32 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 32)
 							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -32]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == ITEM_ALTAR)
+					{
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 40)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -40]);
 						else
 							box->info.color = 0;
 					}

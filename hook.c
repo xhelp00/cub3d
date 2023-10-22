@@ -60,6 +60,13 @@ int	key_press(int key, t_box *box)
 		box->info.pos_z = 200;
 	if (key == 65507)
 		box->info.pos_z = -200;
+	if (key == 65477)
+	{
+		if (box->hud)
+			box->hud = 0;
+		else
+			box->hud = 1;
+	}
 
 	//IDDQD for god mode
 	if (key >= 'a' && key <= 'z')  // Assuming ASCII values
@@ -85,7 +92,8 @@ int	key_press(int key, t_box *box)
 			box->input_index--;
 		}
 	}
-	//printf("Key pressed: %c, Current buffer: %s\n", (char)key, box->input_buffer);	s
+	// printf("Key pressed: %c, Current buffer: %s\n", (char)key, box->input_buffer);
+	// printf("Key released: %i\n", key);
 	return (0);
 }
 

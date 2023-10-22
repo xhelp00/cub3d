@@ -302,6 +302,8 @@ void	parser(t_box *box, int fd)
 			}
 			last->data->seg = 0;
 		}
+		else if (last->data->texture == ITEMS)
+			sprite_append(box, x, y, ITEM_ALTAR);
 		// i = -1;
 		// printf("\nDUMP:\n");
 		// while (++i < box->n_sprites)
