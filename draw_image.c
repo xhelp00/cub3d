@@ -12,6 +12,31 @@
 
 #include "cub3d.h"
 
+void fill_screen_red(t_box *box)
+{
+	int x, y;
+	unsigned char alpha = 0x80;
+	unsigned char red_value = 0xFF; 
+	unsigned int *pixel_buffer = (unsigned int *)box->image.addr;
+	y = 0;
+	while (y < SCREENHEIGHT)
+	{
+		x = 0;
+		while (x < SCREENWIDTH)
+		{
+			int index = y * box->image.line_len / 4 + x;
+			unsigned int current_color = pixel_buffer[index];
+			unsigned char current_red = (current_color >> 16) & 0xFF;
+			unsigned char blended_red = (red_value * alpha + current_red * (255 - alpha)) / 255;
+			pixel_buffer[index] = (current_color & 0xFF00FFFF) | (blended_red << 16);
+			x++;
+		}
+		y++;
+	}
+}
+
+
+
 void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 {
 	unsigned char	*pixel;
@@ -147,7 +172,12 @@ void	redraw(t_box *box)
 	//single_square_test(box);
 
 	if (!box->finished)
+	{
+		if (box->player.hit)
+			fill_screen_red(box);
 		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+	}
+
 	else
 	{
 		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
