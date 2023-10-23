@@ -285,6 +285,8 @@ typedef struct s_box
 	int				input_index;
 	int 			god;
 	int				hud;
+	int				finished;
+	struct timeval	fin_time;
 }				t_box;
 
 //shape rect used for drawing minimap

@@ -19,7 +19,7 @@ void	action_door(t_box *box)
 	s = box->sprites;
 	while (s)
 	{
-		if (s->data->texture == DOOR && s->data->dist < 1 && !s->data->opening && s->data->state == CLOSE && box->player.n_key > 0)
+		if (s->data->texture == DOOR && s->data->dist < 2 && !s->data->opening && s->data->state == CLOSE && box->player.n_key > 0)
 		{
 			box->player.n_key--;
 			s->data->opening = 1;
@@ -434,8 +434,9 @@ void	cal_sprite_move(t_box *box)
 			// WIN SOUND
 			printf("YOU WIN!!!\n");
 			box->p = music(box->env, "sounds/fanfare.mp3");
-			usleep(8000000);
-			exit_hook(box);
+			sprite_remove(box, sprites);
+			box->finished = 1;
+			gettimeofday(&box->fin_time, NULL);
 		}
 		if (sprites->data->texture == DOOR)
 		{

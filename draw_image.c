@@ -146,7 +146,15 @@ void	redraw(t_box *box)
 	draw_hud(box);
 	//single_square_test(box);
 
-	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+	if (!box->finished)
+		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+	else
+	{
+		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[LEECH].img, 0, 0);
+		if (box->player.frame > 100)
+			exit_hook(box);
+	}
 
 	nbr = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, nbr);
