@@ -293,6 +293,7 @@ void	cal_sprite_move(t_box *box)
 					{
 						box->lost = 1;
 						printf("YOU ARE DEAD!!!\n");
+						box->p = music(box->env, "sounds/fail.mp3");
 						gettimeofday(&box->fin_time, NULL);
 						break;
 					}

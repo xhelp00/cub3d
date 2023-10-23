@@ -213,6 +213,7 @@ typedef struct s_sprite_data
 # define ITEM_ALTAR 48
 # define TROPHY 49
 # define WIN 42
+# define GRIM 39
 
 typedef struct s_sprite
 {
