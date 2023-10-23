@@ -27,3 +27,5 @@
 ![mouse_right_button](https://github.com/xhelp00/cub3d/assets/111277585/2151ea5c-e38d-4802-9ec4-25686a2ba670) - activate 
 
 ![mouse_left_button](https://github.com/xhelp00/cub3d/assets/111277585/3fff35a5-2d11-43a2-915c-79d02bda4433) - shoot
+
+![f8](https://github.com/xhelp00/cub3d/assets/111277585/077c49a5-cae8-4a75-9825-a127fe8980ba) - show/hide HUD
