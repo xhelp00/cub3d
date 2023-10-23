@@ -286,7 +286,7 @@ void	cal_sprite_move(t_box *box)
 			else if (sprites->data->dist < 0.1)
 			{
 				box->player.hit = 1;
-				if (box->god == 0)
+				if (box->god == 0 && !box->finished)
 				{
 				box->player.hp -= 1;
 				box->p = music(box->env, "sounds/ow.mp3");
