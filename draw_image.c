@@ -16,7 +16,7 @@ void fill_screen_red(t_box *box)
 {
 	int x, y;
 	unsigned char alpha = 0x80;
-	unsigned char red_value = 0xFF; 
+	unsigned char red_value = 0xFF;
 	unsigned int *pixel_buffer = (unsigned int *)box->image.addr;
 	y = 0;
 	while (y < SCREENHEIGHT)
@@ -190,7 +190,7 @@ void	redraw(t_box *box)
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, nbr);
 	if (box->hud)
 	{
-		nbr = ft_itoa(box->player.speed);
+		nbr = (free(nbr), ft_itoa(box->player.speed));
 		mlx_string_put(box->mlx, box->win, 65, 203, 0x00FFFFFF, nbr);
 		nbr = (free(nbr), ft_itoa(box->player.range));
 		mlx_string_put(box->mlx, box->win, 65, 245, 0x00FFFFFF, nbr);
