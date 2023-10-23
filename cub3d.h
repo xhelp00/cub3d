@@ -286,7 +286,8 @@ typedef struct s_box
 	int				input_index;
 	int 			god;
 	int				hud;
-	int				finished;
+	int				lost;
+	int				won;
 	struct timeval	fin_time;
 }				t_box;
 

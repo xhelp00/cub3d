@@ -151,11 +151,6 @@ int	timer(t_box *box)
 {
 	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	if (box->player.hp < 1)
-	{
-		printf("YOU ARE DEAD!!!\n");
-		exit_hook(box);
-	}
 	/* while (box->info.angry && !box->info.sound)
 	{
 		printf("YOU ARE DEAD!!!\n");

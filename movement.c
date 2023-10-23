@@ -286,10 +286,17 @@ void	cal_sprite_move(t_box *box)
 			else if (sprites->data->dist < 0.1)
 			{
 				box->player.hit = 1;
-				if (box->god == 0 && !box->finished)
+				if (box->god == 0 && !box->won && !box->lost)
 				{
-				box->player.hp -= 1;
-				box->p = music(box->env, "sounds/ow.mp3");
+					box->player.hp -= 1;
+					if (box->player.hp < 1)
+					{
+						box->lost = 1;
+						printf("YOU ARE DEAD!!!\n");
+						gettimeofday(&box->fin_time, NULL);
+						break;
+					}
+					box->p = music(box->env, "sounds/ow.mp3");
 				}
 				gettimeofday(&box->player.hit_time, NULL);
 			}
@@ -433,7 +440,7 @@ void	cal_sprite_move(t_box *box)
 			printf("YOU WIN!!!\n");
 			box->p = music(box->env, "sounds/fanfare.mp3");
 			sprite_remove(box, sprites);
-			box->finished = 1;
+			box->won = 1;
 			gettimeofday(&box->fin_time, NULL);
 			break;
 		}
