@@ -425,6 +425,7 @@ void	cal_sprite_move(t_box *box)
 		{
 			// KEY SOUND
 			box->player.n_key++;
+			box->p = music(box->env, "sounds/key.mp3");
 			sprite_remove(box, sprites);
 			break;
 		}
@@ -432,6 +433,8 @@ void	cal_sprite_move(t_box *box)
 		{
 			// WIN SOUND
 			printf("YOU WIN!!!\n");
+			box->p = music(box->env, "sounds/fanfare.mp3");
+			usleep(8000000);
 			exit_hook(box);
 		}
 		if (sprites->data->texture == DOOR)
