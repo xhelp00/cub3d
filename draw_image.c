@@ -151,7 +151,7 @@ void	redraw(t_box *box)
 	else
 	{
 		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[LEECH].img, 0, 0);
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[WIN].img, 320, 40);
 		if (box->player.frame > 100)
 			exit_hook(box);
 	}

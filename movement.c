@@ -423,7 +423,6 @@ void	cal_sprite_move(t_box *box)
 		}
 		if (sprites->data->texture == KEY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
 		{
-			// KEY SOUND
 			box->player.n_key++;
 			box->p = music(box->env, "sounds/key.mp3");
 			sprite_remove(box, sprites);
@@ -431,12 +430,12 @@ void	cal_sprite_move(t_box *box)
 		}
 		if (sprites->data->texture == TROPHY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
 		{
-			// WIN SOUND
 			printf("YOU WIN!!!\n");
 			box->p = music(box->env, "sounds/fanfare.mp3");
 			sprite_remove(box, sprites);
 			box->finished = 1;
 			gettimeofday(&box->fin_time, NULL);
+			break;
 		}
 		if (sprites->data->texture == DOOR)
 		{

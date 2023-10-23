@@ -42,6 +42,7 @@ void	init_textures(t_box *box)
 	box->textures[ITEM_ALTAR].img = mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
 	box->textures[KEY].img = mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);
 	box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
+	box->textures[WIN].img = mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
 	i = -1;
 	while (++i < 50)
 	{
