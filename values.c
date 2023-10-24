@@ -27,7 +27,8 @@ void	init_textures(t_box *box)
 	while (++i < 50)
 		box->textures[i].img = 0;
 	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
-	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
+	//box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
+	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/blackhole.xpm", &k, &j);
 	box->textures[DOOR].img = mlx_xpm_file_to_image(box->mlx, "textures/bars.xpm", &k, &j);
 	box->textures[BABY].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
 	box->textures[NERVE_ENDING].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);

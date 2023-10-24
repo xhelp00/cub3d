@@ -36,10 +36,11 @@ void	menu(t_box *box)
 		printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
 		printf("                                                     \n");
 		printf("Terminal Menu:\n");
-		printf("1. Choose map 1\n");
-		printf("2. Choose map 2\n");
-		printf("3. Exit\n");
-		printf("4. Toggle Music On/Off\n");
+		printf("1. Choose map hell\n");
+		printf("2. Choose map arena\n");
+		printf("3. Choose map exampleTexture\n");
+		printf("4. Exit\n");
+		printf("5. Toggle Music On/Off\n");
         printf("Enter your choice (1-4): ");
 
         if (scanf("%d", &choice) != 1)
@@ -52,16 +53,19 @@ void	menu(t_box *box)
         switch(choice)
         {
             case 1:
+                box->map_filename = "maps/hell.cub";
+                return;
+			case 2:
                 box->map_filename = "maps/arena.cub";
                 return;
-            case 2:
+            case 3:
                 box->map_filename = "maps/exampleTexture.cub";
                 return;
-            case 3:
+            case 4:
                 printf("Exiting...\n");
                 exit(0);
                 break;
-            case 4:
+            case 5:
                 if (box->music)
                 {
                     // Stop the music. You need a function to handle this.
