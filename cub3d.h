@@ -290,6 +290,7 @@ typedef struct s_box
 	int				lost;
 	int				won;
 	struct timeval	fin_time;
+	int				exit_menu;
 }				t_box;
 
 //shape rect used for drawing minimap
