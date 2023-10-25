@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-void	process_choice(int choice, t_box *box)
+void	set_map_filename(int choice, t_box *box)
 {
 	if (choice == 1)
 		box->map_filename = "maps/hell.cub";
@@ -20,7 +20,13 @@ void	process_choice(int choice, t_box *box)
 		box->map_filename = "maps/arena.cub";
 	else if (choice == 3)
 		box->map_filename = "maps/exampleTexture.cub";
-	else if (choice == 4)
+	else if (choice > 3 && choice < 5)
+		printf("Invalid map choice. Please select a valid map number.\n");
+}
+
+void	handle_other_choices(int choice, t_box *box)
+{
+	if (choice == 4)
 	{
 		printf("Exiting...\n");
 		box->exit_menu = 1;
@@ -39,44 +45,67 @@ void	process_choice(int choice, t_box *box)
 			printf("Music turned on.\n");
 		}
 	}
-	else
+	else if (choice > 5)
 		printf("Invalid choice. Please enter a number between 1 and 5.\n");
+}
+
+void	process_choice(int choice, t_box *box)
+{
+	if (choice >= 1 && choice <= 3)
+		set_map_filename(choice, box);
+	else
+		handle_other_choices(choice, box);
+}
+
+void	print_menu(void)
+{
+	printf("                                                     \n");
+	printf("                       _|         _|_|_|     _|_|_|  \n");
+	printf("   _|_|_|   _|    _|   _|_|_|           _|   _|    _|\n");
+	printf(" _|         _|    _|   _|    _|     _|_|     _|    _|\n");
+	printf(" _|         _|    _|   _|    _|         _|   _|    _|\n");
+	printf("   _|_|_|     _|_|_|   _|_|_|     _|_|_|     _|_|_|  \n");
+	printf("                                                     \n");
+	printf("    42 project presented by jbartosi & phelebra      \n");
+	printf("                                                     \n");
+	printf("        ██╗███████╗ █████╗  █████╗  ██████╗          \n");
+	printf("        ██║██╔════╝██╔══██╗██╔══██╗██╔════╝          \n");
+	printf("        ██║███████╗███████║███████║██║               \n");
+	printf("        ██║╚════██║██╔══██║██╔══██║██║               \n");
+	printf("        ██║███████║██║  ██║██║  ██║╚██████╗          \n");
+	printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
+	printf("                                                     \n");
+	printf("Terminal Menu:\n");
+	printf("1. Choose map hell\n");
+	printf("2. Choose map arena\n");
+	printf("3. Choose map exampleTexture\n");
+	printf("4. Exit\n");
+	printf("5. Toggle Music On/Off\n");
+	printf("Enter your choice (1-5): ");
+}
+
+int	get_user_input(t_box *box)
+{
+	int	choice;
+
+	if (scanf("%d", &choice) != 1)
+	{
+		while (getchar() != '\n')
+			continue ;
+	}
+	process_choice(choice, box);
+	return (choice);
 }
 
 void	menu(t_box *box)
 {
-	int		choice;
+	int	choice;
 
+	choice = 0;
 	while (!box->map_filename && !box->exit_menu)
 	{
-		printf("                                                     \n");
-		printf("                       _|         _|_|_|     _|_|_|  \n");
-		printf("   _|_|_|   _|    _|   _|_|_|           _|   _|    _|\n");
-		printf(" _|         _|    _|   _|    _|     _|_|     _|    _|\n");
-		printf(" _|         _|    _|   _|    _|         _|   _|    _|\n");
-		printf("   _|_|_|     _|_|_|   _|_|_|     _|_|_|     _|_|_|  \n");
-		printf("                                                     \n");
-		printf("    42 project presented by jbartosi & phelebra      \n");
-		printf("                                                     \n");
-		printf("        ██╗███████╗ █████╗  █████╗  ██████╗          \n");
-		printf("        ██║██╔════╝██╔══██╗██╔══██╗██╔════╝          \n");
-		printf("        ██║███████╗███████║███████║██║               \n");
-		printf("        ██║╚════██║██╔══██║██╔══██║██║               \n");
-		printf("        ██║███████║██║  ██║██║  ██║╚██████╗          \n");
-		printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
-		printf("                                                     \n");
-		printf("Terminal Menu:\n");
-		printf("1. Choose map hell\n");
-		printf("2. Choose map arena\n");
-		printf("3. Choose map exampleTexture\n");
-		printf("4. Exit\n");
-		printf("5. Toggle Music On/Off\n");
-		printf("Enter your choice (1-5): ");
-		if (scanf("%d", &choice) != 1)
-			while (getchar() != '\n')
-				continue ;
-		process_choice(choice, box);
-		choice = 0;
+		print_menu();
+		choice = get_user_input(box);
 	}
 }
 
