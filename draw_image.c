@@ -131,33 +131,37 @@ void	draw_pickups_on_hud(t_box *box, int x, int y)
 				* (y - 50 - ((y - 50) / 2))]);
 }
 
+unsigned int	extract_heart_color(t_box *box, int x, int y, int i)
+{
+	int	xoffset;
+	int	index;
+
+	xoffset = 0;
+	if (i < (box->player.hp / 2))
+		xoffset = x - 50;
+	else if (box->player.hp % 2 == 1 && i == (box->player.hp / 2))
+		xoffset = x - 34;
+	else
+		xoffset = x - 18;
+	index = (xoffset - ((x + (i * 32) - 50) / 2)) * 4
+		+ box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2));
+	return (extract_color(&box->textures[UI_HEARTS].addr[index]));
+}
+
 void	draw_hearts_on_hud(t_box *box, int x, int y)
 {
 	int	i;
 
-	i = -1;
-	while (++i < ((box->player.max_hp + 1) / 2))
+	i = 0;
+	while (i < (box->player.max_hp + 1) / 2)
 	{
 		if (y > 15 && y < 45 && x > 50 + (i * 32) && x < 82 + (i * 32))
 		{
-			if (i < (box->player.hp / 2))
-				box->info.color = extract_color(&box->textures[UI_HEARTS]
-						.addr[((x - 50) - ((x + (i * 32) - 50) / 2)) * 4
-						+ box->textures[UI_HEARTS].line_len * (y - 15
-							- ((y - 15) / 2))]);
-			else if (box->player.hp % 2 == 1 && i == (box->player.hp / 2))
-				box->info.color = extract_color(&box->textures[UI_HEARTS]
-						.addr[((x - 34) - ((x + (i * 32) - 50) / 2)) * 4
-						+ box->textures[UI_HEARTS].line_len * (y - 15
-							- ((y - 15) / 2))]);
-			else
-				box->info.color = extract_color(&box->textures[UI_HEARTS]
-						.addr[((x - 18) - ((x + (i * 32) - 50) / 2)) * 4
-						+ box->textures[UI_HEARTS].line_len * (y - 15
-							- ((y - 15) / 2))]);
+			box->info.color = extract_heart_color(box, x, y, i);
 			if ((box->info.color & 0x00FFFFFF) != 0)
 				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 		}
+		i++;
 	}
 }
 
@@ -206,13 +210,8 @@ void	draw_hud(t_box *box)
 	}
 }
 
-/*	Redraw
-
-*/
-void	redraw(t_box *box)
+void	init_redraw(t_box *box)
 {
-	char	*nbr;
-
 	mlx_destroy_image(box->mlx, box->image.img);
 	box->image.bits_pp = 0;
 	box->image.line_len = 0;
@@ -220,6 +219,67 @@ void	redraw(t_box *box)
 	box->image.img = mlx_new_image(box->mlx, SCREENWIDTH, SCREENHEIGHT);
 	box->image.addr = (unsigned char *)mlx_get_data_addr(box->image.img,
 			&box->image.bits_pp, &box->image.line_len, &box->image.endian);
+}
+
+void	handle_game_state(t_box *box)
+{
+	double	frame;
+
+	if (!box->won && !box->lost)
+	{
+		if (box->player.hit)
+			fill_screen_red(box);
+		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+	}
+	else
+	{
+		frame = ((((box->time.tv_sec - box->fin_time.tv_sec)
+						+ ((box->time.tv_usec - box->fin_time.tv_usec)
+							/ 1000000.0)) * 10) * 16) / 10;
+		box->player.frame = frame;
+		if (box->lost)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[GRIM].img,
+				360, 95);
+		else if (box->win)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[WIN].img,
+				320, 40);
+		if (box->player.frame > 100)
+			exit_hook(box);
+	}
+}
+
+void	display_and_free_stat(t_box *box, int value, int x, int y)
+{
+	char	*nbr;
+
+	nbr = ft_itoa(value);
+	mlx_string_put(box->mlx, box->win, x, y, 0x00FFFFFF, nbr);
+	free(nbr);
+}
+
+void	update_hud(t_box *box)
+{
+	char	*nbr;
+
+	nbr = ft_itoa(1.0 / box->info.frame_time);
+	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, nbr);
+	free(nbr);
+	if (box->hud)
+	{
+		display_and_free_stat(box, box->player.speed, 65, 203);
+		display_and_free_stat(box, box->player.range, 65, 245);
+		display_and_free_stat(box, box->player.fire_rate, 65, 287);
+		display_and_free_stat(box, box->player.shot_speed, 65, 329);
+		display_and_free_stat(box, box->player.dmg, 65, 371);
+	}
+	nbr = ft_itoa(box->player.n_key);
+	mlx_string_put(box->mlx, box->win, 50, 70, 0x00FFFFFF, nbr);
+	free(nbr);
+}
+
+void	redraw(t_box *box)
+{
+	init_redraw(box);
 	cast_floor(box);
 	cast_wall(box);
 	cast_obj(box);
@@ -227,48 +287,6 @@ void	redraw(t_box *box)
 	cal_sprite_move(box);
 	draw_minimap(box);
 	draw_hud(box);
-	if (!box->won && !box->lost)
-	{
-		if (box->player.hit)
-			fill_screen_red(box);
-		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
-	}
-	else if (box->lost)
-	{
-		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec)
-						+ ((box->time.tv_usec - box->fin_time.tv_usec)
-							/ 1000000.0)) * 10) * 16) / 10;
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[GRIM]
-			.img, 360, 95);
-		if (box->player.frame > 100)
-			exit_hook(box);
-	}
-	else if (box->win)
-	{
-		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec)
-						+ ((box->time.tv_usec - box->fin_time.tv_usec)
-							/ 1000000.0)) * 10) * 16) / 10;
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[WIN]
-			.img, 320, 40);
-		if (box->player.frame > 100)
-			exit_hook(box);
-	}
-	nbr = ft_itoa(1.0 / box->info.frame_time);
-	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, nbr);
-	if (box->hud)
-	{
-		nbr = (free(nbr), ft_itoa(box->player.speed));
-		mlx_string_put(box->mlx, box->win, 65, 203, 0x00FFFFFF, nbr);
-		nbr = (free(nbr), ft_itoa(box->player.range));
-		mlx_string_put(box->mlx, box->win, 65, 245, 0x00FFFFFF, nbr);
-		nbr = (free(nbr), ft_itoa(box->player.fire_rate));
-		mlx_string_put(box->mlx, box->win, 65, 287, 0x00FFFFFF, nbr);
-		nbr = (free(nbr), ft_itoa(box->player.shot_speed));
-		mlx_string_put(box->mlx, box->win, 65, 329, 0x00FFFFFF, nbr);
-		nbr = (free(nbr), ft_itoa(box->player.dmg));
-		mlx_string_put(box->mlx, box->win, 65, 371, 0x00FFFFFF, nbr);
-	}
-	nbr = (free(nbr), ft_itoa(box->player.n_key));
-	mlx_string_put(box->mlx, box->win, 50, 70, 0x00FFFFFF, nbr);
-	free(nbr);
+	handle_game_state(box);
+	update_hud(box);
 }
