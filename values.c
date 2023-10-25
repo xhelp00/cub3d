@@ -12,14 +12,6 @@
 
 #include "cub3d.h"
 
-/*	Init_textures
-
-	Loads textures into memory
-*/
-/*box->textures[1].img
-	= mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
-*/
-
 void	alloc_textures(t_box *box)
 {
 	int	i;
@@ -59,6 +51,7 @@ void	set_texture_defaults(t_box *box)
 	}
 }
 
+//load_specific_textures(box, 1, "textures/floor.xpm");
 void	init_textures(t_box *box)
 {
 	alloc_textures(box);
@@ -82,76 +75,23 @@ void	init_textures(t_box *box)
 	load_specific_textures(box, GRIM, "textures/grim.xpm");
 	set_texture_defaults(box);
 }
-/*
-void	init_textures(t_box *box)
-{
-	int		k;
-	int		j;
-	int		i;
 
-	box->textures = malloc(50 * sizeof(t_image));
-	i = -1;
-	while (++i < 50)
-		box->textures[i].img = 0;
-	box->textures[0].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
-	box->textures[1].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/blackhole.xpm", &k, &j);
-	box->textures[DOOR].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/bars.xpm", &k, &j);
-	box->textures[BABY].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
-	box->textures[NERVE_ENDING].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
-	box->textures[LEECH].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
-	box->textures[ISAAC].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
-	box->textures[TEAR].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
-	box->textures[LARRY_JR_HEAD].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
-	box->textures[UI_PICKUPS].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/ui_pickups.xpm", &k, &j);
-	box->textures[UI_HEARTS].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/ui_hearts.xpm", &k, &j);
-	box->textures[UI_STATS].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/ui_stats.xpm", &k, &j);
-	box->textures[ITEMS].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/items.xpm", &k, &j);
-	box->textures[ITEM_ALTAR].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
-	box->textures[KEY].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);
-	box->textures[TROPHY].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
-	box->textures[WIN].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
-	box->textures[GRIM].img
-		= mlx_xpm_file_to_image(box->mlx, "textures/grim.xpm", &k, &j);
-	i = -1;
-	while (++i < 50)
-	{
-		if (!box->textures[i].img)
-			box->textures[i].img
-				= mlx_xpm_file_to_image(box->mlx,
-					"textures/grey_bricks.xpm", &k, &j);
-		box->textures[i].addr
-			= (unsigned char *)mlx_get_data_addr(box->textures[i].img,
-				&box->textures[i].bits_pp, &box->textures[i].line_len,
-				&box->textures[i].endian);
-	}
-}*/
-
-/*	Init_vals
-
-	Sets most of the values to 0
-*/
-void	init_vals(t_box *box)
+void	init_general_vals(t_box *box)
 {
 	box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
 	box->sprites = NULL;
 	box->items = NULL;
+	box->n_sprites = 0;
+	box->god = 0;
+	box->hud = 1;
+	box->won = 0;
+	box->lost = 0;
+	box->input_index = 0;
+	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
+}
+
+void	init_pos_dir_vals(t_box *box)
+{
 	box->info.pos_x = 4;
 	box->info.pos_y = 5;
 	box->info.pos_z = 0;
@@ -161,6 +101,10 @@ void	init_vals(t_box *box)
 	box->info.start_dir_y = 0;
 	box->info.plane_x = 0;
 	box->info.plane_y = 0.66;
+}
+
+void	init_time_move_vals(t_box *box)
+{
 	gettimeofday(&box->time, NULL);
 	gettimeofday(&box->old_time, NULL);
 	box->info.camera_x = 0;
@@ -169,6 +113,10 @@ void	init_vals(t_box *box)
 	box->info.rotate = 0;
 	box->info.move_x = 0;
 	box->info.move_y = 0;
+}
+
+void	init_attr_vals(t_box *box)
+{
 	box->info.hit = 0;
 	box->info.sprint = 0;
 	box->info.pitch = 0;
@@ -176,16 +124,27 @@ void	init_vals(t_box *box)
 	box->info.old_dir_x = 0;
 	box->info.old_plane_x = 0;
 	box->info.door = 0;
-	box->mouse.xdistance = 0;
-	box->mouse.ydistance = 0;
-	box->mouse.x = 0;
-	box->mouse.y = 0;
+}
+
+void	init_misc_vals(t_box *box)
+{
 	box->info.distance = 0;
 	box->info.color = 0;
 	box->info.rot_speed = 0;
 	box->info.move_speed = 0;
 	box->info.zbuffer = malloc(SCREENWIDTH * sizeof(double));
-	box->n_sprites = 0;
+}
+
+void	init_mouse_vals(t_box *box)
+{
+	box->mouse.xdistance = 0;
+	box->mouse.ydistance = 0;
+	box->mouse.x = 0;
+	box->mouse.y = 0;
+}
+
+void	init_player_vals(t_box *box)
+{
 	box->player.speed = 100;
 	box->player.range = 65;
 	box->player.fire_rate = 50;
@@ -197,13 +156,18 @@ void	init_vals(t_box *box)
 	box->player.max_hp = 6;
 	box->player.hit = 0;
 	box->player.n_key = 0;
-	box->god = 0;
-	box->hud = 1;
-	box->won = 0;
-	box->lost = 0;
 	gettimeofday(&box->player.last_tear, NULL);
-	box->input_index = 0;
-	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
+}
+
+void	init_vals(t_box *box)
+{
+	init_general_vals(box);
+	init_pos_dir_vals(box);
+	init_time_move_vals(box);
+	init_attr_vals(box);
+	init_misc_vals(box);
+	init_mouse_vals(box);
+	init_player_vals(box);
 }
 
 void	reset_vals(t_box *box)
@@ -235,12 +199,8 @@ void	swap(t_sprite *x)
 	x->next->data = tmp;
 }
 
-void	bubble_sort_sprites(t_box *box)
+void	calc_sprite_distances(t_box *box, t_sprite *sprites)
 {
-	t_sprite	*sprites;
-	t_sprite	*tmp;
-
-	sprites = box->sprites;
 	while (sprites)
 	{
 		sprites->data->dist = ((box->info.pos_x - sprites->data->x)
@@ -253,16 +213,35 @@ void	bubble_sort_sprites(t_box *box)
 				* (sprites->data->start_y - sprites->data->y));
 		sprites = sprites->next;
 	}
+}
+
+void	inner_bubble_sort(t_sprite *sprites)
+{
+	t_sprite	*tmp;
+
+	tmp = sprites;
+	while (tmp->next)
+	{
+		if (tmp->data->dist < tmp->next->data->dist)
+			swap(tmp);
+		tmp = tmp->next;
+	}
+}
+
+void	outer_bubble_sort(t_box *box)
+{
+	t_sprite	*sprites;
+
 	sprites = box->sprites;
 	while (sprites)
 	{
-		tmp = sprites;
-		while (tmp->next)
-		{
-			if (tmp->data->dist < tmp->next->data->dist)
-				swap(tmp);
-			tmp = tmp->next;
-		}
+		inner_bubble_sort(sprites);
 		sprites = sprites->next;
 	}
+}
+
+void	bubble_sort_sprites(t_box *box)
+{
+	calc_sprite_distances(box, box->sprites);
+	outer_bubble_sort(box);
 }
