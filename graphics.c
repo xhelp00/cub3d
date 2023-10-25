@@ -16,32 +16,25 @@ void	draw_rect(t_rect *rect, t_box *box)
 {
 	int	i;
 	int	j;
-	int	tmp_x = 0;
-	int	tmp_y = 0;
+	int	tmp_x;
+	int	tmp_y;
 
-	//rect->border_width--;
+	tmp_x = 0;
+	tmp_y = 0;
 	i = -1;
 	while (++i < rect->height)
 	{
 		j = -1;
 		while (++j < rect->width)
 		{
-			//printf("Drawing pixel at %d, %d\n", tmp_x, tmp_y);
-
 			tmp_x = rect->x + j;
 			tmp_y = rect->y + i;
-			/* if (i <= rect->border_width || j <= rect->border_width
-				|| i >= rect->height - 1 - rect->border_width
-				|| j >= rect->width - 1 - rect->border_width)
-				img[tmp_y * res_width + tmp_x] = rect->border_color;
-			else */
-				//img[(tmp_y * box->image.line_len) + (tmp_x * (box->image.bits_pp / 8))] = rect->fill_color;
 			my_mlx_pyxel_put(&box->image, tmp_x, tmp_y, rect->fill_color);
 		}
 	}
 }
 
- void	draw_line(t_line *line, t_box *box)
+void	draw_line(t_line *line, t_box *box)
 {
 	double	delta_x;
 	double	delta_y;
@@ -58,10 +51,9 @@ void	draw_rect(t_rect *rect, t_box *box)
 	pixel_y = line->begin_y;
 	while (pixels)
 	{
-		//img[(int)pixel_y * res_width + (int)pixel_x] = line->color;
 		my_mlx_pyxel_put(&box->image, (int)pixel_x, (int)pixel_y, line->color);
 		pixel_x += delta_x;
 		pixel_y += delta_y;
 		pixels--;
 	}
-} 
+}
