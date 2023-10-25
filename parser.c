@@ -12,16 +12,8 @@
 
 #include "cub3d.h"
 
-t_sprite	*new_sprite(void)
+void	set_data(t_sprite *new)
 {
-	t_sprite	*new;
-
-	new = ft_calloc(1, sizeof(t_sprite));
-	if (!new)
-		return (NULL);
-	new->data = ft_calloc(1, sizeof(t_sprite_data));
-	if (!new->data)
-		return (NULL);
 	new->data->x = 0;
 	new->data->y = 0;
 	new->data->start_x = 0;
@@ -43,6 +35,19 @@ t_sprite	*new_sprite(void)
 	new->data->state = IDLE;
 	new->next = NULL;
 	new->prev = NULL;
+}
+
+t_sprite	*new_sprite(void)
+{
+	t_sprite	*new;
+
+	new = ft_calloc(1, sizeof(t_sprite));
+	if (!new)
+		return (NULL);
+	new->data = ft_calloc(1, sizeof(t_sprite_data));
+	if (!new->data)
+		return (NULL);
+	set_data(new);
 	return (new);
 }
 
@@ -99,7 +104,8 @@ t_sprite	*find_seg(t_box *box, int seg)
 	sprites = box->sprites;
 	while (sprites)
 	{
-		if (sprites->data->seg == seg && (sprites->data->texture == LARRY_JR_BODY || sprites->data->texture == LARRY_JR_HEAD))
+		if (sprites->data->seg == seg && (sprites->data->texture
+				== LARRY_JR_BODY || sprites->data->texture == LARRY_JR_HEAD))
 			return (sprites);
 		sprites = sprites->next;
 	}
@@ -115,7 +121,8 @@ t_sprite	*find_door(t_box *box, int x, int y)
 		return (NULL);
 	while (sprites)
 	{
-		if (sprites->data->x == x && sprites->data->y == y && sprites->data->texture == DOOR)
+		if (sprites->data->x == x && sprites->data->y == y
+			&& sprites->data->texture == DOOR)
 			return (sprites);
 		sprites = sprites->next;
 	}
@@ -126,53 +133,49 @@ void	remove_seg(t_box *box, t_sprite *to_rem)
 {
 	t_sprite	*sprites;
 
-	if (to_rem->data->texture == LARRY_JR_BODY || to_rem->data->texture == LARRY_JR_HEAD)
+	if (to_rem->data->texture == LARRY_JR_BODY || to_rem->data->texture
+		== LARRY_JR_HEAD)
 	{
 		if (to_rem->data->seg == 0)
 		{
-			// printf("KILLED HEAD: %i\n", to_rem->data->seg);
 			sprites = box->sprites;
 			while (sprites)
 			{
 				if (sprites->data->seg == to_rem->data->seg + 1)
 				{
 					sprites->data->texture = LARRY_JR_HEAD;
-					break;
+					break ;
 				}
 				sprites = sprites->next;
 			}
 			sprites = box->sprites;
 			while (sprites)
 			{
-				if (sprites->data->texture == LARRY_JR_HEAD || sprites->data->texture == LARRY_JR_BODY)
+				if (sprites->data->texture == LARRY_JR_HEAD
+					|| sprites->data->texture == LARRY_JR_BODY)
 					sprites->data->seg--;
 				sprites = sprites->next;
 			}
 		}
 		else
 		{
-			// printf("KILLED SEGMENT: %i\n", to_rem->data->seg);
 			sprites = box->sprites;
 			while (sprites)
 			{
-				if (sprites->data->texture == LARRY_JR_BODY && sprites->data->seg > to_rem->data->seg)
-				{
-					// sprites->data->x = find_seg(box, sprites->data->seg - 1)->data->x;
-					// sprites->data->y = find_seg(box, sprites->data->seg - 1)->data->y;
+				if (sprites->data->texture == LARRY_JR_BODY
+					&& sprites->data->seg > to_rem->data->seg)
 					sprites->data->seg--;
-				}
 				sprites = sprites->next;
 			}
-
 		}
 		sprites = box->sprites;
 		while (sprites)
 		{
-			if (sprites->data->texture == LARRY_JR_HEAD || sprites->data->texture == LARRY_JR_BODY)
+			if (sprites->data->texture == LARRY_JR_HEAD
+				|| sprites->data->texture == LARRY_JR_BODY)
 				sprites->data->n_seg = sprites->data->n_seg - 1;
 			sprites = sprites->next;
 		}
-
 	}
 }
 
@@ -285,16 +288,13 @@ void	parser(t_box *box, int fd)
 		s++;
 		texture = ft_atoi(line + s);
 		line = (free(line), get_next_line(fd));
-		// printf("%s\n%f | %f | %i\n", "ADDING SPRITE IN PROGRESS!!!!", x, y, texture);
 		sprite_append(box, x, y, texture);
 		t_sprite	*last;
 		last = last_sprite(box->sprites);
 		if (last->data->texture == LARRY_JR_HEAD)
 		{
-			// printf("JARRY LUNIOR\n");
 			while (last->data->seg++ < last->data->n_seg)
 			{
-				// printf("JARRY BODY SEG %i\n", last->data->seg);
 				sprite_append(box, x + last->data->seg / 3.0, y + last->data->seg / 3.0, LARRY_JR_BODY);
 				last_sprite(box->sprites)->data->seg = last->data->seg;
 				last_sprite(box->sprites)->data->n_seg = last->data->n_seg;
@@ -304,10 +304,6 @@ void	parser(t_box *box, int fd)
 		}
 		else if (last->data->texture == ITEMS)
 			sprite_append(box, x, y, ITEM_ALTAR);
-		// i = -1;
-		// printf("\nDUMP:\n");
-		// while (++i < box->n_sprites)
-		// 	printf("Texture: %i | x: %f | y: %f\n", box->sprites[i].texture, box->sprites[i].x, box->sprites[i].y);
 	}
 	free(line);
 }
