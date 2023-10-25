@@ -354,7 +354,7 @@ void		cast_wall(t_box *box);
 void		cast_obj(t_box *box);
 
 //Minimap.c
-void		drawMinimap(t_box *box);
+void		draw_minimap(t_box *box);
 void		draw_map(t_box *box);
 int			get_fill_color(char grid_item, t_box *box, int i, int j);
 void		draw_player(t_box *box);

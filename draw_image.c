@@ -167,7 +167,7 @@ void	redraw(t_box *box)
 	//print_map_contents(box);
     //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
 
-	drawMinimap(box);
+	draw_minimap(box);
 	draw_hud(box);
 	//single_square_test(box);
 
