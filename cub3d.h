@@ -48,6 +48,12 @@ typedef struct s_ray
 	int		end_y;
 }				t_ray;
 
+typedef struct
+{
+	float x;
+	float y;
+} t_point;
+
 typedef struct s_info
 {
 	int		move_y;

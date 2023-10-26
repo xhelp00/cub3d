@@ -39,13 +39,13 @@ void	handle_other_choices(int choice, t_box *box)
 			box->music = 0;
 			printf("Music turned off.\n");
 		}
-		else
+		else if (!box->music)
 		{
 			box->music = 1;
 			printf("Music turned on.\n");
 		}
 	}
-	else if (choice > 5)
+	else
 		printf("Invalid choice. Please enter a number between 1 and 5.\n");
 }
 
@@ -84,28 +84,25 @@ void	print_menu(void)
 	printf("Enter your choice (1-5): ");
 }
 
-int	get_user_input(t_box *box)
+void	get_user_input(t_box *box)
 {
 	int	choice;
 
+	choice = 0;
 	if (scanf("%d", &choice) != 1)
 	{
 		while (getchar() != '\n')
 			continue ;
 	}
 	process_choice(choice, box);
-	return (choice);
 }
 
 void	menu(t_box *box)
 {
-	int	choice;
-
-	choice = 0;
 	while (!box->map_filename && !box->exit_menu)
 	{
 		print_menu();
-		choice = get_user_input(box);
+		get_user_input(box);
 	}
 }
 
