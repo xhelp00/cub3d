@@ -250,6 +250,55 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 	}
 }
 
+void	enemy_angle(t_box *box, t_sprite_data *data)
+{
+	box->info.t_angle = atan2(data->y - box->info.pos_y,
+			data->x - box->info.pos_x);
+	box->info.now_angle = atan2(data->dir_y, data->dir_x)
+		- atan2(box->info.start_dir_y, box->info.start_dir_x);
+	if (box->info.t_angle < 0)
+		box->info.t_angle += 2 * PI;
+	if (box->info.now_angle < 0)
+		box->info.now_angle += 2 * PI;
+	if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle
+			* (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
+	{
+		box->info.old_dir_x = data->dir_x;
+		data->dir_x = data->dir_x * cos(box->info.rot_speed
+				* 0.5) - data->dir_y * sin(box->info.rot_speed * 0.5);
+		data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed
+				* 0.5) + data->dir_y * cos(box->info.rot_speed * 0.5);
+	}
+	else
+	{
+		box->info.old_dir_x = data->dir_x;
+		data->dir_x = data->dir_x * cos(-box->info.rot_speed
+				* 0.5) - data->dir_y * sin(-box->info.rot_speed * 0.5);
+		data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed
+				* 0.5) + data->dir_y * cos(-box->info.rot_speed * 0.5);
+	}
+}
+
+void	enemy_move(t_box *box, t_sprite_data *data)
+{
+	if (((box->map[(int)(data->x + data->dir_x
+					* box->info.ene_move_speed)][(int)data->y] == '0')
+		|| (box->map[(int)(data->x + data->dir_x
+		* box->info.move_speed)][(int)data->y] == '0' + DOOR + 1
+		&& find_door(box, (int)(data->x + data->dir_x * box->info.move_speed),
+			(int)data->y)->data->state == OPEN))
+		&& ((box->map[(int)(data->x)][(int)(data->y + data->dir_y
+			* box->info.ene_move_speed)] == '0')
+		|| (box->map[(int)(data->x)][(int)(data->y + data->dir_y
+			* box->info.ene_move_speed)] == '0' + DOOR + 1
+		&& find_door(box, (int)(data->x), (int)(data->y + data->dir_y
+			* box->info.ene_move_speed))->data->state == OPEN)))
+	{
+		data->x += data->dir_x * 0.1 * box->info.ene_move_speed;
+		data->y += data->dir_y * 0.1 * box->info.ene_move_speed;
+	}
+}
+
 void	cal_sprite_move(t_box *box)
 {
 	t_sprite	*sprites;
@@ -260,34 +309,8 @@ void	cal_sprite_move(t_box *box)
 	{
 		if (sprites->data->texture == LARRY_JR_HEAD)
 		{
-			box->info.t_angle = atan2(sprites->data->y - box->info.pos_y, sprites->data->x - box->info.pos_x);
-			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
-			if (box->info.t_angle < 0)
-				box->info.t_angle += 2 * PI;
-			if (box->info.now_angle < 0)
-				box->info.now_angle += 2 * PI;
-			if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle * (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
-			{
-				box->info.old_dir_x = sprites->data->dir_x;
-				sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(box->info.rot_speed * 0.5);
-				sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(box->info.rot_speed * 0.5);
-			}
-			else
-			{
-				box->info.old_dir_x = sprites->data->dir_x;
-				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
-				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
-			}
-			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
-				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
-			{
-				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
-				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
-			}
+			enemy_angle(box, sprites->data);
+			enemy_move(box, sprites->data);
 		}
 		if (sprites->data->texture == LARRY_JR_BODY)
 		{
@@ -309,16 +332,7 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
-			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
-				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
-			{
-				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
-				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
-			}
+			enemy_move(box, sprites->data);
 		}
 		if (sprites->data->texture < TEAR && sprites->data->texture != DOOR)
 		{
@@ -348,36 +362,11 @@ void	cal_sprite_move(t_box *box)
 			}
 		}
 
-		if (sprites->data->texture == LEECH || (sprites->data->texture == BABY && sprites->data->state == AWAKE))
+		if (sprites->data->texture == LEECH || (sprites->data->texture == BABY
+			&& sprites->data->state == AWAKE))
 		{
-			box->info.t_angle = atan2(sprites->data->y - box->info.pos_y, sprites->data->x - box->info.pos_x);
-			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
-			if (box->info.t_angle < 0)
-				box->info.t_angle += 2 * PI;
-			if (box->info.now_angle < 0)
-				box->info.now_angle += 2 * PI;
-			if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle * (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
-			{
-				box->info.old_dir_x = sprites->data->dir_x;
-				sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(box->info.rot_speed * 0.5);
-				sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(box->info.rot_speed * 0.5);
-			}
-			else
-			{
-				box->info.old_dir_x = sprites->data->dir_x;
-				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
-				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
-			}
-			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
-				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
-				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
-			{
-				sprites->data->x += sprites->data->dir_x * 0.1 * box->info.ene_move_speed;
-				sprites->data->y += sprites->data->dir_y * 0.1 * box->info.ene_move_speed;
-			}
+			enemy_angle(box, sprites->data);
+			enemy_move(box, sprites->data);
 		}
 
 		if (sprites->data->texture == TEAR)
