@@ -32,16 +32,16 @@ int	mouse_release(int keycode, int x, int y, t_box *box)
 	return (0);
 }
 
-/*	Key_press
-
-	Processes pressed down key
-*/
-int	key_press(int key, t_box *box)
+void	handle_rotate(int key, t_box *box)
 {
 	if (key == 113)
 		box->info.rotate = -1;
 	if (key == 101)
 		box->info.rotate = 1;
+}
+
+void	handle_move(int key, t_box *box)
+{
 	if (key == 119 || key == 65362)
 		box->info.move_x = 1;
 	if (key == 115 || key == 65364)
@@ -50,6 +50,10 @@ int	key_press(int key, t_box *box)
 		box->info.move_y = -1;
 	if (key == 100 || key == 65363)
 		box->info.move_y = 1;
+}
+
+void	handle_position_adjustment(int key, t_box *box)
+{
 	if (key == 65505)
 		box->info.sprint = 1;
 	if (key == 65365)
@@ -60,40 +64,46 @@ int	key_press(int key, t_box *box)
 		box->info.pos_z = 200;
 	if (key == 65507)
 		box->info.pos_z = -200;
+}
+
+void	toggle_hud(int key, t_box *box)
+{
 	if (key == 65477)
 	{
-		if (box->hud)
-			box->hud = 0;
-		else
-			box->hud = 1;
+		box->hud = !box->hud;
 	}
+}
 
-	//IDDQD for god mode
-	if (key >= 'a' && key <= 'z')  // Assuming ASCII values
+void	handle_input_buffer(int key, t_box *box)
+{
+	if (key >= 'a' && key <= 'z')
 	{
-		// Assign the character to the buffer
 		box->input_buffer[box->input_index] = (char)key;
 		box->input_index++;
-		box->input_buffer[box->input_index] = '\0'; // Null terminate
-
-		// Using strstr to check for "iddqd" in the buffer
+		box->input_buffer[box->input_index] = '\0';
 		if (strstr(box->input_buffer, "iddqd"))
 		{
 			printf("GOD MODE active\n");
 			box->god = 1;
-			// Reset the buffer after detecting the code
 			ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
 			box->input_index = 0;
 		}
-		else if (box->input_index >= (int)sizeof(box->input_buffer) - 1) // If buffer is full
+		else if (box->input_index >= (int) sizeof(box->input_buffer) - 1)
 		{
-			// Shift the buffer to the left by one character
-			ft_memmove(box->input_buffer, box->input_buffer + 1, sizeof(box->input_buffer) - 1);
+			ft_memmove(box->input_buffer, box->input_buffer + 1,
+				sizeof(box->input_buffer) - 1);
 			box->input_index--;
 		}
 	}
-	// printf("Key pressed: %c, Current buffer: %s\n", (char)key, box->input_buffer);
-	// printf("Key released: %i\n", key);
+}
+
+int	key_press(int key, t_box *box)
+{
+	handle_rotate(key, box);
+	handle_move(key, box);
+	handle_position_adjustment(key, box);
+	toggle_hud(key, box);
+	handle_input_buffer(key, box);
 	return (0);
 }
 
@@ -105,7 +115,6 @@ int	key_release(int key, t_box *box)
 {
 	if (key == 65307)
 	{
-		//mlx_destroy_window(box->mlx, box->win);
 		exit_hook(box);
 		exit(0);
 	}
@@ -127,7 +136,6 @@ int	key_release(int key, t_box *box)
 		box->info.up_down = 0;
 	if (key == 65507)
 		box->info.pos_z = 0;
-	// printf("Key released: %i\n", key);
 	return (0);
 }
 
@@ -137,16 +145,11 @@ int	key_release(int key, t_box *box)
 */
 int	exit_hook(t_box *box)
 {
-
 	if (box->pid > 0)
 	{
 		if (kill(box->pid, SIGTERM) == -1)
-		{
-        	perror("Failed to terminate child process");
-    	}
-		//waitpid(box.pid, NULL, 0);  // This waits for the child to terminate
+			perror("Failed to terminate child process");
 	}
-
 	mlx_destroy_window(box->mlx, box->win);
 	exit(0);
 }
