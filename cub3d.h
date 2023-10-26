@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -40,7 +38,7 @@
 # define VDIV 1
 # define VMOVE 0.0
 # define MINIMAP_OFFSET 10
-# define PI (atan(1) * 4)
+# define PI 3.14159265358979323846
 
 typedef struct s_ray
 {
@@ -48,11 +46,11 @@ typedef struct s_ray
 	int		end_y;
 }				t_ray;
 
-typedef struct
+typedef struct s_point
 {
-	float x;
-	float y;
-} t_point;
+	float	x;
+	float	y;
+}				t_point;
 
 typedef struct s_info
 {
@@ -145,7 +143,7 @@ typedef struct s_info
 	float	cam_z;
 	int		up_down;
 	int		distance;
-	t_ray		*ray;
+	t_ray	*ray;
 	int		to_destroy;
 	int		flipped;
 	int		door;
@@ -269,11 +267,11 @@ typedef struct s_mouse
 
 typedef struct s_box
 {
-	int 			music;
+	int				music;
 	char			*map_filename;
 	int				pid;
 	int				p;
-	char 			**env;
+	char			**env;
 	void			*mlx;
 	void			*win;
 	t_image			image;
@@ -289,9 +287,9 @@ typedef struct s_box
 	struct timeval	time;
 	struct timeval	old_time;
 	t_mouse			mouse;
-	char			input_buffer[6];  // to store "iddqd" + '\0'
+	char			input_buffer[6];
 	int				input_index;
-	int 			god;
+	int				god;
 	int				hud;
 	int				lost;
 	int				won;
@@ -300,7 +298,7 @@ typedef struct s_box
 }				t_box;
 
 //shape rect used for drawing minimap
-typedef struct	s_rect
+typedef struct s_rect
 {
 	int			x;
 	int			y;
@@ -312,7 +310,7 @@ typedef struct	s_rect
 }				t_rect;
 
 //shape line
-typedef struct	s_line
+typedef struct s_line
 {
 	int			begin_x;
 	int			begin_y;
