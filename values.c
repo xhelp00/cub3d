@@ -56,7 +56,8 @@ void	init_textures(t_box *box)
 {
 	alloc_textures(box);
 	load_specific_textures(box, 0, "textures/wall.xpm");
-	load_specific_textures(box, 1, "textures/blackhole.xpm");
+	load_specific_textures(box, 2, "textures/blackhole.xpm");
+	load_specific_textures(box, 1, "textures/floor.xpm");
 	load_specific_textures(box, DOOR, "textures/bars.xpm");
 	load_specific_textures(box, BABY, "textures/baby.xpm");
 	load_specific_textures(box, NERVE_ENDING, "textures/nerve_ending.xpm");
