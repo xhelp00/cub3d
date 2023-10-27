@@ -10,9 +10,95 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "cub3d.h"
+
+void	setup_floor_and_ceiling(t_box *box, int y)
+{
+	reset_vals(box);
+	if (y > SCREENHEIGHT / 2 + box->info.pitch)
+		box->info.is_floor = 1;
+	else
+		box->info.is_floor = 0;
+}
+
+void	calculate_ray_directions(t_box *box)
+{
+	box->info.ray_dir_x0 = box->info.dir_x - box->info.plane_x;
+	box->info.ray_dir_y0 = box->info.dir_y - box->info.plane_y;
+	box->info.ray_dir_x1 = box->info.dir_x + box->info.plane_x;
+	box->info.ray_dir_y1 = box->info.dir_y + box->info.plane_y;
+}
+
+void	compute_perspective_values(t_box *box, int y)
+{
+	if (box->info.is_floor)
+		box->info.p = y - SCREENHEIGHT / 2 - box->info.pitch;
+	else
+		box->info.p = SCREENHEIGHT / 2 - y + box->info.pitch;
+	if (box->info.is_floor)
+		box->info.cam_z = 0.5 * SCREENHEIGHT + box->info.pos_z;
+	else
+		box->info.cam_z = 0.5 * SCREENHEIGHT - box->info.pos_z;
+}
+
+void	compute_row_and_step_values(t_box *box)
+{
+	box->info.row_distance = box->info.cam_z / box->info.p;
+	box->info.floor_step_x = box->info.row_distance * (box->info.ray_dir_x1
+			- box->info.ray_dir_x0) / SCREENWIDTH;
+	box->info.floor_step_y = box->info.row_distance * (box->info.ray_dir_y1
+			- box->info.ray_dir_y0) / SCREENWIDTH;
+}
+
+void	initialize_floor_positions(t_box *box)
+{
+	box->info.floor_x = box->info.pos_x + box->info.row_distance
+		* box->info.ray_dir_x0;
+	box->info.floor_y = box->info.pos_y + box->info.row_distance
+		* box->info.ray_dir_y0;
+}
+
+void	initialize_floor_casting(t_box *box, int y)
+{
+	setup_floor_and_ceiling(box, y);
+	calculate_ray_directions(box);
+	compute_perspective_values(box, y);
+	compute_row_and_step_values(box);
+	initialize_floor_positions(box);
+}
+
+void	compute_floor_values(t_box *box)
+{
+	box->info.cell_x = (int)(box->info.floor_x);
+	box->info.cell_y = (int)(box->info.floor_y);
+	box->info.tx = (int)(TEXTUREWIDTH * (box->info.floor_x - box->info.cell_x))
+		& (TEXTUREWIDTH - 1);
+	box->info.ty = (int)(TEXTUREHEIGHT * (box->info.floor_y - box->info.cell_y))
+		& (TEXTUREHEIGHT - 1);
+	box->info.floor_x += box->info.floor_step_x;
+	box->info.floor_y += box->info.floor_step_y;
+	box->info.floor_texture = 1;
+	box->info.ceiling_texture = 1;
+	box->info.distance = (int)((box->info.pos_x - box->info.floor_x)
+			* (box->info.pos_x - box->info.floor_x) + (box->info.pos_y
+				- box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
+}
+
+void	handle_floor_casting(t_box *box, int x, int y)
+{
+	compute_floor_values(box);
+	if (box->info.is_floor)
+		box->info.color = extract_color(&box->textures[box->info.floor_texture]
+				.addr[box->info.tx * 4 + box->textures[box->info.floor_texture]
+				.line_len * box->info.ty]);
+	else
+		box->info.color = extract_color(&box->textures[box->info
+				.ceiling_texture].addr[box->info.tx * 4 + box->textures[box
+				->info.floor_texture].line_len * box->info.ty]);
+	box->info.color = (box->info.color >> 1) & 8355711;
+	apply_fog(box, box->info.distance);
+	my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+}
 
 void	cast_floor(t_box *box)
 {
@@ -22,66 +108,10 @@ void	cast_floor(t_box *box)
 	y = -1;
 	while (++y < SCREENHEIGHT)
 	{
-		reset_vals(box);
-		if (y > SCREENHEIGHT / 2 + box->info.pitch)
-			box->info.is_floor = 1;
-		else
-			box->info.is_floor = 0;
-		box->info.ray_dir_x0 = box->info.dir_x - box->info.plane_x;
-		box->info.ray_dir_y0 = box->info.dir_y - box->info.plane_y;
-		box->info.ray_dir_x1 = box->info.dir_x + box->info.plane_x;
-		box->info.ray_dir_y1 = box->info.dir_y + box->info.plane_y;
-
-		if (box->info.is_floor)
-			box->info.p = y - SCREENHEIGHT / 2 - box->info.pitch;
-		else
-			box->info.p = SCREENHEIGHT / 2 - y + box->info.pitch;
-
-		if (box->info.is_floor)
-			box->info.cam_z = 0.5 * SCREENHEIGHT + box->info.pos_z;
-		else
-			box->info.cam_z = 0.5 * SCREENHEIGHT - box->info.pos_z;
-
-		box->info.row_distance = box->info.cam_z / box->info.p;
-
-		box->info.floor_step_x = box->info.row_distance * (box->info.ray_dir_x1 - box->info.ray_dir_x0) / SCREENWIDTH;
-		box->info.floor_step_y = box->info.row_distance * (box->info.ray_dir_y1 - box->info.ray_dir_y0) / SCREENWIDTH;
-
-		box->info.floor_x = box->info.pos_x + box->info.row_distance * box->info.ray_dir_x0;
-		box->info.floor_y = box->info.pos_y + box->info.row_distance * box->info.ray_dir_y0;
-
+		initialize_floor_casting(box, y);
 		x = -1;
 		while (++x < SCREENWIDTH)
-		{
-			box->info.cell_x = (int)(box->info.floor_x);
-			box->info.cell_y = (int)(box->info.floor_y);
-
-			box->info.tx = (int)(TEXTUREWIDTH * (box->info.floor_x - box->info.cell_x)) & (TEXTUREWIDTH - 1);
-			box->info.ty = (int)(TEXTUREHEIGHT * (box->info.floor_y - box->info.cell_y)) & (TEXTUREHEIGHT - 1);
-
-			box->info.floor_x += box->info.floor_step_x;
-			box->info.floor_y += box->info.floor_step_y;
-
-			box->info.floor_texture = 1;
-			box->info.ceiling_texture = 1;
-
-			box->info.distance = (int)((box->info.pos_x - box->info.floor_x) * (box->info.pos_x - box->info.floor_x) + (box->info.pos_y - box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
-
-			if (box->info.is_floor)
-			{
-				box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
-				box->info.color = (box->info.color >> 1) & 8355711;
-				apply_fog(box, box->info.distance);
-				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
-			}
-			else
-			{
-				box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
-				box->info.color = (box->info.color >> 1) & 8355711;
-				apply_fog(box, box->info.distance);
-				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
-			}
-		}
+			handle_floor_casting(box, x, y);
 	}
 }
 
