@@ -454,38 +454,48 @@ int	handle_tear(t_box *box, t_sprite_data *data, t_sprite *sprites)
 	return (1);
 }
 
+double	calculate_frame_time(t_box *box, t_sprite_data *data)
+{
+	return (((((box->time.tv_sec - data->hit_time.tv_sec)
+					+ ((box->time.tv_usec - data->hit_time.tv_usec)
+						/ 1000000.0)) * 10) * 16) / 10);
+}
+
+void	apply_item_effects(t_box *box, int item_id)
+{
+	if (item_id == 0)
+		box->player.fire_rate -= box->player.fire_rate / 10;
+	else if (item_id == 3)
+	{
+		box->player.dmg += 5;
+		if (!find_item(box, 11) && !find_item(box, 3))
+			box->player.dmg *= 1.5;
+	}
+	else if (item_id == 5)
+	{
+		box->player.fire_rate /= 2;
+		box->player.range /= 1.5;
+	}
+	else if (item_id == 6)
+		box->player.dmg += 10;
+	else if (item_id == 11)
+	{
+		box->player.max_hp += 2;
+		box->player.hp = box->player.max_hp;
+		box->player.dmg += 3;
+		if (!find_item(box, 3) && !find_item(box, 11))
+			box->player.dmg *= 1.5;
+		box->player.range += 15;
+		box->player.speed += 30;
+	}
+}
+
 int	handle_item(t_box *box, t_sprite_data *data, t_sprite *sprites)
 {
-	data->frame = ((((box->time.tv_sec - data->hit_time.tv_sec) + ((box->time
-							.tv_usec - data->hit_time.tv_usec) / 1000000.0))
-				* 10) * 16) / 10;
+	data->frame = calculate_frame_time(box, data);
 	if (data->dist < 0.1)
 	{
-		if (data->id == 0)
-			box->player.fire_rate -= box->player.fire_rate / 10;
-		else if (data->id == 3)
-		{
-			box->player.dmg += 5;
-			if (!find_item(box, 11) && !find_item(box, 3))
-				box->player.dmg *= 1.5;
-		}
-		else if (data->id == 5)
-		{
-			box->player.fire_rate /= 2;
-			box->player.range /= 1.5;
-		}
-		else if (data->id == 6)
-			box->player.dmg += 10;
-		else if (data->id == 11)
-		{
-			box->player.max_hp += 2;
-			box->player.hp = box->player.max_hp;
-			box->player.dmg += 3;
-			if (!find_item(box, 3) && !find_item(box, 11))
-				box->player.dmg *= 1.5;
-			box->player.range += 15;
-			box->player.speed += 30;
-		}
+		apply_item_effects(box, data->id);
 		item_append(box, sprites);
 		return (0);
 	}
@@ -527,46 +537,66 @@ int	handle_door(t_box *box, t_sprite_data *data)
 	return (1);
 }
 
+void	process_larry_jr_head(t_box *box, t_sprite_data *data)
+{
+	if (data->texture == LARRY_JR_HEAD)
+	{
+		enemy_angle(box, data);
+		enemy_move(box, data);
+	}
+}
+
+void	process_larry_jr_body(t_box *box, t_sprite_data *data)
+{
+	if (data->texture == LARRY_JR_BODY)
+	{
+		body_angle(box, data);
+		enemy_move(box, data);
+	}
+}
+
+void	process_leech_or_baby(t_box *box, t_sprite_data *data)
+{
+	if (data->texture == LEECH || (data->texture == BABY && data->state
+			== AWAKE))
+	{
+		enemy_angle(box, data);
+		enemy_move(box, data);
+	}
+}
+
+int	determine_sprite_action(t_box *box, t_sprite_data *data, t_sprite *sprites)
+{
+	if (data->texture < TEAR && data->texture != DOOR)
+		return (check_player_hit(box, data));
+	else if (data->texture == TEAR)
+		return (handle_tear(box, data, sprites));
+	else if (data->texture == ITEMS)
+		return (handle_item(box, data, sprites));
+	else if (data->texture == KEY && data->dist < 0.1 && data->dist != 0)
+		return (handle_key(box, sprites));
+	else if (data->texture == TROPHY && data->dist < 0.1 && data->dist != 0)
+		return (handle_trophy(box, sprites));
+	else if (data->texture == DOOR)
+		return (handle_door(box, data));
+	return (1);
+}
+
 void	cal_sprite_move(t_box *box)
 {
 	t_sprite	*sprites;
 	int			continue_loop;
 
-	continue_loop = 1;
 	sprites = box->sprites;
-	while (sprites && continue_loop)
+	while (sprites)
 	{
-		if (sprites->data->texture == LARRY_JR_HEAD)
-		{
-			enemy_angle(box, sprites->data);
-			enemy_move(box, sprites->data);
-		}
-		if (sprites->data->texture == LARRY_JR_BODY)
-		{
-			body_angle(box, sprites->data);
-			enemy_move(box, sprites->data);
-		}
-		if (sprites->data->texture == LEECH || (sprites->data->texture == BABY
-				&& sprites->data->state == AWAKE))
-		{
-			enemy_angle(box, sprites->data);
-			enemy_move(box, sprites->data);
-		}
-		if (sprites->data->texture < TEAR && sprites->data->texture != DOOR)
-			continue_loop = check_player_hit(box, sprites->data);
-		else if (sprites->data->texture == TEAR)
-			continue_loop = handle_tear(box, sprites->data, sprites);
-		else if (sprites->data->texture == ITEMS)
-			continue_loop = handle_item(box, sprites->data, sprites);
-		else if (sprites->data->texture == KEY && sprites->data->dist < 0.1
-			&& sprites->data->dist != 0)
-			continue_loop = handle_key(box, sprites);
-		else if (sprites->data->texture == TROPHY && sprites->data->dist < 0.1
-			&& sprites->data->dist != 0)
-			continue_loop = handle_trophy(box, sprites);
-		else if (sprites->data->texture == DOOR)
-			continue_loop = handle_door(box, sprites->data);
+		process_larry_jr_head(box, sprites->data);
+		process_larry_jr_body(box, sprites->data);
+		process_leech_or_baby(box, sprites->data);
+		continue_loop = determine_sprite_action(box, sprites->data, sprites);
 		if (continue_loop)
 			sprites = sprites->next;
+		else
+			break ;
 	}
 }
