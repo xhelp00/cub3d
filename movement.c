@@ -370,58 +370,86 @@ int	check_player_hit(t_box *box, t_sprite_data *data)
 	return (1);
 }
 
-int	handle_tear(t_box *box, t_sprite_data *data, t_sprite *sprites)
+int	check_frame_and_remove(t_box *box, t_sprite_data *data, t_sprite *sprites)
+{
+	data->frame = ((((box->time.tv_sec - data->hit_time.tv_sec)
+					+((box->time.tv_usec - data->hit_time.tv_usec) / 1000000.0))
+				* 10) * 16) / 10;
+	if (data->frame > 14)
+	{
+		sprite_remove(box, sprites);
+		return (0);
+	}
+	return (1);
+}
+
+int	check_collision_with_map(t_box *box, t_sprite_data *data)
+{
+	if ((box->map[(int)(data->x + data->dir_x * box->info.move_speed)][(int)data
+		->y] > '0'
+		&& box->map[(int)(data->x + data->dir_x * box->info.move_speed)]
+			[(int)data->y] != '0' + DOOR + 1)
+		|| (box->map[(int)(data->x)][(int)(data->y + data->dir_y * box->info
+			.move_speed)] > '0'
+		&& box->map[(int)(data->x)][(int)(data->y + data->dir_y * box->info
+			.move_speed)] != '0' + DOOR + 1))
+		return (1);
+	return (0);
+}
+
+int	check_collision_with_door(t_box *box, t_sprite_data *data)
+{
+	if ((find_door(box, (int)data->x, (int)data->y + data->dir_y * box->info
+				.move_speed) && find_door(box, (int)data->x, (int)data->y
+				+ data->dir_y * box->info.move_speed)->data->state != OPEN)
+		|| (find_door(box, (int)(data->x + data->dir_x * box->info.move_speed),
+			(int)data->y)
+		&& find_door(box, (int)(data->x + data->dir_x * box->info.move_speed),
+		(int)data->y)->data->state != OPEN))
+		return (1);
+	return (0);
+}
+
+int	check_collision_sprites(t_box *box, t_sprite_data *data, t_sprite *sprites)
 {
 	t_sprite	*obj;
 
+	obj = box->sprites;
+	while (obj)
+	{
+		if (1 > ((obj->data->x - data->x) * (obj->data->x - data->x)
+				+ (obj->data->y - data->y)
+				* (obj->data->y - data->y)) * 100 && obj->data->texture < TEAR
+			&& obj->data->hit == 0)
+		{
+			sprite_hit(box, sprites, obj);
+			return (1);
+		}
+		obj = obj->next;
+	}
+	return (0);
+}
+
+int	handle_tear(t_box *box, t_sprite_data *data, t_sprite *sprites)
+{
 	if (data->hit)
 	{
-		data->frame = ((((box->time.tv_sec - data->hit_time.tv_sec) + ((box->time.tv_usec - data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-		if (data->frame > 14)
-		{
-			sprite_remove(box, sprites);
-			return (0);
-		}
+		return (check_frame_and_remove(box, data, sprites));
 	}
-	else if ((box->map[(int)(data->x + data->dir_x * box->info.move_speed)][(int)data->y] > '0'
-			&& box->map[(int)(data->x + data->dir_x * box->info.move_speed)][(int)data->y] != '0' + DOOR + 1)
-			|| (box->map[(int)(data->x)][(int)(data->y + data->dir_y * box->info.move_speed)] > '0'
-			&& box->map[(int)(data->x)][(int)(data->y + data->dir_y * box->info.move_speed)] != '0' + DOOR + 1))
-	{
-		sprite_hit(box, sprites, NULL);
-		return (0);
-	}
-	else if ((find_door(box, (int)data->x, (int)data->y + data->dir_y * box->info.move_speed)
-			&& find_door(box, (int)data->x, (int)data->y + data->dir_y * box->info.move_speed)->data->state != OPEN)
-			|| (find_door(box, (int)(data->x + data->dir_x * box->info.move_speed), (int)data->y)
-			&& find_door(box, (int)(data->x + data->dir_x * box->info.move_speed), (int)data->y)->data->state != OPEN))
-	{
-		sprite_hit(box, sprites, NULL);
-		return (0);
-	}
-	else if (data->travel > box->player.range / 5.0)
+	else if (check_collision_with_map(box, data)
+		|| check_collision_with_door(box, data)
+		|| data->travel > box->player.range / 5.0
+		|| check_collision_sprites(box, data, sprites))
 	{
 		sprite_hit(box, sprites, NULL);
 		return (0);
 	}
 	else
 	{
-		obj = box->sprites;
-		while (obj)
-		{
-			if (1 > ((obj->data->x - data->x)
-					* (obj->data->x - data->x)
-					+ (obj->data->y - data->y)
-					* (obj->data->y - data->y)) * 100 && obj->data->texture < TEAR
-					&& obj->data->hit == 0)
-				{
-					sprite_hit(box, sprites, obj);
-					return (0);
-				}
-			obj = obj->next;
-		}
-		data->x += data->dir_x * box->info.move_speed * (box->player.shot_speed / 8.0);
-		data->y += data->dir_y * box->info.move_speed * (box->player.shot_speed / 8.0);
+		data->x += data->dir_x * box->info.move_speed * (box->player.shot_speed
+				/ 8.0);
+		data->y += data->dir_y * box->info.move_speed * (box->player.shot_speed
+				/ 8.0);
 	}
 	return (1);
 }
@@ -429,7 +457,8 @@ int	handle_tear(t_box *box, t_sprite_data *data, t_sprite *sprites)
 int	handle_item(t_box *box, t_sprite_data *data, t_sprite *sprites)
 {
 	data->frame = ((((box->time.tv_sec - data->hit_time.tv_sec) + ((box->time
-		.tv_usec - data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+							.tv_usec - data->hit_time.tv_usec) / 1000000.0))
+				* 10) * 16) / 10;
 	if (data->dist < 0.1)
 	{
 		if (data->id == 0)
@@ -485,9 +514,9 @@ int	handle_door(t_box *box, t_sprite_data *data)
 {
 	if (data->opening)
 	{
-		data->frame = ((((box->time.tv_sec - data->action_time.tv_sec) + ((box
-			->time.tv_usec - data->action_time.tv_usec) / 1000000.0)) * 10)
-				* 16) / 10;
+		data->frame = ((((box->time.tv_sec - data->action_time.tv_sec)
+						+ ((box->time.tv_usec - data->action_time.tv_usec)
+							/ 1000000.0)) * 10) * 16) / 10;
 		if (data->frame > 32)
 		{
 			data->opening = 0;
@@ -518,7 +547,7 @@ void	cal_sprite_move(t_box *box)
 			enemy_move(box, sprites->data);
 		}
 		if (sprites->data->texture == LEECH || (sprites->data->texture == BABY
-			&& sprites->data->state == AWAKE))
+				&& sprites->data->state == AWAKE))
 		{
 			enemy_angle(box, sprites->data);
 			enemy_move(box, sprites->data);
