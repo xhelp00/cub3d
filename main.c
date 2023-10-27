@@ -73,7 +73,7 @@ void	print_menu(void)
 	printf("        ██║███████╗███████║███████║██║               \n");
 	printf("        ██║╚════██║██╔══██║██╔══██║██║               \n");
 	printf("        ██║███████║██║  ██║██║  ██║╚██████╗          \n");
-	printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
+	printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.42\n");
 	printf("                                                     \n");
 	printf("Terminal Menu:\n");
 	printf("1. Choose map hell\n");

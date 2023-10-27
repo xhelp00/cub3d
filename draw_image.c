@@ -129,6 +129,8 @@ void	draw_pickups_on_hud(t_box *box, int x, int y)
 		box->info.color = extract_color(&box->textures[UI_PICKUPS].addr[(x - 4
 					- ((x - 20) / 2)) * 4 + box->textures[UI_PICKUPS].line_len
 				* (y - 50 - ((y - 50) / 2))]);
+	if ((box->info.color & 0x00FFFFFF) != 0)
+		my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 }
 
 unsigned int	extract_heart_color(t_box *box, int x, int y, int i)
@@ -225,13 +227,13 @@ void	handle_game_state(t_box *box)
 {
 	double	frame;
 
-	if (!box->won && !box->lost)
+	if (!box->won)
 	{
 		if (box->player.hit)
 			fill_screen_red(box);
 		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	}
-	else
+	if (box->won || box->lost)
 	{
 		frame = ((((box->time.tv_sec - box->fin_time.tv_sec)
 						+ ((box->time.tv_usec - box->fin_time.tv_usec)

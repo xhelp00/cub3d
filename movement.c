@@ -279,6 +279,35 @@ void	enemy_angle(t_box *box, t_sprite_data *data)
 	}
 }
 
+void	body_angle(t_box *box, t_sprite_data *data)
+{
+	box->info.t_angle = atan2(data->y - find_seg(box, data->seg - 1)->data->y,
+			data->x - find_seg(box, data->seg - 1)->data->x);
+	box->info.now_angle = atan2(data->dir_y, data->dir_x)
+		- atan2(box->info.start_dir_y, box->info.start_dir_x);
+	if (box->info.t_angle < 0)
+		box->info.t_angle += 2 * PI;
+	if (box->info.now_angle < 0)
+		box->info.now_angle += 2 * PI;
+	if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle
+			* (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
+	{
+		box->info.old_dir_x = data->dir_x;
+		data->dir_x = data->dir_x * cos(box->info.rot_speed * 0.5) - data->dir_y
+			* sin(box->info.rot_speed * 0.5);
+		data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5)
+			+ data->dir_y * cos(box->info.rot_speed * 0.5);
+	}
+	else
+	{
+		box->info.old_dir_x = data->dir_x;
+		data->dir_x = data->dir_x * cos(-box->info.rot_speed * 0.5)
+			- data->dir_y * sin(-box->info.rot_speed * 0.5);
+		data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5)
+			+ data->dir_y * cos(-box->info.rot_speed * 0.5);
+	}
+}
+
 void	enemy_move(t_box *box, t_sprite_data *data)
 {
 	if (((box->map[(int)(data->x + data->dir_x
@@ -299,13 +328,184 @@ void	enemy_move(t_box *box, t_sprite_data *data)
 	}
 }
 
+int	update_player_frame_when_hit(t_box *box)
+{
+	box->player.frame = ((((box->time.tv_sec - box->player.hit_time.tv_sec)
+					+ ((box->time.tv_usec - box->player.hit_time.tv_usec)
+						/ 1000000.0)) * 10) * 16) / 10;
+	if (box->player.frame > 20)
+	{
+		box->player.hit = 0;
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_player_getting_hit(t_box *box)
+{
+	box->player.hit = 1;
+	if (box->god == 0 && !box->won && !box->lost)
+	{
+		box->player.hp -= 1;
+		if (box->player.hp < 1)
+		{
+			box->lost = 1;
+			printf("YOU ARE DEAD!!!\n");
+			box->p = music(box->env, "sounds/fail.mp3");
+			gettimeofday(&box->fin_time, NULL);
+			return (0);
+		}
+		box->p = music(box->env, "sounds/ow.mp3");
+	}
+	gettimeofday(&box->player.hit_time, NULL);
+	return (1);
+}
+
+int	check_player_hit(t_box *box, t_sprite_data *data)
+{
+	if (box->player.hit)
+		return (update_player_frame_when_hit(box));
+	else if (data->dist < 0.1)
+		return (handle_player_getting_hit(box));
+	return (1);
+}
+
+int	handle_tear(t_box *box, t_sprite_data *data, t_sprite *sprites)
+{
+	t_sprite	*obj;
+
+	if (data->hit)
+	{
+		data->frame = ((((box->time.tv_sec - data->hit_time.tv_sec) + ((box->time.tv_usec - data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+		if (data->frame > 14)
+		{
+			sprite_remove(box, sprites);
+			return (0);
+		}
+	}
+	else if ((box->map[(int)(data->x + data->dir_x * box->info.move_speed)][(int)data->y] > '0'
+			&& box->map[(int)(data->x + data->dir_x * box->info.move_speed)][(int)data->y] != '0' + DOOR + 1)
+			|| (box->map[(int)(data->x)][(int)(data->y + data->dir_y * box->info.move_speed)] > '0'
+			&& box->map[(int)(data->x)][(int)(data->y + data->dir_y * box->info.move_speed)] != '0' + DOOR + 1))
+	{
+		sprite_hit(box, sprites, NULL);
+		return (0);
+	}
+	else if ((find_door(box, (int)data->x, (int)data->y + data->dir_y * box->info.move_speed)
+			&& find_door(box, (int)data->x, (int)data->y + data->dir_y * box->info.move_speed)->data->state != OPEN)
+			|| (find_door(box, (int)(data->x + data->dir_x * box->info.move_speed), (int)data->y)
+			&& find_door(box, (int)(data->x + data->dir_x * box->info.move_speed), (int)data->y)->data->state != OPEN))
+	{
+		sprite_hit(box, sprites, NULL);
+		return (0);
+	}
+	else if (data->travel > box->player.range / 5.0)
+	{
+		sprite_hit(box, sprites, NULL);
+		return (0);
+	}
+	else
+	{
+		obj = box->sprites;
+		while (obj)
+		{
+			if (1 > ((obj->data->x - data->x)
+					* (obj->data->x - data->x)
+					+ (obj->data->y - data->y)
+					* (obj->data->y - data->y)) * 100 && obj->data->texture < TEAR
+					&& obj->data->hit == 0)
+				{
+					sprite_hit(box, sprites, obj);
+					return (0);
+				}
+			obj = obj->next;
+		}
+		data->x += data->dir_x * box->info.move_speed * (box->player.shot_speed / 8.0);
+		data->y += data->dir_y * box->info.move_speed * (box->player.shot_speed / 8.0);
+	}
+	return (1);
+}
+
+int	handle_item(t_box *box, t_sprite_data *data, t_sprite *sprites)
+{
+	data->frame = ((((box->time.tv_sec - data->hit_time.tv_sec) + ((box->time
+		.tv_usec - data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+	if (data->dist < 0.1)
+	{
+		if (data->id == 0)
+			box->player.fire_rate -= box->player.fire_rate / 10;
+		else if (data->id == 3)
+		{
+			box->player.dmg += 5;
+			if (!find_item(box, 11) && !find_item(box, 3))
+				box->player.dmg *= 1.5;
+		}
+		else if (data->id == 5)
+		{
+			box->player.fire_rate /= 2;
+			box->player.range /= 1.5;
+		}
+		else if (data->id == 6)
+			box->player.dmg += 10;
+		else if (data->id == 11)
+		{
+			box->player.max_hp += 2;
+			box->player.hp = box->player.max_hp;
+			box->player.dmg += 3;
+			if (!find_item(box, 3) && !find_item(box, 11))
+				box->player.dmg *= 1.5;
+			box->player.range += 15;
+			box->player.speed += 30;
+		}
+		item_append(box, sprites);
+		return (0);
+	}
+	return (1);
+}
+
+int	handle_key(t_box *box, t_sprite *sprites)
+{
+	box->player.n_key++;
+	box->p = music(box->env, "sounds/key.mp3");
+	sprite_remove(box, sprites);
+	return (0);
+}
+
+int	handle_trophy(t_box *box, t_sprite *sprites)
+{
+	printf("YOU WIN!!!\n");
+	box->p = music(box->env, "sounds/fanfare.mp3");
+	sprite_remove(box, sprites);
+	box->won = 1;
+	gettimeofday(&box->fin_time, NULL);
+	return (0);
+}
+
+int	handle_door(t_box *box, t_sprite_data *data)
+{
+	if (data->opening)
+	{
+		data->frame = ((((box->time.tv_sec - data->action_time.tv_sec) + ((box
+			->time.tv_usec - data->action_time.tv_usec) / 1000000.0)) * 10)
+				* 16) / 10;
+		if (data->frame > 32)
+		{
+			data->opening = 0;
+			if (data->state == CLOSE)
+				data->state = OPEN;
+		}
+	}
+	return (1);
+}
+
 void	cal_sprite_move(t_box *box)
 {
 	t_sprite	*sprites;
-	t_sprite	*obj;
+	int			continue_loop;
 
+	continue_loop = 1;
 	sprites = box->sprites;
-	while (sprites)
+	while (sprites && continue_loop)
 	{
 		if (sprites->data->texture == LARRY_JR_HEAD)
 		{
@@ -314,177 +514,30 @@ void	cal_sprite_move(t_box *box)
 		}
 		if (sprites->data->texture == LARRY_JR_BODY)
 		{
-			box->info.t_angle = atan2(sprites->data->y - find_seg(box, sprites->data->seg - 1)->data->y, sprites->data->x - find_seg(box, sprites->data->seg - 1)->data->x);
-			box->info.now_angle = atan2(sprites->data->dir_y, sprites->data->dir_x) - atan2(box->info.start_dir_y, box->info.start_dir_x);
-			if (box->info.t_angle < 0)
-				box->info.t_angle += 2 * PI;
-			if (box->info.now_angle < 0)
-				box->info.now_angle += 2 * PI;
-			if (box->info.now_angle < box->info.t_angle || fabs(box->info.now_angle * (180 / PI) - box->info.t_angle * (180 / PI)) > 180)
-			{
-				box->info.old_dir_x = sprites->data->dir_x;
-				sprites->data->dir_x = sprites->data->dir_x * cos(box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(box->info.rot_speed * 0.5);
-				sprites->data->dir_y = box->info.old_dir_x * sin(box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(box->info.rot_speed * 0.5);
-			}
-			else
-			{
-				box->info.old_dir_x = sprites->data->dir_x;
-				sprites->data->dir_x = sprites->data->dir_x * cos(-box->info.rot_speed * 0.5) - sprites->data->dir_y * sin(-box->info.rot_speed * 0.5);
-				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
-			}
+			body_angle(box, sprites->data);
 			enemy_move(box, sprites->data);
 		}
-		if (sprites->data->texture < TEAR && sprites->data->texture != DOOR)
-		{
-			if (box->player.hit)
-			{
-				box->player.frame = ((((box->time.tv_sec - box->player.hit_time.tv_sec) + ((box->time.tv_usec - box->player.hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-				if (box->player.frame > 20)
-					box->player.hit = 0;
-			}
-			else if (sprites->data->dist < 0.1)
-			{
-				box->player.hit = 1;
-				if (box->god == 0 && !box->won && !box->lost)
-				{
-					box->player.hp -= 1;
-					if (box->player.hp < 1)
-					{
-						box->lost = 1;
-						printf("YOU ARE DEAD!!!\n");
-						box->p = music(box->env, "sounds/fail.mp3");
-						gettimeofday(&box->fin_time, NULL);
-						break;
-					}
-					box->p = music(box->env, "sounds/ow.mp3");
-				}
-				gettimeofday(&box->player.hit_time, NULL);
-			}
-		}
-
 		if (sprites->data->texture == LEECH || (sprites->data->texture == BABY
 			&& sprites->data->state == AWAKE))
 		{
 			enemy_angle(box, sprites->data);
 			enemy_move(box, sprites->data);
 		}
-
-		if (sprites->data->texture == TEAR)
-		{
-			if (sprites->data->hit)
-			{
-				sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-				if (sprites->data->frame > 14)
-				{
-					sprite_remove(box, sprites);
-					break;
-				}
-			}
-			else if ((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] > '0'
-					&& box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] != '0' + DOOR + 1)
-					|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] > '0'
-					&& box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.move_speed)] != '0' + DOOR + 1))
-			{
-				sprite_hit(box, sprites, NULL);
-				break;
-			}
-			else if ((find_door(box, (int)sprites->data->x, (int)sprites->data->y + sprites->data->dir_y * box->info.move_speed)
-					&& find_door(box, (int)sprites->data->x, (int)sprites->data->y + sprites->data->dir_y * box->info.move_speed)->data->state != OPEN)
-					|| (find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)
-					&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state != OPEN))
-			{
-				sprite_hit(box, sprites, NULL);
-				break;
-			}
-			else if (sprites->data->travel > box->player.range / 5.0)
-			{
-				sprite_hit(box, sprites, NULL);
-				break;
-			}
-			else
-			{
-				obj = box->sprites;
-				while (obj)
-				{
-					if (1 > ((obj->data->x - sprites->data->x)
-							* (obj->data->x - sprites->data->x)
-							+ (obj->data->y - sprites->data->y)
-							* (obj->data->y - sprites->data->y)) * 100 && obj->data->texture < TEAR
-							&& obj->data->hit == 0)
-						{
-							sprite_hit(box, sprites, obj);
-							break;
-						}
-					obj = obj->next;
-				}
-				sprites->data->x += sprites->data->dir_x * box->info.move_speed * (box->player.shot_speed / 8.0);
-				sprites->data->y += sprites->data->dir_y * box->info.move_speed * (box->player.shot_speed / 8.0);
-			}
-
-		}
-		if (sprites->data->texture == ITEMS)
-		{
-			sprites->data->frame = ((((box->time.tv_sec - sprites->data->hit_time.tv_sec) + ((box->time.tv_usec - sprites->data->hit_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-			if (sprites->data->dist < 0.1)
-			{
-				if (sprites->data->id == 0)
-					box->player.fire_rate -= box->player.fire_rate / 10;
-				else if (sprites->data->id == 3)
-				{
-					box->player.dmg += 5;
-					if (!find_item(box, 11) && !find_item(box, 3))
-						box->player.dmg *= 1.5;
-				}
-				else if (sprites->data->id == 5)
-				{
-					box->player.fire_rate /= 2;
-					box->player.range /= 1.5;
-				}
-				else if (sprites->data->id == 6)
-					box->player.dmg += 10;
-				else if (sprites->data->id == 11)
-				{
-					box->player.max_hp += 2;
-					box->player.hp = box->player.max_hp;
-					box->player.dmg += 3;
-					if (!find_item(box, 3) && !find_item(box, 11))
-						box->player.dmg *= 1.5;
-					box->player.range += 15;
-					box->player.speed += 30;
-				}
-				item_append(box, sprites);
-				break;
-			}
-		}
-		if (sprites->data->texture == KEY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
-		{
-			box->player.n_key++;
-			box->p = music(box->env, "sounds/key.mp3");
-			sprite_remove(box, sprites);
-			break;
-		}
-		if (sprites->data->texture == TROPHY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
-		{
-			printf("YOU WIN!!!\n");
-			box->p = music(box->env, "sounds/fanfare.mp3");
-			sprite_remove(box, sprites);
-			box->won = 1;
-			gettimeofday(&box->fin_time, NULL);
-			break;
-		}
-		if (sprites->data->texture == DOOR)
-		{
-			if (sprites->data->opening)
-			{
-				sprites->data->frame = ((((box->time.tv_sec - sprites->data->action_time.tv_sec) + ((box->time.tv_usec - sprites->data->action_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-				if (sprites->data->frame > 32)
-				{
-					sprites->data->opening = 0;
-					if (sprites->data->state == CLOSE)
-						sprites->data->state = OPEN;
-				}
-			}
-		}
-		sprites = sprites->next;
+		if (sprites->data->texture < TEAR && sprites->data->texture != DOOR)
+			continue_loop = check_player_hit(box, sprites->data);
+		else if (sprites->data->texture == TEAR)
+			continue_loop = handle_tear(box, sprites->data, sprites);
+		else if (sprites->data->texture == ITEMS)
+			continue_loop = handle_item(box, sprites->data, sprites);
+		else if (sprites->data->texture == KEY && sprites->data->dist < 0.1
+			&& sprites->data->dist != 0)
+			continue_loop = handle_key(box, sprites);
+		else if (sprites->data->texture == TROPHY && sprites->data->dist < 0.1
+			&& sprites->data->dist != 0)
+			continue_loop = handle_trophy(box, sprites);
+		else if (sprites->data->texture == DOOR)
+			continue_loop = handle_door(box, sprites->data);
+		if (continue_loop)
+			sprites = sprites->next;
 	}
 }
