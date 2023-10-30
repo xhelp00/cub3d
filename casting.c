@@ -605,6 +605,8 @@ void	process_leech_directions(t_box *box, t_sprite *sprites,
 
 void	process_leech(t_box *box, t_sprite *sprites)
 {
+	if (sprites->data->dist < 2)
+		sprites->data->state = AWAKE;
 	if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47
 		&& box->info.tex_y > 15)
 		process_leech_directions(box, sprites, sprites->data->dir_x, sprites
@@ -687,6 +689,8 @@ void	process_larry_directions(t_box *box, t_sprite *sprites,
 
 void	process_larry_head(t_box *box, t_sprite *sprites)
 {
+	if (sprites->data->dist < 2)
+		sprites->data->state = AWAKE;
 	if (box->info.tex_x < 60 && box->info.tex_x > 20 && box->info.tex_y < 60
 		&& box->info.tex_y > 25)
 		process_larry_directions(box, sprites, sprites->data->dir_x, sprites
@@ -697,6 +701,8 @@ void	process_larry_head(t_box *box, t_sprite *sprites)
 
 void	process_larry_body(t_box *box, t_sprite *sprites)
 {
+	if (!sprites->data->state && find_seg(box, 0)->data->state == AWAKE)
+		sprites->data->state = AWAKE;
 	if (box->info.tex_x < 50 && box->info.tex_x > 20 && box->info.tex_y < 60
 		&& box->info.tex_y > 30)
 	{

@@ -249,6 +249,8 @@ void	handle_direction_s(t_box *box, int i, int c)
 {
 	box->info.rot_speed = 3.143;
 	box->info.rotate = 1;
+	box->mouse.x = SCREENWIDTH / 2;
+	box->mouse.y = SCREENHEIGHT / 2;
 	cal_move(box);
 	box->info.rotate = 0;
 	box->map[i][c] = '0';
@@ -258,6 +260,8 @@ void	handle_direction_e(t_box *box, int i, int c)
 {
 	box->info.rot_speed = 1.5715;
 	box->info.rotate = 1;
+	box->mouse.x = SCREENWIDTH / 2;
+	box->mouse.y = SCREENHEIGHT / 2;
 	cal_move(box);
 	box->info.rotate = 0;
 	box->map[i][c] = '0';
@@ -267,6 +271,8 @@ void	handle_direction_w(t_box *box, int i, int c)
 {
 	box->info.rot_speed = 1.5715;
 	box->info.rotate = -1;
+	box->mouse.x = SCREENWIDTH / 2;
+	box->mouse.y = SCREENHEIGHT / 2;
 	cal_move(box);
 	box->info.rotate = 0;
 	box->map[i][c] = '0';

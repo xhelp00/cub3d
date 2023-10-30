@@ -536,7 +536,8 @@ int	handle_door(t_box *box, t_sprite_data *data)
 
 void	process_larry_jr_head(t_box *box, t_sprite_data *data)
 {
-	if (data->texture == LARRY_JR_HEAD)
+	if (data->texture == LARRY_JR_HEAD && data->state
+			== AWAKE)
 	{
 		enemy_angle(box, data);
 		enemy_move(box, data);
@@ -545,7 +546,8 @@ void	process_larry_jr_head(t_box *box, t_sprite_data *data)
 
 void	process_larry_jr_body(t_box *box, t_sprite_data *data)
 {
-	if (data->texture == LARRY_JR_BODY)
+	if (data->texture == LARRY_JR_BODY && data->state
+			== AWAKE)
 	{
 		body_angle(box, data);
 		enemy_move(box, data);
@@ -554,8 +556,8 @@ void	process_larry_jr_body(t_box *box, t_sprite_data *data)
 
 void	process_leech_or_baby(t_box *box, t_sprite_data *data)
 {
-	if (data->texture == LEECH || (data->texture == BABY && data->state
-			== AWAKE))
+	if ((data->texture == LEECH || data->texture == BABY) && data->state
+			== AWAKE)
 	{
 		enemy_angle(box, data);
 		enemy_move(box, data);
