@@ -56,7 +56,7 @@ void	init_textures(t_box *box)
 {
 	alloc_textures(box);
 	load_specific_textures(box, 0, "textures/wall.xpm");
-	load_specific_textures(box, 2, "textures/blackhole.xpm");
+	load_specific_textures(box, BLACKHOLE, "textures/blackhole.xpm");
 	load_specific_textures(box, 1, "textures/floor.xpm");
 	load_specific_textures(box, DOOR, "textures/bars.xpm");
 	load_specific_textures(box, BABY, "textures/baby.xpm");
@@ -87,6 +87,8 @@ void	init_general_vals(t_box *box)
 	box->hud = 1;
 	box->won = 0;
 	box->lost = 0;
+	box->music = 0;
+	box->pid = 0;
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
 }

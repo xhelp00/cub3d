@@ -49,6 +49,8 @@ void	draw_player(t_box *box)
 {
 	t_rect	rect;
 
+	rect.height = 10;
+	rect.width = 10;
 	rect.x = (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - 15;
 	rect.y = (box->info.pos_x * 10) + 5;
 	rect.fill_color = 0x00e63946;
