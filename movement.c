@@ -334,11 +334,8 @@ int	update_player_frame_when_hit(t_box *box)
 					+ ((box->time.tv_usec - box->player.hit_time.tv_usec)
 						/ 1000000.0)) * 10) * 16) / 10;
 	if (box->player.frame > 20)
-	{
 		box->player.hit = 0;
-		return (1);
-	}
-	return (0);
+	return (1);
 }
 
 int	handle_player_getting_hit(t_box *box)

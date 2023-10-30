@@ -99,6 +99,8 @@ void	handle_input_buffer(int key, t_box *box)
 
 int	key_press(int key, t_box *box)
 {
+	if (box->won || box->lost)
+		return (0);
 	handle_rotate(key, box);
 	handle_move(key, box);
 	handle_position_adjustment(key, box);

@@ -227,12 +227,9 @@ void	handle_game_state(t_box *box)
 {
 	double	frame;
 
-	if (!box->won)
-	{
-		if (box->player.hit)
-			fill_screen_red(box);
-		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
-	}
+	if (box->player.hit)
+		fill_screen_red(box);
+	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
 	if (box->won || box->lost)
 	{
 		frame = ((((box->time.tv_sec - box->fin_time.tv_sec)
