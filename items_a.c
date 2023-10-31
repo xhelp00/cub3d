@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   items.c                                            :+:      :+:    :+:   */
+/*   items_a.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbartosi <jbartosi@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,23 +11,6 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-t_item	*new_item(void)
-{
-	t_item	*new;
-
-	new = ft_calloc(1, sizeof(t_item));
-	if (!new)
-		return (NULL);
-	new->data = ft_calloc(1, sizeof(t_item_data));
-	if (!new->data)
-		return (NULL);
-	new->data->id = 0;
-	new->data->texture = 0;
-	new->next = NULL;
-	new->prev = NULL;
-	return (new);
-}
 
 t_item	*last_item(t_item *i)
 {
