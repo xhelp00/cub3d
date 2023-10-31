@@ -12,7 +12,7 @@
 
 
 NAME = cub3d
-CFLAGS = -Wall -Wextra -Werror -g #fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 LIBFT = Libft
 MLX = minilibx
 UNAME_S := $(shell uname -s)

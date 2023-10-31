@@ -77,5 +77,6 @@ void	parser(t_box *box, int fd)
 	initialize_and_read_map(box, fd, &line);
 	process_map_characters(box);
 	adjust_map_width(box);
+	check_around(box, box->map);
 	read_process_additional_attributes(box, fd);
 }

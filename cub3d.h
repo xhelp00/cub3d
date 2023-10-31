@@ -446,6 +446,9 @@ void			item_remove(t_box *box, t_item *to_rem);
 //map_file
 void			set_map_filename(int choice, t_box *box);
 void			initialize_and_read_map(t_box *box, int fd, char **line);
+void			check3(t_box *box, char **argv);
+void			check_around(t_box *box, char **map);
+
 //menu
 void			handle_other_choices(int choice, t_box *box);
 void			process_choice(int choice, t_box *box);
@@ -533,6 +536,7 @@ void			process_direction_character(t_box *box, int i, int c);
 void			process_single_character(t_box *box, int i, int c);
 void			process_map_characters(t_box *box);
 void			adjust_map_width(t_box *box);
+int				suffix_check(char *s);
 //parser
 t_point			parse_attribute_values(char *line, int *texture, int *s);
 void			handle_larry_jr_head(t_box *box, t_point point, t_sprite *last);

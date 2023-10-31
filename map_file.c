@@ -32,6 +32,11 @@ void	initialize_and_read_map(t_box *box, int fd, char **line)
 	box->map_width = 0;
 	box->map_height = 0;
 	*line = get_next_line(fd);
+	if (!*line)
+	{
+		ft_printf("%s\n", "Error map.");
+		exit(1);
+	}
 	while ((*line)[0] != '\n')
 	{
 		box->map = ft_arrappend(box->map, ft_strtrim(*line, "\n"));
@@ -41,4 +46,40 @@ void	initialize_and_read_map(t_box *box, int fd, char **line)
 		box->map_height++;
 	}
 	free(*line);
+}
+
+void	check3(t_box *box, char **argv)
+{
+	if (!suffix_check(argv[1]))
+	{
+		printf("Error\nWrong map format.\n");
+		exit(1);
+	}
+	box->map_filename = argv[1];
+}
+
+void	check_around(t_box *box, char **map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (i == 0 || i == box->map_height - 1 || j == 0
+				|| j == box->map_width - 1)
+			{
+				if (map[i][j] != '1')
+				{
+					ft_printf("Error\nInvalid map.\n");
+					exit(1);
+				}
+			}
+			j++;
+		}
+		i++;
+	}
 }

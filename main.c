@@ -56,9 +56,7 @@ void	check(t_box *box, int argc, char **argv)
 	if (argc == 1)
 		check2(box);
 	else if (argc == 2)
-	{
-		box->map_filename = argv[1];
-	}
+		check3(box, argv);
 	else
 	{
 		printf("Error\nInvalid number of arguments.\n");

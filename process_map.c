@@ -76,3 +76,14 @@ void	adjust_map_width(t_box *box)
 		}
 	}
 }
+
+int	suffix_check(char *s)
+{
+	int	len;
+
+	len = ft_strlen(s);
+	if (s[len - 4] == '.' && s[len - 3] == 'c' && \
+	s[len - 2] == 'u' && s[len - 1] == 'b')
+		return (1);
+	return (0);
+}
