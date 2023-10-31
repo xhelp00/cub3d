@@ -69,8 +69,8 @@ void	check_around(t_box *box, char **map)
 		j = 0;
 		while (map[i][j])
 		{
-			if (i == 0 || i == box->map_height - 1 || j == 0
-				|| j == box->map_width - 1)
+			if (i == 0 || i == box->map_height || j == 0
+				|| j == box->map_width)
 			{
 				if (map[i][j] != '1')
 				{
