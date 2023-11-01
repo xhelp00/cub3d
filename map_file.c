@@ -69,10 +69,10 @@ void	check_around(t_box *box, char **map)
 		j = 0;
 		while (map[i][j])
 		{
-			if (i == 0 || i == box->map_height || j == 0
-				|| j == box->map_width)
+			if (i == 0 || i == box->map_height - 1 || j == 0
+				|| j == box->map_width - 1)
 			{
-				if (map[i][j] != '1')
+				if (map[i][j] != '1' && map[i][j] != '8' && map[i][j] != '4')
 				{
 					ft_printf("Error\nInvalid map.\n");
 					exit(1);
