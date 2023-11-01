@@ -37,7 +37,7 @@ void	initialize_and_read_map(t_box *box, int fd, char **line)
 		ft_printf("%s\n", "Error map.");
 		exit(1);
 	}
-	while ((*line)[0] != '\n')
+	while (*line && (*line)[0] && (*line)[0] != '\n')
 	{
 		box->map = ft_arrappend(box->map, ft_strtrim(*line, "\n"));
 		if ((int) ft_strlen(*line) - 1 > box->map_width)
