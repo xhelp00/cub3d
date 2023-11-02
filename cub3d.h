@@ -203,6 +203,7 @@ typedef struct s_sprite_data
 //Texture numbers
 # define DOOR 2
 # define BLACKHOLE 3
+# define GREY_BRICKS 7
 # define BABY 10
 # define NERVE_ENDING 11
 # define LEECH 12
