@@ -87,6 +87,6 @@ int	exit_hook(t_box *box)
 		if (kill(box->pid, SIGTERM) == -1)
 			perror("Failed to terminate child process");
 	}
-	mlx_destroy_window(box->mlx, box->win);
+	free_stuff(box);
 	exit(0);
 }

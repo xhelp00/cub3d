@@ -424,7 +424,7 @@ void			redraw(t_box *box);
 //graphics
 void			draw_rect(t_rect *rect, t_box *box);
 void			draw_line(t_line *line, t_box *box);
-//hook_handle 
+//hook_handle
 void			handle_rotate(int key, t_box *box);
 void			handle_move(int key, t_box *box);
 void			handle_position_adjustment(int key, t_box *box);
@@ -567,5 +567,7 @@ void			calc_sprite_distances(t_box *box, t_sprite *sprites);
 void			inner_bubble_sort(t_sprite *sprites);
 void			outer_bubble_sort(t_box *box);
 void			bubble_sort_sprites(t_box *box);
+//free_stuff
+void			free_stuff(t_box *box);
 
 #endif

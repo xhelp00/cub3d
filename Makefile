@@ -25,7 +25,7 @@ SRC = action.c baby_nerve_leech.c cast_door.c cast_enemy.c cast_floor.c \
 		item_move.c \
 		items_a.c items_n.c keyhook.c main.c map_file.c menu.c minimap.c \
 		movement.c parser.c process_map.c redraw.c remove_seg.c reset_vals.c \
-		sort.c sound.c sprite_move.c tear_larry_isaac.c
+		sort.c sound.c sprite_move.c tear_larry_isaac.c free_stuff.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
