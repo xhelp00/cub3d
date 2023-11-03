@@ -22,7 +22,6 @@ void	init_general_vals(t_box *box)
 	box->hud = 1;
 	box->won = 0;
 	box->lost = 0;
-	box->music = 0;
 	box->pid = 0;
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));

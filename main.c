@@ -89,6 +89,7 @@ int	main(int argc, char **argv, char **env)
 {
 	t_box			box;
 
+	box.music = 0;
 	check(&box, argc, argv);
 	box.mlx = mlx_init();
 	box.win = mlx_new_window(box.mlx, SCREENWIDTH, SCREENHEIGHT, "cub3d");
