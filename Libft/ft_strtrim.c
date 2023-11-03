@@ -3,62 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/12 14:57:13 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/12 14:57:15 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/13 10:39:28 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/20 12:04:25 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
-
-static size_t	spec_strlen(char *str, char *set)
-{
-	size_t	counter;
-	size_t	i;
-
-	i = 0;
-	counter = ft_strlen(str);
-	while (i < ft_strlen(str))
-	{
-		if (ft_strchr(set, str[i]))
-			counter--;
-		else
-			break ;
-		i++;
-	}
-	if (!counter)
-		return (counter);
-	i = ft_strlen(str);
-	while (--i)
-	{
-		if (ft_strchr(set, str[i]))
-			counter--;
-		else
-			break ;
-	}
-	return (counter);
-}
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*substr;
-	size_t	substr_ctr;
+	char	*ptr;
 	size_t	i;
-	size_t	reduced_strlen;
+	size_t	start;
+	size_t	end;
 
-	if (!s1)
+	if (s1 == NULL || set == NULL)
 		return (NULL);
-	reduced_strlen = spec_strlen((char *)s1, (char *)set);
-	substr = ft_calloc(reduced_strlen + 1, sizeof(char));
-	if (!substr)
+	start = 0;
+	end = ft_strlen(s1);
+	while (s1[start] != '\0' && ft_strchr(set, s1[start]))
+		start++;
+	while (end > start && ft_strchr(set, s1[end - 1]))
+		end--;
+	ptr = malloc(sizeof(char) * (end - start) + 1);
+	if (!ptr)
 		return (NULL);
 	i = 0;
-	substr_ctr = 0;
-	while (ft_strchr(set, s1[i]))
-		i++;
-	while (substr_ctr < reduced_strlen)
-		substr[substr_ctr++] = s1[i++];
-	return (substr);
+	while (end > start)
+		ptr[i++] = s1[start++];
+	ptr[i] = '\0';
+	return (ptr);
 }

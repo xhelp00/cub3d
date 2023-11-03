@@ -1,70 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/14 14:41:54 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/14 14:41:55 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/13 10:41:11 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/19 09:57:54 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_pow(int nb, int power)
-{
-	if (power < 0)
-		return (0);
-	if (power == 1)
-		return (nb);
-	if (power == 0)
-		return (1);
-	return (nb * ft_pow(nb, power - 1));
-}
-
-static int	ft_abs(int nb)
-{
-	if (nb < 0)
-		return (nb * -1);
-	return (nb);
-}
-
-static void	add_digit_fd(int fd, int n, int n_len)
-{
-	int	factor;
-	int	digit;
-
-	digit = '-';
-	factor = ft_pow(10, n_len - 1);
-	if (n < 0)
-	{
-		n *= -1;
-		write(fd, &digit, sizeof(char));
-	}
-	while (n_len)
-	{
-		digit = 0;
-		while (n >= factor)
-		{
-			digit += 1;
-			n -= factor;
-		}
-		digit += '0';
-		write(fd, &digit, sizeof(char));
-		n_len--;
-		factor /= 10;
-	}
-}
-
 void	ft_putnbr_fd(int n, int fd)
 {
-	int	n_len;
+	unsigned int	m;
 
-	n_len = 1;
-	if (n == -2147483648)
-		return (ft_putstr_fd("-2147483648", fd));
-	while (ft_abs(n) / ft_pow(10, n_len - 1) >= 10)
-		n_len++;
-	add_digit_fd(fd, n, n_len);
+	if (n < 0)
+	{
+		m = -n;
+		write (fd, "-", 1);
+	}
+	else
+		m = n;
+	if (m >= 10)
+	{
+		ft_putnbr_fd(m / 10, fd);
+		ft_putnbr_fd(m % 10, fd);
+	}
+	if (m < 10)
+	{
+		m += '0';
+		write (fd, &m, 1);
+	}
 }

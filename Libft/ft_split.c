@@ -3,83 +3,90 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/12 15:48:09 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/12 15:48:10 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/13 10:39:39 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/23 09:56:43 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	get_wc(char *s, char c)
+static int	ft_wordcount(char const *s, char c)
 {
-	int	wc;
-
-	wc = 0;
-	if (!c || !s || !*s)
-		return (0);
-	while (s && *s)
-	{
-		if (*s != c)
-		{
-			wc++;
-			s = ft_strchr(s, c);
-		}
-		else
-			while (*s == c)
-				s++;
-	}
-	return (wc);
-}
-
-static int	evacuate(char **res_arr)
-{
+	int	wordcount;
 	int	i;
 
+	wordcount = 0;
 	i = 0;
-	while (res_arr[i])
-		free(res_arr[i++]);
-	free(res_arr);
-	return (1);
-}
-
-static int	write_split(char **res_arr, char *s, char c)
-{
-	int		i;
-	int		res_ctr;
-	int		w_len;
-
-	i = 0;
-	res_ctr = 0;
-	while (s && s[i])
+	while (s[i])
 	{
 		while (s[i] == c)
 			i++;
-		if (!s[i])
-			break ;
-		if (ft_strchr(&s[i], c))
-			w_len = ft_strchr(&s[i], c) - &s[i];
-		else
-			w_len = ft_strlen(&s[i]);
-		res_arr[res_ctr] = ft_calloc(sizeof(char), w_len + 1);
-		if (!res_arr[res_ctr])
-			return (evacuate(res_arr));
-		ft_strlcpy (res_arr[res_ctr++], (char *)s + i, (size_t)w_len + 1);
-		i += w_len;
+		if (s[i])
+			wordcount++;
+		while (s[i] && s[i] != c)
+			i++;
 	}
-	res_arr[res_ctr] = NULL;
-	return (0);
+	return (wordcount);
 }
 
-char	**ft_split(char const *s, char c)
+static int	ft_size_word(char const *s, char c)
 {
-	char	**res_arr;
+	int	size;
 
-	res_arr = ft_calloc(sizeof(char *), get_wc((char *)s, c) + 1);
-	if (!res_arr)
+	size = 0;
+	while (s[size] != c && s[size])
+	{
+		size++;
+	}
+	return (size);
+}
+
+static void	ft_free(char **strs, int j)
+{
+	while (j-- > 0)
+		free(strs[j]);
+	free(strs);
+}
+
+static char	**ft_fill(char **new, const char *str, char c, int count)
+{
+	int	words;
+	int	len;
+	int	i;
+
+	i = 0;
+	words = 0;
+	while (words < count)
+	{
+		while (str[i] == c)
+			i++;
+		len = ft_size_word(&str[i], c);
+		new[words] = ft_substr(str, i, len);
+		if (!new[words])
+		{
+			ft_free(new, words);
+			return (NULL);
+		}
+		while (str[i] && str[i] != c)
+			i++;
+		words++;
+	}
+	new[words] = NULL;
+	return (new);
+}
+
+char	**ft_split(const char *str, char c)
+{
+	int		count;
+	char	**new;
+
+	if (!str)
 		return (NULL);
-	if (write_split(res_arr, (char *)s, c) == 1)
+	count = ft_wordcount(str, c);
+	new = malloc ((count + 1) * sizeof(char **));
+	if (!new)
 		return (NULL);
-	return (res_arr);
+	return (ft_fill(new, str, c, count));
 }

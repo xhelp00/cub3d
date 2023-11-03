@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   header2.c                                          :+:      :+:    :+:   */
+/*   ft_arrappend.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 08:56:59 by nroth             #+#    #+#             */
-/*   Updated: 2022/10/14 08:57:05 by nroth            ###   ########.fr       */
+/*   Created: 2023/06/10 16:50:14 by jbartosi          #+#    #+#             */
+/*   Updated: 2023/10/16 16:05:02 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 	appends item to char * array and re allocates the space.
 	original arr is freed
 	NOTE: ITEM has to be freeable
+	CREDITS for nroth <3
 */
-
 char	**ft_arrappend(char **arr, char *to_append)
 {
 	char	**ret;

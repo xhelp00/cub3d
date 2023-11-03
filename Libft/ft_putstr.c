@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   header2.c                                          :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 08:56:59 by nroth             #+#    #+#             */
-/*   Updated: 2022/10/14 08:57:05 by nroth            ###   ########.fr       */
+/*   Created: 2023/02/08 15:16:06 by phelebra          #+#    #+#             */
+/*   Updated: 2023/02/08 16:52:21 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/*
-	frees items of an array of pointers and frees the arr itself
-*/
-
-void	ft_arrfree(void **arr)
+int	ft_putstr(char *s)
 {
-	int	i;
-
-	i = -1;
-	while (arr[++i])
-		free (arr[i]);
-	free (arr);
+	if (!s)
+		s = "(null)" ;
+	ft_putstr_fd(s, 1);
+	return (ft_strlen(s));
 }

@@ -3,78 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/13 13:31:31 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/13 13:31:32 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/13 10:39:58 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/19 17:13:24 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_pow(int nb, int power)
+static int	ft_intlen(int n)
 {
-	if (power < 0)
-		return (0);
-	if (power == 1)
-		return (nb);
-	if (power == 0)
-		return (1);
-	return (nb * ft_pow(nb, power - 1));
-}
+	int	len;
 
-static int	ft_abs(int nb)
-{
-	if (nb < 0)
-		return (nb * -1);
-	return (nb);
-}
-
-static void	add_digit(char *dest, int n, int n_len)
-{
-	int	index;
-	int	factor;
-	int	digit;
-
-	digit = 0;
-	index = 0;
-	factor = ft_pow(10, n_len - 1);
-	if (n < 0)
+	len = 0;
+	if (n <= 0)
+		len++;
+	while (n)
 	{
-		n *= -1;
-		dest[index++] = '-';
-		n_len++;
+		n /= 10;
+		len++;
 	}
-	while (index < n_len)
-	{
-		digit = 0;
-		while (n >= factor)
-		{
-			digit += 1;
-			n -= factor;
-		}
-		dest[index] = digit + '0';
-		index++;
-		factor /= 10;
-	}
+	return (len);
 }
 
 char	*ft_itoa(int n)
 {
-	int		n_len;
-	char	*res;
+	char		*ptr;
+	int			len;
+	long int	m;
 
-	n_len = 1;
-	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
-	while (ft_abs(n) / ft_pow(10, n_len - 1) >= 10)
-		n_len++;
-	if (n < 0)
-		res = ft_calloc(sizeof(char), n_len + 2);
-	else
-		res = ft_calloc(sizeof(char), n_len + 1);
-	if (!res)
+	len = ft_intlen(n);
+	ptr = malloc(sizeof(char) * len + 1);
+	if (!ptr)
 		return (NULL);
-	add_digit(res, n, n_len);
-	return (res);
+	m = n;
+	if (m < 0)
+	{
+		ptr[0] = '-';
+		m *= -1;
+	}
+	ptr[len] = '\0';
+	len--;
+	if (m == 0)
+		ptr[0] = '0';
+	while (m)
+	{
+		ptr[len] = m % 10 + '0';
+		m /= 10;
+		len--;
+	}
+	return (ptr);
 }

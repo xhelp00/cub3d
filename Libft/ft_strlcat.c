@@ -1,40 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/11 12:02:10 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/11 12:02:14 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/10 17:04:28 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/16 17:16:28 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *dest, const char *src, size_t size)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstbuffsize)
 {
-	unsigned int	src_cnt;
-	unsigned int	dest_cnt;
-	size_t			ret_val;
+	size_t	i;
+	size_t	j;
+	size_t	res;
 
-	if (!dest && !size)
+	i = 0;
+	j = 0;
+	if (!dst && dstbuffsize == 0)
 		return (0);
-	dest_cnt = ft_strlen(dest);
-	src_cnt = 0;
-	if (size > ft_strlen(dest))
-		ret_val = ft_strlen(src) + ft_strlen(dest);
+	while (dst[i] && i < dstbuffsize)
+		i++;
+	j = ft_strlen(src);
+	if (dstbuffsize > i)
+		res = i + j;
 	else
-		return (ft_strlen(src) + size);
-	if (!size)
-		return (ret_val);
-	while (src[src_cnt]
-		&& dest_cnt + 1 < size)
-	{
-		dest[dest_cnt] = src[src_cnt];
-		src_cnt++;
-		dest_cnt++;
-	}
-	dest[dest_cnt] = '\0';
-	return (ret_val);
+		res = dstbuffsize + j;
+	j = 0;
+	while (dstbuffsize != 0 && src[j] && i < dstbuffsize - 1)
+		dst[i++] = src[j++];
+	if (dstbuffsize > i)
+		dst[i] = '\0';
+	return (res);
 }

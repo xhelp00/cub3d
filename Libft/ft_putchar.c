@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/11 16:16:24 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/11 16:16:25 by nroth            ###   ########.fr       */
+/*   Created: 2023/02/08 16:05:16 by phelebra          #+#    #+#             */
+/*   Updated: 2023/02/08 16:05:33 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_cpyarr(char **dest, char **src)
+int	ft_putchar(char c)
 {
-	while (*src)
-	{
-		*dest = *src;
-		dest++;
-		src++;
-	}
-	*dest = NULL;
+	return (write(1, &c, 1));
 }

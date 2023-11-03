@@ -3,142 +3,104 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/17 10:50:12 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/17 10:50:14 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/30 09:52:22 by phelebra          #+#    #+#             */
+/*   Updated: 2023/02/03 10:48:34 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	ft_str_append(char **s1, char const *s2)
+char	*read_file(int fd, char *s)
 {
-	char	*ret_str;
-	size_t	tot_len;
-	size_t	i;
-
-	tot_len = ft_strlen(*s1) + ft_strlen(s2);
-	ret_str = (char *)ft_calloc(tot_len + 1, sizeof(char));
-	if (!ret_str)
-		return ;
-	i = 0;
-	while (i < tot_len)
-	{
-		if (i < ft_strlen(*s1))
-			ret_str[i] = *(*(s1) + i);
-		else
-			ret_str[i] = s2[i - ft_strlen(*s1)];
-		i++;
-	}
-	if (*s1)
-		free(*s1);
-	ft_bzero((char *)s2, BUFFER_SIZE);
-	*s1 = ret_str;
-}
-
-static char	*read_file(int fd, char *res)
-{
+	int		bytes_number;
 	char	*buffer;
-	int		err_code;
 
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	bytes_number = 1;
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	err_code = 1;
-	while (err_code > 0 && !ft_strchr(res, '\n'))
+	while (bytes_number != 0 && !ft_strchrgnl(s, '\n'))
 	{
-		err_code = read(fd, buffer, BUFFER_SIZE);
-		if (err_code > 0)
-			ft_str_append(&res, buffer);
-		else if (err_code == 0)
-			break ;
-		else if (err_code == -1)
+		bytes_number = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_number == -1)
 		{
-			if (res)
-				free(res);
-			res = NULL;
-			break ;
+			free(buffer);
+			return (NULL);
 		}
+		buffer[bytes_number] = '\0';
+		s = ft_strjoingnl(s, buffer);
 	}
 	free(buffer);
-	return (res);
+	return (s);
 }
 
-/*
-	update s to remove the line read,
-	freeing original and allocating whatever leftover is in s
-*/
-static char	*update_s(char *s)
+char	*single_line(char *s)
 {
-	int		i;
-	char	*new_s;
-	int		new_len;
-	int		line_len;
-
-	line_len = 0;
-	while (s[line_len] && s[line_len] != '\n')
-		line_len++;
-	if (s[line_len] == '\n')
-		line_len++;
-	new_len = ft_strlen(s) - line_len;
-	if (!new_len)
-		free(s);
-	if (!new_len)
-		return (NULL);
-	new_s = (char *) ft_calloc(new_len + 1, sizeof(char));
-	if (!new_s)
-		return (NULL);
-	i = -1;
-	while (++i < new_len)
-		new_s[i] = s[line_len + i];
-	free (s);
-	return (new_s);
-}
-
-/*
-	get the line from s, only up to \n or \0.
-*/
-static char	*get_line(char *s)
-{
-	char	*line;
-	int		line_len;
+	char	*ptr;
 	int		i;
 
-	line_len = 0;
 	i = 0;
-	while (s[line_len] && s[line_len] != '\n')
-		line_len++;
-	if (s[line_len] == '\n')
-		line_len++;
-	line = (char *) ft_calloc(line_len + 1, sizeof(char));
-	if (!line)
+	if (!*s)
 		return (NULL);
-	while (i < line_len)
+	while (s[i] != '\n' && s[i])
+		i++;
+	ptr = malloc (sizeof(char) * (i + 2));
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (s[i] != '\n' && s[i])
 	{
-		line[i] = s[i];
+		ptr[i] = s[i];
 		i++;
 	}
-	return (line);
+	if (s[i] == '\n')
+	{
+		ptr[i] = s[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
 }
 
-/*
-	S is an array of character pointers, each one will be tied to the
-	file descriptor as index. 
-	this is to keep the read line of each file descriptor and appending to it.
-*/
+char	*update_static(char *s)
+{
+	char	*ptr;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (s[i] != '\n' && s[i])
+		i++;
+	if (!s[i])
+	{
+		free(s);
+		return (NULL);
+	}
+	ptr = malloc(sizeof(char) * (ft_strlengnl(s) + 1 - i));
+	if (!ptr)
+		return (NULL);
+	i++;
+	j = 0;
+	while (s[i])
+		ptr[j++] = s[i++];
+	ptr[j] = '\0';
+	free(s);
+	return (ptr);
+}
 
 char	*get_next_line(int fd)
 {
-	static char	*s[FOPEN_MAX];
-	char		*line;
+	static char	*s;
+	char		*next_line;
 
-	if (BUFFER_SIZE < 1 || fd < 0 || fd > FOPEN_MAX)
+	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	s[fd] = read_file(fd, s[fd]);
-	if (!s[fd])
+	s = read_file(fd, s);
+	if (!s)
 		return (NULL);
-	line = get_line(s[fd]);
-	s[fd] = update_s(s[fd]);
-	return (line);
+	next_line = single_line(s);
+	s = update_static(s);
+	return (next_line);
 }

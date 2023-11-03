@@ -3,74 +3,59 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nroth <nroth@student.42.fr>                +#+  +:+       +#+         #
+#    By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/01/10 10:00:32 by nroth             #+#    #+#              #
-#    Updated: 2023/03/02 16:35:39 by nroth            ###   ########.fr        #
+#    Created: 2023/01/13 09:54:20 by phelebra          #+#    #+#              #
+#    Updated: 2023/01/23 10:22:16 by phelebra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+CC 		:= 	clang
+FLAGS 	:= 	-Wall -Wextra -Werror
+RM		:=	rm -f
 
+NAME	:=	libft.a
 
-SRCS =	ft_arrappend.c ft_arrfree.c ft_lstadd_front.c ft_putchar_fd.c ft_strmapi.c \
-		ft_arrcpy.c ft_lstclear.c ft_putendl_fd.c ft_strncmp.c \
-		ft_arrlen.c ft_lstdelone.c ft_putnbr_fd.c ft_strnstr.c \
-		ft_atoi.c ft_lstiter.c ft_putstr_fd.c ft_strrchr.c \
-		ft_bzero.c ft_lstlast.c ft_split.c ft_strtrim.c \
-		ft_calloc.c ft_lstmap.c ft_strappend.c ft_substr.c \
-		ft_isalnum.c ft_lstnew.c ft_strchr.c ft_tolower.c \
-		ft_isalpha.c ft_lstsize.c ft_strdup.c ft_toupper.c \
-		ft_isascii.c ft_memchr.c ft_striteri.c get_next_line.c \
-		ft_isdigit.c ft_memcmp.c ft_strjoin.c \
-		ft_isprint.c ft_memcpy.c ft_strlcat.c \
-		ft_itoa.c ft_memmove.c ft_strlcpy.c \
-		ft_lstadd_back.c ft_memset.c ft_strlen.c ft_arrappend_void.c\
+SRCS	:= 	ft_isascii.c ft_isprint.c ft_isalpha.c ft_isdigit.c ft_isalnum.c \
+				ft_tolower.c ft_toupper.c ft_strlen.c ft_memset.c ft_memchr.c \
+				ft_atoi.c ft_memcmp.c ft_strncmp.c ft_memcpy.c ft_memmove.c \
+				ft_bzero.c ft_strnstr.c ft_strchr.c ft_strrchr.c ft_strlcpy.c \
+				ft_strlcat.c ft_calloc.c ft_strdup.c ft_substr.c ft_strtrim.c \
+				ft_strjoin.c ft_putchar_fd.c ft_striteri.c ft_putstr_fd.c \
+				ft_putendl_fd.c ft_putnbr_fd.c ft_strmapi.c ft_itoa.c \
+				ft_split.c ft_printf.c ft_putchar.c ft_putstr.c ft_putnbr.c \
+				ft_putptr.c ft_puthex.c ft_putunsign.c get_next_line.c \
+				get_next_line_utils.c ft_arrappend.c ft_arrlen.c
 
-FT_PRINTF_FOL = ft_printf/
-FT_PRINTF = ${addprefix ${FT_PRINTF_FOL}, libftprintf.a}
+BONUS_S	:=	ft_lstnew.c ft_lstsize.c ft_lstlast.c ft_lstmap.c ft_lstiter.c \
+			ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstadd_front.c \
 
-NAME = libft.a
+OBJS	:=	$(SRCS:.c=.o)
+BONUS_O :=	$(BONUS_S:.c=.o)
 
-HEADER = ${NAME:.a=.h}
+all:		$(NAME)
 
-OBJS_DIR = objs/
-OBJS = ${SRCS:.c=.o}
-OBJS_PREFIXED = ${addprefix ${OBJS_DIR}, ${OBJS}}
+$(NAME):	$(OBJS) $(BONUS_O)
+			ar -rcs $(NAME) $(OBJS)
 
-CC_FLAGS = -Wall -Wextra -Werror
-CC = cc
+bonus:		$(NAME) $(BONUS_O)
+			ar -rcs $(NAME) $(BONUS_O)
+	
+.c.o:
+			$(CC) $(FLAGS) -c $< -o $(<:.c=.o)
 
-# Colors
-
-NRM_COLOR = \033[0;39m
-
-GREEN = \033[0;92m
-YELLOW = \033[0;93m
-
-
-
-all: ${NAME}
-
-${OBJS_DIR}%.o : %.c
-	@ mkdir -p ${OBJS_DIR}
-	@ ${CC} ${CC_FLAGS} -c $< -o $@
-
-${NAME}:	${OBJS_PREFIXED} ${FT_PRINTF}
-	@ ar -crs ${NAME} ${OBJS_PREFIXED}
-	@ ar -rs ${NAME} ${addprefix ${addprefix  ${FT_PRINTF_FOL}, ${OBJS_DIR}}, *}
-	@ echo "${GREEN}${NAME} created!${NRM_COLOR}" 
-
-${FT_PRINTF}:
-	@ make -C ${FT_PRINTF_FOL} --no-print-directory
+so:
+	$(CC) -nostartfiles -fPIC $(CFLAGS) $(SRCS) $(BONUS_S)
+	gcc -nostartfiles -shared -o libft.so $(OBJS) $(BONUS_O)
 
 clean:
-	rm -rf ${FT_PRINTF_FOL}${OBJS_DIR}
-	rm -rf ${OBJS_DIR}
+			$(RM) $(OBJS) $(BONUS_O)
 
-fclean: clean
-	rm -rf ${FT_PRINTF}
-	rm -f ${NAME}
+fclean: 	clean
+			$(RM) $(NAME)
 
-re: fclean all
+re:			fclean all
 
-.PHONY: all clean fclean re
+rebonus:	fclean bonus
+
+.PHONY: 	all clean fclean re bonus rebonus
