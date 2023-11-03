@@ -16,7 +16,7 @@ void	process_baby(t_box *box, t_sprite *sprites)
 {
 	if (box->info.tex_y < 47 && box->info.tex_y > 15)
 	{
-		if (sprites->data->dist < 2)
+		if (sprites->data->dist < 5)
 		{
 			sprites->data->state = AWAKE;
 			box->info.color = extract_color(&box->textures[sprites->data
@@ -54,7 +54,7 @@ void	process_nerve(t_box *box, t_sprite *sprites)
 
 void	process_leech(t_box *box, t_sprite *sprites)
 {
-	if (sprites->data->dist < 2)
+	if (sprites->data->dist < 5)
 		sprites->data->state = AWAKE;
 	if (box->info.tex_x < 48 && box->info.tex_x > 15 && box->info.tex_y < 47
 		&& box->info.tex_y > 15)

@@ -57,7 +57,7 @@ void	process_tear_travel(t_box *box, t_sprite *sprites)
 
 void	process_larry_head(t_box *box, t_sprite *sprites)
 {
-	if (sprites->data->dist < 2)
+	if (sprites->data->dist < 5)
 		sprites->data->state = AWAKE;
 	if (box->info.tex_x < 60 && box->info.tex_x > 20 && box->info.tex_y < 60
 		&& box->info.tex_y > 25)
