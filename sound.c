@@ -12,22 +12,24 @@
 
 #include "cub3d.h"
 
-int music(char **env, char *track)
+char	*g_player;
+#ifdef __linux__
+
+char	*g_player = "/usr/bin/mpg123";
+
+#elif __APPLE__
+
+char	*g_player = "/Users/helebrant/.brew/bin/mpg123";
+
+#endif
+
+int	music(char **env, char *track)
 {
-
-	char *player;
-
-	#ifdef __linux__
-		player = "/usr/bin/mpg123";
-	#elif __APPLE__
-		player = "/Users/helebrant/.brew/bin/mpg123";
-	#endif
-
 	pid_t	pid;
 	char	*argv[4];
 
 	pid = fork();
-	argv[0] = player;
+	argv[0] = g_player;
 	argv[1] = "-q";
 	argv[2] = track;
 	argv[3] = NULL;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/11 12:53:16 by nroth             #+#    #+#             */
-/*   Updated: 2023/01/11 12:53:18 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/10 17:06:34 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/15 22:04:16 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,12 @@
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	size_t			counter;
-	unsigned char	s1_c;
-	unsigned char	s2_c;
+	size_t	i;
 
-	counter = 0;
-	while (counter < n)
-	{
-		s1_c = *(unsigned char *)(s1 + counter);
-		s2_c = *(unsigned char *)(s2 + counter);
-		if (s1_c - s2_c)
-			return (s1_c - s2_c);
-		counter++;
-	}
-	return (0);
+	i = 0;
+	if (n <= 0)
+		return (0);
+	while ((((unsigned char *)s1)[i] == ((unsigned char *)s2)[i]) && i < n - 1)
+		i++;
+	return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
 }

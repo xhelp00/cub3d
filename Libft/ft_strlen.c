@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   header2.c                                          :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nroth <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 08:56:59 by nroth             #+#    #+#             */
-/*   Updated: 2022/10/14 08:57:05 by nroth            ###   ########.fr       */
+/*   Created: 2023/01/10 14:59:34 by phelebra          #+#    #+#             */
+/*   Updated: 2023/01/15 21:44:10 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 size_t	ft_strlen(const char *s)
 {
-	unsigned long	length;
+	int	i;
 
-	if (!s)
-		return (0);
-	length = 0;
-	while (s[length] != '\0')
-		length++;
-	return (length);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }
