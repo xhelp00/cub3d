@@ -31,7 +31,7 @@
 # include <signal.h>
 # include <sys/wait.h>
 
-
+# define MOUSE_CONTROL 1
 # define SCREENWIDTH 1280
 # define SCREENHEIGHT 720
 # define TEXTUREWIDTH 64
@@ -171,7 +171,7 @@ typedef struct s_image
 # define LEFT 2
 # define RIGHT 3
 
-typedef struct s_data
+typedef struct s_sprite_data
 {
 	double			x;
 	double			y;
@@ -205,9 +205,15 @@ typedef struct s_data
 # define LARRY_JR_HEAD 30
 # define LARRY_JR_BODY 31
 # define TEAR 40
+# define KEY 43
+# define UI_PICKUPS 44
 # define UI_HEARTS 45
 # define UI_STATS 46
 # define ITEMS 47
+# define ITEM_ALTAR 48
+# define TROPHY 49
+# define WIN 42
+# define GRIM 39
 
 typedef struct s_sprite
 {
@@ -233,12 +239,12 @@ typedef struct s_player
 {
 	int				hp;
 	int				max_hp;
+	int				n_key;
 	int				speed;
 	int				range;
 	int				fire_rate;
 	int				shot_speed;
 	int				dmg;
-	double			dmg_mult;
 	int				cry;
 	int				state;
 	int				frame;
@@ -280,6 +286,10 @@ typedef struct s_box
 	char			input_buffer[6];  // to store "iddqd" + '\0'
 	int				input_index;
 	int 			god;
+	int				hud;
+	int				lost;
+	int				won;
+	struct timeval	fin_time;
 }				t_box;
 
 //shape rect used for drawing minimap

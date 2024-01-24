@@ -37,8 +37,8 @@ t_sprite	*new_sprite(void)
 	new->data->start_n_seg = 0;
 	new->data->seg = 0;
 	new->data->hit = 0;
-	new->data->sound = 0;
 	new->data->id = 0;
+	new->data->sound = 0;
 	new->data->opening = 0;
 	new->data->state = IDLE;
 	new->next = NULL;
@@ -302,6 +302,8 @@ void	parser(t_box *box, int fd)
 			}
 			last->data->seg = 0;
 		}
+		else if (last->data->texture == ITEMS)
+			sprite_append(box, x, y, ITEM_ALTAR);
 		// i = -1;
 		// printf("\nDUMP:\n");
 		// while (++i < box->n_sprites)

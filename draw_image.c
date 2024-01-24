@@ -12,6 +12,31 @@
 
 #include "cub3d.h"
 
+void fill_screen_red(t_box *box)
+{
+	int x, y;
+	unsigned char alpha = 0x80;
+	unsigned char red_value = 0xFF;
+	unsigned int *pixel_buffer = (unsigned int *)box->image.addr;
+	y = 0;
+	while (y < SCREENHEIGHT)
+	{
+		x = 0;
+		while (x < SCREENWIDTH)
+		{
+			int index = y * box->image.line_len / 4 + x;
+			unsigned int current_color = pixel_buffer[index];
+			unsigned char current_red = (current_color >> 16) & 0xFF;
+			unsigned char blended_red = (red_value * alpha + current_red * (255 - alpha)) / 255;
+			pixel_buffer[index] = (current_color & 0xFF00FFFF) | (blended_red << 16);
+			x++;
+		}
+		y++;
+	}
+}
+
+
+
 void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 {
 	unsigned char	*pixel;
@@ -55,7 +80,7 @@ void	draw_hud(t_box *box)
 	int		x;
 	int		y;
 	int		i;
-
+	t_item	*items;
 
 	y = -1;
 	while (++y < SCREENHEIGHT)
@@ -64,16 +89,21 @@ void	draw_hud(t_box *box)
 		while (++x < SCREENWIDTH)
 		{
 			box->info.color = 0;
-			if (y > 185 && y < 215 && x > 20 && x < 50)
-				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 185 - ((y - 185) / 2))]);
-			else if (y > 225 && y < 255 && x > 20 && x < 50)
-				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 210 - ((y - 225) / 2))]);
-			else if (y > 268 && y < 298 && x > 20 && x < 60)
-				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x + 10 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 268 - ((y - 268) / 2))]);
-			else if (y > 305 && y < 335 && x > 20 && x < 50)
-				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 290 - ((y - 305) / 2))]);
-			else if (y > 350 && y < 380 && x > 20 && x < 50)
-				box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 350 - ((y - 350) / 2))]);
+			if (box->hud)
+			{
+				if (y > 185 && y < 215 && x > 20 && x < 50)
+					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 185 - ((y - 185) / 2))]);
+				else if (y > 225 && y < 255 && x > 20 && x < 50)
+					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 210 - ((y - 225) / 2))]);
+				else if (y > 268 && y < 298 && x > 20 && x < 55)
+					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x + 10 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 268 - ((y - 268) / 2))]);
+				else if (y > 305 && y < 335 && x > 20 && x < 50)
+					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 290 - ((y - 305) / 2))]);
+				else if (y > 350 && y < 380 && x > 20 && x < 50)
+					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 350 - ((y - 350) / 2))]);
+			}
+			if (y > 50 && y < 80 && x > 20 && x < 50)
+				box->info.color = extract_color(&box->textures[UI_PICKUPS].addr[(x - 4 - ((x - 20) / 2)) * 4 + box->textures[UI_PICKUPS].line_len * (y - 50 - ((y - 50) / 2))]);
 			if ((box->info.color & 0x00FFFFFF) != 0)
 				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 			box->info.color = 0;
@@ -92,6 +122,22 @@ void	draw_hud(t_box *box)
 							my_mlx_pyxel_put(&box->image, x, y, box->info.color);
 				}
 			}
+			if (box->hud)
+			{
+				items = box->items;
+				i = 0;
+				while (items && i < 20)
+				{
+					if (y > 650 && y < 682 && x > 20 + (i * 32) && x < 52 + (i * 32))
+					{
+						box->info.color = extract_color(&box->textures[items->data->texture].addr[((x - 20 + ((items->data->id % 20) * 32)) - (i * 32)) * 4 + box->textures[items->data->texture].line_len * (y - 650)]);
+						if ((box->info.color & 0x00FFFFFF) != 0)
+								my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+					}
+					i++;
+					items = items->next;
+				}
+			}
 		}
 	}
 }
@@ -101,7 +147,6 @@ void	draw_hud(t_box *box)
 */
 void	redraw(t_box *box)
 {
-	char	*fps;
 	char 	*nbr;
 
 	mlx_destroy_image(box->mlx, box->image.img);
@@ -126,26 +171,43 @@ void	redraw(t_box *box)
 	draw_hud(box);
 	//single_square_test(box);
 
-	mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+	if (!box->won && !box->lost)
+	{
+		if (box->player.hit)
+			fill_screen_red(box);
+		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+	}
+	else if (box->lost)
+	{
+		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[GRIM].img, 360, 95);
+		if (box->player.frame > 100)
+			exit_hook(box);
+	}
+	else if (box->win)
+	{
+		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[WIN].img, 320, 40);
+		if (box->player.frame > 100)
+			exit_hook(box);
+	}
 
-	fps = ft_itoa(1.0 / box->info.frame_time);
-	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, fps);
-
-	if (box->player.hit && box->player.frame % 2 == 0)
-		box->info.color = 0x00FF0000;
-	else
-		box->info.color = 0x00FFFFFF;
-	nbr = ft_itoa(box->player.speed);
-	mlx_string_put(box->mlx, box->win, 65, 203, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.range));
-	mlx_string_put(box->mlx, box->win, 65, 245, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.fire_rate));
-	mlx_string_put(box->mlx, box->win, 65, 287, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.shot_speed));
-	mlx_string_put(box->mlx, box->win, 65, 329, box->info.color, nbr);
-	nbr = (free(nbr), ft_itoa(box->player.dmg));
-	mlx_string_put(box->mlx, box->win, 65, 371, box->info.color, nbr);
+	nbr = ft_itoa(1.0 / box->info.frame_time);
+	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, nbr);
+	if (box->hud)
+	{
+		nbr = (free(nbr), ft_itoa(box->player.speed));
+		mlx_string_put(box->mlx, box->win, 65, 203, 0x00FFFFFF, nbr);
+		nbr = (free(nbr), ft_itoa(box->player.range));
+		mlx_string_put(box->mlx, box->win, 65, 245, 0x00FFFFFF, nbr);
+		nbr = (free(nbr), ft_itoa(box->player.fire_rate));
+		mlx_string_put(box->mlx, box->win, 65, 287, 0x00FFFFFF, nbr);
+		nbr = (free(nbr), ft_itoa(box->player.shot_speed));
+		mlx_string_put(box->mlx, box->win, 65, 329, 0x00FFFFFF, nbr);
+		nbr = (free(nbr), ft_itoa(box->player.dmg));
+		mlx_string_put(box->mlx, box->win, 65, 371, 0x00FFFFFF, nbr);
+	}
+	nbr = (free(nbr), ft_itoa(box->player.n_key));
+	mlx_string_put(box->mlx, box->win, 50, 70, 0x00FFFFFF, nbr);
 	free(nbr);
-
-	free(fps);
 }

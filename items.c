@@ -29,13 +29,13 @@ t_item	*new_item(void)
 	return (new);
 }
 
-t_item	*last_item(t_item *s)
+t_item	*last_item(t_item *i)
 {
-	if (!s)
+	if (!i)
 		return (NULL);
-	while (s->next)
-		s = s->next;
-	return (s);
+	while (i->next)
+		i = i->next;
+	return (i);
 }
 
 void	item_add_back(t_box *box, t_item *new)

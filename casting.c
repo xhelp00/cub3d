@@ -6,7 +6,7 @@
 /*   By: phelebra <xhelp00@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:04:56 by jbartosi          #+#    #+#             */
-/*   Updated: 2023/10/16 14:20:57 by phelebra         ###   ########.fr       */
+/*   Updated: 2023/10/16 16:12:41 by phelebra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,29 +107,35 @@ void	draw_door(t_box *box, int x)
 	else
 		box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
 	box->info.wall_x -= floor((box->info.wall_x));
-		box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
-		if (!box->info.door_side && box->info.ray_dir_x > 0)
-			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
-		if (box->info.door_side && box->info.ray_dir_y < 0)
-			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
-
-		box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
-		box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
-
-		box->info.draw = box->info.draw_start;
-		while (box->info.draw++ < box->info.draw_end)
-		{
-			box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
-			box->info.tex_pos += box->info.step;
+	box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
+	if (!box->info.door_side && box->info.ray_dir_x > 0)
+		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
+	if (box->info.door_side && box->info.ray_dir_y < 0)
+		box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
+	box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
+	box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
+	box->info.draw = box->info.draw_start;
+	while (box->info.draw++ < box->info.draw_end)
+	{
+		box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
+		box->info.tex_pos += box->info.step;
+		// printf("DOOR OPENING: %i | DOOR STATE %i\n", door->data->opening, door->data->state);
+		if (!door->data->opening)
 			box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
-			if ((box->info.color & 0x00FFFFFF) != 0)
-			{
-				apply_fog(box, box->info.prep_wall_dist * 9);
-				my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
-			}
+		else if (door->data->opening)
+		{
+			if (box->info.text_x - door->data->frame * 2 < 64 && box->info.text_x - door->data->frame * 2 > 0)
+				box->info.color = extract_color(&box->textures[box->info.text_num].addr[(box->info.text_x - door->data->frame * 2) * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
+			else
+				box->info.color = 0;
 		}
-		box->info.zbuffer[x] = box->info.prep_wall_dist;
-		//printf("%i: %f\n", x, box->info.zbuffer[x]);
+		if ((box->info.color & 0x00FFFFFF) != 0)
+		{
+			apply_fog(box, box->info.prep_wall_dist * 9);
+			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
+		}
+	}
+	box->info.zbuffer[x] = box->info.prep_wall_dist;
 }
 
 void	cast_wall(t_box *box)
@@ -188,102 +194,7 @@ void	cast_wall(t_box *box)
 			}
 			if (box->map[box->info.map_x][box->info.map_y] > '0' && box->map[box->info.map_x][box->info.map_y] != DOOR + 1 + '0')
 				box->info.hit = 1;
-		}
-		if (!box->info.side)
-			box->info.prep_wall_dist = (box->info.side_dist_x - box->info.delta_dist_x);
-		else
-			box->info.prep_wall_dist = (box->info.side_dist_y - box->info.delta_dist_y);
-		box->info.line_height = (int)(SCREENHEIGHT / box->info.prep_wall_dist);
-		box->info.draw_start = -box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
-		if (box->info.draw_start < 0)
-			box->info.draw_start = 0;
-		box->info.draw_end = box->info.line_height / 2 + SCREENHEIGHT / 2 + box->info.pitch + (box->info.pos_z / box->info.prep_wall_dist);
-		if (box->info.draw_end >= SCREENHEIGHT)
-			box->info.draw_end = SCREENHEIGHT - 1;
-
-		box->info.text_num = box->map[box->info.map_x][box->info.map_y] - 1 - '0';
-		if (!box->info.side)
-			box->info.wall_x = box->info.pos_y + box->info.prep_wall_dist * box->info.ray_dir_y;
-		else
-			box->info.wall_x = box->info.pos_x + box->info.prep_wall_dist * box->info.ray_dir_x;
-		box->info.wall_x -= floor((box->info.wall_x));
-
-		box->info.text_x = (int)(box->info.wall_x * (double)TEXTUREWIDTH);
-		if (!box->info.side && box->info.ray_dir_x > 0)
-			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
-		if (box->info.side && box->info.ray_dir_y < 0)
-			box->info.text_x = TEXTUREWIDTH - box->info.text_x - 1;
-
-		box->info.step = 1.0 * TEXTUREHEIGHT / box->info.line_height;
-		box->info.tex_pos = (box->info.draw_start - box->info.pitch - (box->info.pos_z / box->info.prep_wall_dist) - SCREENHEIGHT / 2 + box->info.line_height / 2) * box->info.step;
-
-		box->info.draw = box->info.draw_start;
-		while (box->info.draw++ < box->info.draw_end)
-		{
-			box->info.text_y = (int)box->info.tex_pos & (TEXTUREHEIGHT - 1);
-			box->info.tex_pos += box->info.step;
-				box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
-				if (box->info.side)
-					box->info.color = (box->info.color >> 1) & 8355711;
-				apply_fog(box, box->info.prep_wall_dist * 9);
-				my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
-		}
-		box->info.zbuffer[x] = box->info.prep_wall_dist;
-		//printf("%i: %f\n", x, box->info.zbuffer[x]);
-
-		//this part is updating array of rays (their endings)
-		box->info.ray[x].end_x = (box->info.map_y *10) - (box->map_width * 10) + SCREENWIDTH - MINIMAP_OFFSET;
-		box->info.ray[x].end_y = (box->info.map_x *10) + MINIMAP_OFFSET;
-		if (box->info.ray[x].end_x < (box->info.pos_y * 10) + SCREENWIDTH - (box->map_width * 10) - MINIMAP_OFFSET -5)
-			box->info.ray[x].end_x += 10;
-		if (box->info.ray[x].end_y < (box->info.pos_x * 10) + MINIMAP_OFFSET -5)
-			box->info.ray[x].end_y += 10;
-	}
-}
-
-void	cast_door(t_box *box)
-{
-	int	x;
-	//t_line	line;
-	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
-
-	x = -1;
-	while (++x < SCREENWIDTH)
-	{
-		reset_vals(box);
-		box->info.camera_x = 2 * x / (double)SCREENWIDTH - 1;
-		box->info.ray_dir_x = box->info.dir_x + box->info.plane_x * box->info.camera_x;
-		box->info.ray_dir_y = box->info.dir_y + box->info.plane_y * box->info.camera_x;
-		box->info.map_x = (int)box->info.pos_x;
-		box->info.map_y = (int)box->info.pos_y;
-		box->info.delta_dist_x = fabs(1 / box->info.ray_dir_x);
-		box->info.delta_dist_y = fabs(1 / box->info.ray_dir_y);
-
-
-
-		if (box->info.ray_dir_x < 0)
-		{
-			box->info.step_x = -1;
-			box->info.side_dist_x = (box->info.pos_x - box->info.map_x) * box->info.delta_dist_x;
-		}
-		else
-		{
-			box->info.step_x = 1;
-			box->info.side_dist_x = (box->info.map_x + 1.0 - box->info.pos_x) * box->info.delta_dist_x;
-		}
-		if (box->info.ray_dir_y < 0)
-		{
-			box->info.step_y = -1;
-			box->info.side_dist_y = (box->info.pos_y - box->info.map_y) * box->info.delta_dist_y;
-		}
-		else
-		{
-			box->info.step_y = 1;
-			box->info.side_dist_y = (box->info.map_y + 1.0 - box->info.pos_y) * box->info.delta_dist_y;
-		}
-		while(!box->info.hit)
-		{
-			if (box->info.side_dist_x < box->info.side_dist_y)
+			else if (box->map[box->info.map_x][box->info.map_y] == DOOR + 1 + '0' && !box->info.door && !(find_door(box, box->info.map_x, box->info.map_y)->data->state == OPEN && !find_door(box, box->info.map_x, box->info.map_y)->data->opening))
 			{
 				box->info.door_side = box->info.side;
 				box->info.door = 1;
@@ -688,8 +599,32 @@ void	cast_obj(t_box *box)
 					}
 					else if (sprites->data->texture == ITEMS)
 					{
-						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 48 && box->info.tex_y > 16)
-							box->info.color = extract_color(&box->textures[ITEMS].addr[((box->info.tex_x - 16 + ((sprites->data->id % 20) * 32)) * 4) + box->textures[ITEMS].line_len * box->info.tex_y + box->textures[ITEMS].line_len * (-16 + (sprites->data->id / 20) * 32)]);
+						sprites->data->frame = ((int)((box->time.tv_usec / 100000.0) * 4) / 5);
+						if (sprites->data->frame > 4)
+							sprites->data->frame = 8 - sprites->data->frame;
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 48 - 1 * sprites->data->frame && box->info.tex_y > 16 - 1 * sprites->data->frame)
+							box->info.color = extract_color(&box->textures[ITEMS].addr[((box->info.tex_x - 16 + ((sprites->data->id % 20) * 32)) * 4) + box->textures[ITEMS].line_len * box->info.tex_y + box->textures[ITEMS].line_len * ((-16 + sprites->data->frame) + (sprites->data->id / 20) * 32)]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == TROPHY)
+					{
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 8)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -8]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == KEY)
+					{
+						if (box->info.tex_x < 32 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 32)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -32]);
+						else
+							box->info.color = 0;
+					}
+					else if (sprites->data->texture == ITEM_ALTAR)
+					{
+						if (box->info.tex_x < 48 && box->info.tex_x > 16 && box->info.tex_y < 64 && box->info.tex_y > 40)
+							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * -40]);
 						else
 							box->info.color = 0;
 					}

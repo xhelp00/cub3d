@@ -36,10 +36,11 @@ void	menu(t_box *box)
 		printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
 		printf("                                                     \n");
 		printf("Terminal Menu:\n");
-		printf("1. Choose map 1\n");
-		printf("2. Choose map 2\n");
-		printf("3. Exit\n");
-		printf("4. Toggle Music On/Off\n");
+		printf("1. Choose map hell\n");
+		printf("2. Choose map arena\n");
+		printf("3. Choose map exampleTexture\n");
+		printf("4. Exit\n");
+		printf("5. Toggle Music On/Off\n");
         printf("Enter your choice (1-4): ");
 
         if (scanf("%d", &choice) != 1)
@@ -52,16 +53,19 @@ void	menu(t_box *box)
         switch(choice)
         {
             case 1:
+                box->map_filename = "maps/hell.cub";
+                return;
+			case 2:
                 box->map_filename = "maps/arena.cub";
                 return;
-            case 2:
+            case 3:
                 box->map_filename = "maps/exampleTexture.cub";
                 return;
-            case 3:
+            case 4:
                 printf("Exiting...\n");
                 exit(0);
                 break;
-            case 4:
+            case 5:
                 if (box->music)
                 {
                     // Stop the music. You need a function to handle this.
@@ -151,11 +155,6 @@ int	timer(t_box *box)
 {
 	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	if (box->player.hp < 1)
-	{
-		printf("YOU ARE DEAD!!!\n");
-		exit_hook(box);
-	}
 	/* while (box->info.angry && !box->info.sound)
 	{
 		printf("YOU ARE DEAD!!!\n");
@@ -231,46 +230,46 @@ int	main(int argc, char **argv, char **env)
 
 //***testing stuff below to be removed***s//
 
-void print_map_contents(t_box *box)
-{
-    for (int i = 0; i < box->map_height; i++)
-    {
-        for (int j = 0; j < box->map_width; j++)
-        {
-            printf("%c ", box->map[i][j]);
-        }
-        printf("\n");
-    }
-}
+// void print_map_contents(t_box *box)
+// {
+//     for (int i = 0; i < box->map_height; i++)
+//     {
+//         for (int j = 0; j < box->map_width; j++)
+//         {
+//             printf("%c ", box->map[i][j]);
+//         }
+//         printf("\n");
+//     }
+// }
 
-void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color)
-{
-    int x, y;
-    for (y = 0; y < height; y++)
-    {
-        for (x = 0; x < width; x++)
-        {
-            int pixel_pos = y * width + x;
-            buffer[pixel_pos * 4] = color & 0xFF;            // Blue channel
-            buffer[pixel_pos * 4 + 1] = (color >> 8) & 0xFF;  // Green channel
-            buffer[pixel_pos * 4 + 2] = (color >> 16) & 0xFF; // Red channel
-            buffer[pixel_pos * 4 + 3] = (color >> 24) & 0xFF; // Alpha channel
-        }
-    }
-}
+// void fill_buffer_with_color(unsigned char *buffer, int width, int height, int color)
+// {
+//     int x, y;
+//     for (y = 0; y < height; y++)
+//     {
+//         for (x = 0; x < width; x++)
+//         {
+//             int pixel_pos = y * width + x;
+//             buffer[pixel_pos * 4] = color & 0xFF;            // Blue channel
+//             buffer[pixel_pos * 4 + 1] = (color >> 8) & 0xFF;  // Green channel
+//             buffer[pixel_pos * 4 + 2] = (color >> 16) & 0xFF; // Red channel
+//             buffer[pixel_pos * 4 + 3] = (color >> 24) & 0xFF; // Alpha channel
+//         }
+//     }
+// }
 
-void single_square_test(t_box *box) {
-    t_rect rect;
+// void single_square_test(t_box *box) {
+//     t_rect rect;
 
-    char grid_item = box->map[0][0];  // Just picking the top-left item as a test
+//     char grid_item = box->map[0][0];  // Just picking the top-left item as a test
 
-    rect.x = 300;
-    rect.y = 400;
-    rect.width = 20;
-    rect.height = 20;
-    rect.border_color = 0x0014213d;
-    rect.border_width = 0;
-    rect.fill_color = get_fill_color(grid_item);
-    printf("Calling single_square_test\n");
-    draw_rect(&rect, box);
-}
+//     rect.x = 300;
+//     rect.y = 400;
+//     rect.width = 20;
+//     rect.height = 20;
+//     rect.border_color = 0x0014213d;
+//     rect.border_width = 0;
+//     rect.fill_color = get_fill_color(grid_item);
+//     printf("Calling single_square_test\n");
+//     draw_rect(&rect, box);
+// }
