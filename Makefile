@@ -21,7 +21,7 @@ SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
-MLX_FLAGS = -lft -lmlx -lXext -lX11 -lm
+MLX_FLAGS = -lft -lmlx -lXext -lXrender -lX11 -lm
 CFLAGS += -fPIE
 LDFLAGS += -pie
 endif

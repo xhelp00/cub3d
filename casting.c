@@ -67,19 +67,14 @@ void	cast_floor(t_box *box)
 
 			box->info.distance = (int)((box->info.pos_x - box->info.floor_x) * (box->info.pos_x - box->info.floor_x) + (box->info.pos_y - box->info.floor_y) * (box->info.pos_y - box->info.floor_y));
 
-			if (box->info.is_floor)
-			{
-				box->info.color = extract_color(&box->textures[box->info.floor_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
-				box->info.color = (box->info.color >> 1) & 8355711;
-				apply_fog(box, box->info.distance);
-				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
-			}
-			else
+			if (box->info.distance < 100)
 			{
 				box->info.color = extract_color(&box->textures[box->info.ceiling_texture].addr[box->info.tx * 4 + box->textures[box->info.floor_texture].line_len * box->info.ty]);
 				box->info.color = (box->info.color >> 1) & 8355711;
-				apply_fog(box, box->info.distance);
-				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+				my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
+				// printf("%d\n", box->info.distance);
+				my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility((float)(100 - (box->info.distance))/100));
+				// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
 			}
 		}
 	}
@@ -131,8 +126,12 @@ void	draw_door(t_box *box, int x)
 		}
 		if ((box->info.color & 0x00FFFFFF) != 0)
 		{
-			apply_fog(box, box->info.prep_wall_dist * 9);
-			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
+			// apply_fog(box, box->info.prep_wall_dist * 9);
+			my_mlx_pyxel_put(&box->image, x, box->info.draw, 0xFF << 24 | box->info.color);
+			if ((int)box->info.prep_wall_dist < 12)
+				my_mlx_pyxel_put(&box->shaders, x, box->info.draw, pixel_visibility((float)(12 - box->info.prep_wall_dist)/12));
+			else
+				my_mlx_pyxel_put(&box->shaders, x, box->info.draw, pixel_visibility(0));
 		}
 	}
 	box->info.zbuffer[x] = box->info.prep_wall_dist;
@@ -240,8 +239,13 @@ void	cast_wall(t_box *box)
 			box->info.color = extract_color(&box->textures[box->info.text_num].addr[box->info.text_x * 4 + box->textures[box->info.text_num].line_len * box->info.text_y]);
 			if (box->info.side)
 				box->info.color = (box->info.color >> 1) & 8355711;
-			apply_fog(box, box->info.prep_wall_dist * 9);
-			my_mlx_pyxel_put(&box->image, x, box->info.draw, box->info.color);
+			// apply_fog(box, box->info.prep_wall_dist * 9);
+			// printf("%f\n", box->info.prep_wall_dist);
+			my_mlx_pyxel_put(&box->image, x, box->info.draw, 0xFF << 24 | box->info.color);
+			if ((int)box->info.prep_wall_dist < 12)
+				my_mlx_pyxel_put(&box->shaders, x, box->info.draw, pixel_visibility((float)(12 - box->info.prep_wall_dist)/12));
+			else
+				my_mlx_pyxel_put(&box->shaders, x, box->info.draw, pixel_visibility(0));
 		}
 		box->info.zbuffer[x] = box->info.prep_wall_dist;
 		if (box->info.door)
@@ -345,24 +349,6 @@ void	cast_obj(t_box *box)
 					box->info.d = (box->info.part - box->info.v_move_screen) * 256 - SCREENHEIGHT * 128 + box->info.sprite_height * 128;
 					box->info.tex_y = ((box->info.d * TEXTUREHEIGHT) / box->info.sprite_height) / 256;
 					//printf("Color from: %i\n", sprites->data->texture);
-					if ((box->info.t_angle > 2.7 && box->info.t_angle < 3.3) || (box->info.t_angle > -3.3 && box->info.t_angle < -2.7))
-						box->info.text_n = 0;
-					else if (box->info.t_angle > -2.7 && box->info.t_angle < -2.0)
-						box->info.text_n = 1;
-					else if (box->info.t_angle > -2.0 && box->info.t_angle < -1.2)
-						box->info.text_n = 2;
-					else if (box->info.t_angle > -1.2 && box->info.t_angle < -0.4)
-						box->info.text_n = 3;
-					else if (box->info.t_angle > -0.4 && box->info.t_angle < 0.4)
-						box->info.text_n = 4;
-					else if (box->info.t_angle > 0.4 && box->info.t_angle < 1.2)
-						box->info.text_n = 5;
-					else if (box->info.t_angle > 1.2 && box->info.t_angle < 2.0)
-						box->info.text_n = 6;
-					else if (box->info.t_angle > 2.0 && box->info.t_angle < 2.7)
-						box->info.text_n = 7;
-					else
-						box->info.text_n = 0;
 					if (sprites->data->texture == BABY)
 					{
 						if (box->info.tex_y < 47 && box->info.tex_y > 15)
@@ -486,8 +472,12 @@ void	cast_obj(t_box *box)
 							if ((box->info.color & 0x00FFFFFF) != 0)
 							{
 								hit_mark(box, sprites);
-								apply_fog(box, sprites->data->dist);
-								my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
+								// apply_fog(box, sprites->data->dist);
+								my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, 0xFF << 24 | box->info.color);
+								if (sprites->data->dist < 100)
+									my_mlx_pyxel_put(&box->shaders, box->info.stripe, box->info.part, pixel_visibility((float)(100 - (sprites->data->dist))/100));
+								else
+									my_mlx_pyxel_put(&box->shaders, box->info.stripe, box->info.part, pixel_visibility(0));
 							}
 							box->info.color = extract_color(&box->textures[sprites->data->texture].addr[((box->info.tex_x - 16) * 4) + box->textures[sprites->data->texture].line_len * box->info.tex_y + box->textures[sprites->data->texture].line_len * 8]);
 						}
@@ -633,8 +623,12 @@ void	cast_obj(t_box *box)
 					if ((box->info.color & 0x00FFFFFF) != 0)
 					{
 						hit_mark(box, sprites);
-						apply_fog(box, sprites->data->dist);
-						my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, box->info.color);
+						// apply_fog(box, sprites->data->dist);
+						my_mlx_pyxel_put(&box->image, box->info.stripe, box->info.part, 0xFF << 24 | box->info.color);
+						if (sprites->data->dist < 100)
+							my_mlx_pyxel_put(&box->shaders, box->info.stripe, box->info.part, pixel_visibility((float)(100 - (sprites->data->dist))/100));
+						else
+							my_mlx_pyxel_put(&box->shaders, box->info.stripe, box->info.part, pixel_visibility(0));
 					}
 					box->info.part++;
 				}

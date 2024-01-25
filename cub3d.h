@@ -271,6 +271,7 @@ typedef struct s_box
 	void			*mlx;
 	void			*win;
 	t_image			image;
+	t_image			shaders;
 	t_image			*textures;
 	t_sprite		*sprites;
 	t_item			*items;
@@ -345,6 +346,7 @@ void		redraw(t_box *box);
 int			extract_color(unsigned char *pixel);
 void		my_mlx_pyxel_put(t_image *image, int x, int y, int color);
 void		apply_fog(t_box *box, double dist);
+unsigned int	pixel_visibility(float fade);
 void		hit_mark(t_box *box, t_sprite *sprite);
 
 //Casting.c

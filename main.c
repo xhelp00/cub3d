@@ -209,9 +209,12 @@ int	main(int argc, char **argv, char **env)
 	box.mlx = mlx_init();
 	box.win = mlx_new_window(box.mlx, SCREENWIDTH, SCREENHEIGHT, "cub3d");
 	init_textures(&box);
-	box.image.img = mlx_new_image(box.mlx, SCREENWIDTH, SCREENHEIGHT);
+	box.image.img = mlx_new_image_alpha(box.mlx, SCREENWIDTH, SCREENHEIGHT);
 	box.image.addr = (unsigned char *)mlx_get_data_addr(box.image.img,
 			&box.image.bits_pp, &box.image.line_len, &box.image.endian);
+	box.shaders.img = mlx_new_image_alpha(box.mlx, SCREENWIDTH, SCREENHEIGHT);
+	box.shaders.addr = (unsigned char *)mlx_get_data_addr(box.shaders.img,
+			&box.shaders.bits_pp, &box.shaders.line_len, &box.shaders.endian);
 	redraw(&box);
 	box.env = env;
 	if (box.music)

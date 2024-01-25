@@ -46,12 +46,18 @@ void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 	*(unsigned int *)pixel = color;
 }
 
+unsigned int	pixel_visibility(float fade)
+{
+	return ((int)((1.0 - fade) * 255) << 24 | 0 << 16 | 0 << 8 | 0);
+}
+
 void	apply_fog(t_box *box, double dist)
 {
+	double fade = (1 - dist / 100);
 	if (dist / 100 < 1.0)
-		box->info.color = ((int)(((box->info.color >> 16) & 0xFF) * (1 - dist / 100)) << 16
-				| (int)(((box->info.color >> 8) & 0xFF) * (1 - dist / 100)) << 8
-				| (int)((box->info.color & 0xFF) * (1 - dist / 100)));
+		box->info.color = ((int)((box->info.color & 0xFF0000) * fade) & 0xFF0000)
+				| ((int)((box->info.color & 0xFF00) * fade) & 0xFF00)
+				| (int)((box->info.color & 0xFF) * fade);
 	else
 		box->info.color = 0;
 }
@@ -105,7 +111,10 @@ void	draw_hud(t_box *box)
 			if (y > 50 && y < 80 && x > 20 && x < 50)
 				box->info.color = extract_color(&box->textures[UI_PICKUPS].addr[(x - 4 - ((x - 20) / 2)) * 4 + box->textures[UI_PICKUPS].line_len * (y - 50 - ((y - 50) / 2))]);
 			if ((box->info.color & 0x00FFFFFF) != 0)
-				my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+			{
+				my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
+				my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
+			}
 			box->info.color = 0;
 			i = -1;
 			while (++i < ((box->player.max_hp + 1) / 2))
@@ -119,7 +128,10 @@ void	draw_hud(t_box *box)
 					else
 						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 18) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
 					if ((box->info.color & 0x00FFFFFF) != 0)
-							my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+					{
+							my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
+							my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
+					}
 				}
 			}
 			if (box->hud)
@@ -132,7 +144,10 @@ void	draw_hud(t_box *box)
 					{
 						box->info.color = extract_color(&box->textures[items->data->texture].addr[((x - 20 + ((items->data->id % 20) * 32)) - (i * 32)) * 4 + box->textures[items->data->texture].line_len * (y - 650)]);
 						if ((box->info.color & 0x00FFFFFF) != 0)
-								my_mlx_pyxel_put(&box->image, x, y, box->info.color);
+						{
+								my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
+								my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
+						}
 					}
 					i++;
 					items = items->next;
@@ -148,16 +163,27 @@ void	draw_hud(t_box *box)
 void	redraw(t_box *box)
 {
 	char 	*nbr;
+	int 	y;
+	int 	x;
 
 	mlx_destroy_image(box->mlx, box->image.img);
-	box->image.bits_pp = 0;
-	box->image.line_len = 0;
-	box->image.endian = 0;
-	box->image.img = mlx_new_image(box->mlx, SCREENWIDTH, SCREENHEIGHT);
-	//box->image.addr = malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(unsigned char *));
+	box->image.img = mlx_new_image_alpha(box->mlx, SCREENWIDTH, SCREENHEIGHT);
 	box->image.addr = (unsigned char *)mlx_get_data_addr(box->image.img,
 			&box->image.bits_pp, &box->image.line_len, &box->image.endian);
-	//printf("%i %i %i", box->image.bits_pp, box->image.line_len, box->image.endian);
+
+	mlx_destroy_image(box->mlx, box->shaders.img);
+	box->shaders.img = mlx_new_image_alpha(box->mlx, SCREENWIDTH, SCREENHEIGHT);
+	box->shaders.addr = (unsigned char *)mlx_get_data_addr(box->shaders.img,
+			&box->shaders.bits_pp, &box->shaders.line_len, &box->shaders.endian);
+
+	y = -1;
+	while (++y < SCREENHEIGHT)
+	{
+		x = -1;
+		while (++x < SCREENWIDTH)
+			my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(0));
+	}
+
 	cast_floor(box);
 	cast_wall(box);
 
@@ -176,6 +202,7 @@ void	redraw(t_box *box)
 		if (box->player.hit)
 			fill_screen_red(box);
 		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
+		mlx_put_image_to_window(box->mlx, box->win, box->shaders.img, 0, 0);
 	}
 	else if (box->lost)
 	{

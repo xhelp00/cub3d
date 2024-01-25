@@ -36,7 +36,8 @@ void	draw_rect(t_rect *rect, t_box *box)
 				img[tmp_y * res_width + tmp_x] = rect->border_color;
 			else */
 				//img[(tmp_y * box->image.line_len) + (tmp_x * (box->image.bits_pp / 8))] = rect->fill_color;
-			my_mlx_pyxel_put(&box->image, tmp_x, tmp_y, rect->fill_color);
+			my_mlx_pyxel_put(&box->image, tmp_x, tmp_y, 0xFF << 24 | rect->fill_color);
+			my_mlx_pyxel_put(&box->shaders, tmp_x, tmp_y, pixel_visibility(1));
 		}
 	}
 }
@@ -59,9 +60,10 @@ void	draw_rect(t_rect *rect, t_box *box)
 	while (pixels)
 	{
 		//img[(int)pixel_y * res_width + (int)pixel_x] = line->color;
-		my_mlx_pyxel_put(&box->image, (int)pixel_x, (int)pixel_y, line->color);
+		my_mlx_pyxel_put(&box->image, (int)pixel_x, (int)pixel_y, 0xFF << 24 | line->color);
+		my_mlx_pyxel_put(&box->shaders, (int)pixel_x, (int)pixel_y, pixel_visibility(1));
 		pixel_x += delta_x;
 		pixel_y += delta_y;
 		pixels--;
 	}
-} 
+}
