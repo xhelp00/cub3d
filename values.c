@@ -36,9 +36,15 @@ void	init_textures(t_box *box)
 	box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
 	box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
 	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
-	box->textures[UI_PICKUPS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_pickups.xpm", &k, &j);
-	box->textures[UI_HEARTS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_hearts.xpm", &k, &j);
-	box->textures[UI_STATS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_stats.xpm", &k, &j);
+	// box->textures[UI_PICKUPS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_pickups.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[UI_PICKUPS], "textures/ui_pickups.png");
+	split_spritesheet(&box->textures[UI_PICKUPS], 8, 5, 16, 16);
+	// box->textures[UI_HEARTS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_hearts.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[UI_HEARTS], "textures/ui_hearts.png");
+	split_spritesheet(&box->textures[UI_HEARTS], 7, 4, 16, 16);
+	// box->textures[UI_STATS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_stats.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[UI_STATS], "textures/ui_stats.png");
+	split_spritesheet(&box->textures[UI_STATS], 4, 4, 16, 16);
 	box->textures[ITEMS].img = mlx_xpm_file_to_image(box->mlx, "textures/items.xpm", &k, &j);
 	box->textures[ITEM_ALTAR].img = mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
 	box->textures[KEY].img = mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);

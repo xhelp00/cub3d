@@ -35,8 +35,6 @@ void fill_screen_red(t_box *box)
 	}
 }
 
-
-
 void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 {
 	unsigned char	*pixel;
@@ -44,6 +42,98 @@ void	my_mlx_pyxel_put(t_image *image, int x, int y, int color)
 	pixel = image->addr + (y * image->line_len + x
 			* (image->bits_pp / 8));
 	*(unsigned int *)pixel = color;
+}
+
+/*
+	my_mlx_put_image_to_window
+
+	Puts either full image, if sprite_id is -1,
+	or sprite form spritesheet with the spirte_id id
+*/
+void	my_mlx_put_image_to_window(t_box *box, t_image *image, int x, int y, int sprite_id)
+{
+	if (sprite_id >= 0)
+		mlx_put_image_to_window(box->mlx, box->win, image->img, x, y, 0 + (image->one_x * (sprite_id % image->n_col)), 0 + (image->one_y * (sprite_id / image->n_col)), image->one_x, image->one_y);
+	else
+		mlx_put_image_to_window(box->mlx, box->win, image->img, x, y, 0, 0, image->width, image->height);
+}
+
+/*
+	new_image
+
+	Creates a new mlx_image_alpha and sets its variables
+*/
+void	new_image(void *mlx, t_image *image, int width, int height)
+{
+	image->img = mlx_new_image_alpha(mlx, width, height);
+	image->width = width;
+	image->height = height;
+	image->addr = (unsigned char *)mlx_get_data_addr(image->img,
+			&image->bits_pp, &image->line_len, &image->endian);
+}
+
+/*
+	clear_image
+
+	Sets every pixel in image to 0
+	which means it will be trasparent
+*/
+void	clear_image(t_image *image)
+{
+	ft_memset(image->addr, 0, image->height * image->width * 4);
+}
+
+/*
+	png_file_to_image
+
+	Tryes to convert png file to image
+*/
+void	png_file_to_image(void *mlx, t_image *image, char *file)
+{
+	cp_image_t	png_img;
+	cp_pixel_t 	*mlx_img_data;
+	int			i;
+
+	png_img = cp_load_png(file);
+	if (png_img.pix == NULL)
+		return ;
+	cp_premultiply(&png_img);
+	image->img = mlx_new_image_alpha(mlx, png_img.w, png_img.h);
+	if (image->img == NULL)
+		return (free(png_img.pix), (void) 0);
+	mlx_img_data = (cp_pixel_t *)mlx_get_data_addr(image->img, &image->bits_pp, &image->line_len, &image->endian);
+	i = -1;
+	while (i++ < png_img.w * png_img.h)
+	{
+		mlx_img_data[i].r = png_img.pix[i].b;
+		mlx_img_data[i].g = png_img.pix[i].g;
+		mlx_img_data[i].b = png_img.pix[i].r;
+		mlx_img_data[i].a = png_img.pix[i].a;
+	}
+	image->width = png_img.w;
+	image->height = png_img.h;
+	free(png_img.pix);
+}
+
+/*
+	split_spritesheet
+
+	Used on spritesheet images to split it into sprites with ids
+	Needs to know number of images in rows and collums beforehand
+	- This step can be done automatically in the future
+*/
+void	split_spritesheet(t_image *image, int n_col, int n_row, int one_x, int one_y)
+{
+	image->n_col = n_col;
+	image->n_row = n_row;
+	if (one_x == 0)
+		image->one_x = image->width / image->n_col;
+	else
+		image->one_x = one_x;
+	if (one_y == 0)
+		image->one_y = image->height / image->n_row;
+	else
+		image->one_y = one_y;
 }
 
 unsigned int	pixel_visibility(float fade)
@@ -88,33 +178,42 @@ void	draw_hud(t_box *box)
 	int		i;
 	t_item	*items;
 
+	my_mlx_put_image_to_window(box, &box->textures[UI_PICKUPS], 20, 50, 1);
+	if (box->hud)
+	{
+		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 185, 1);
+		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 225, 4);
+		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 265, 2);
+		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 305, 5);
+		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 350, 0);
+	}
 	y = -1;
 	while (++y < SCREENHEIGHT)
 	{
 		x = -1;
 		while (++x < SCREENWIDTH)
 		{
-			box->info.color = 0;
-			if (box->hud)
-			{
-				if (y > 185 && y < 215 && x > 20 && x < 50)
-					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 185 - ((y - 185) / 2))]);
-				else if (y > 225 && y < 255 && x > 20 && x < 50)
-					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 210 - ((y - 225) / 2))]);
-				else if (y > 268 && y < 298 && x > 20 && x < 55)
-					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x + 10 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 268 - ((y - 268) / 2))]);
-				else if (y > 305 && y < 335 && x > 20 && x < 50)
-					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 290 - ((y - 305) / 2))]);
-				else if (y > 350 && y < 380 && x > 20 && x < 50)
-					box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 350 - ((y - 350) / 2))]);
-			}
-			if (y > 50 && y < 80 && x > 20 && x < 50)
-				box->info.color = extract_color(&box->textures[UI_PICKUPS].addr[(x - 4 - ((x - 20) / 2)) * 4 + box->textures[UI_PICKUPS].line_len * (y - 50 - ((y - 50) / 2))]);
-			if ((box->info.color & 0x00FFFFFF) != 0)
-			{
-				my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
-				my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
-			}
+			// box->info.color = 0;
+			// if (box->hud)
+			// {
+			// 	if (y > 185 && y < 215 && x > 20 && x < 50)
+			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 185 - ((y - 185) / 2))]);
+			// 	else if (y > 225 && y < 255 && x > 20 && x < 50)
+			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 210 - ((y - 225) / 2))]);
+			// 	else if (y > 268 && y < 298 && x > 20 && x < 55)
+			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x + 10 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 268 - ((y - 268) / 2))]);
+			// 	else if (y > 305 && y < 335 && x > 20 && x < 50)
+			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 290 - ((y - 305) / 2))]);
+			// 	else if (y > 350 && y < 380 && x > 20 && x < 50)
+			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 350 - ((y - 350) / 2))]);
+			// }
+			// if (y > 50 && y < 80 && x > 20 && x < 50)
+			// 	box->info.color = extract_color(&box->textures[UI_PICKUPS].addr[(x - 4 - ((x - 20) / 2)) * 4 + box->textures[UI_PICKUPS].line_len * (y - 50 - ((y - 50) / 2))]);
+			// if ((box->info.color & 0x00FFFFFF) != 0)
+			// {
+			// 	my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
+			// 	// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
+			// }
 			box->info.color = 0;
 			i = -1;
 			while (++i < ((box->player.max_hp + 1) / 2))
@@ -130,7 +229,7 @@ void	draw_hud(t_box *box)
 					if ((box->info.color & 0x00FFFFFF) != 0)
 					{
 							my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
-							my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
+							// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
 					}
 				}
 			}
@@ -146,7 +245,7 @@ void	draw_hud(t_box *box)
 						if ((box->info.color & 0x00FFFFFF) != 0)
 						{
 								my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
-								my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
+								// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
 						}
 					}
 					i++;
@@ -167,14 +266,10 @@ void	redraw(t_box *box)
 	int 	x;
 
 	mlx_destroy_image(box->mlx, box->image.img);
-	box->image.img = mlx_new_image_alpha(box->mlx, SCREENWIDTH, SCREENHEIGHT);
-	box->image.addr = (unsigned char *)mlx_get_data_addr(box->image.img,
-			&box->image.bits_pp, &box->image.line_len, &box->image.endian);
+	new_image(box->mlx, &box->image, SCREENWIDTH, SCREENHEIGHT);
 
 	mlx_destroy_image(box->mlx, box->shaders.img);
-	box->shaders.img = mlx_new_image_alpha(box->mlx, SCREENWIDTH, SCREENHEIGHT);
-	box->shaders.addr = (unsigned char *)mlx_get_data_addr(box->shaders.img,
-			&box->shaders.bits_pp, &box->shaders.line_len, &box->shaders.endian);
+	new_image(box->mlx, &box->shaders, SCREENWIDTH, SCREENHEIGHT);
 
 	y = -1;
 	while (++y < SCREENHEIGHT)
@@ -194,27 +289,28 @@ void	redraw(t_box *box)
     //fill_buffer_with_color(box->image.addr, SCREENWIDTH, SCREENHEIGHT, 0x00FF0000);
 
 	drawMinimap(box);
-	draw_hud(box);
 	//single_square_test(box);
 
 	if (!box->won && !box->lost)
 	{
 		if (box->player.hit)
 			fill_screen_red(box);
-		mlx_put_image_to_window(box->mlx, box->win, box->image.img, 0, 0);
-		mlx_put_image_to_window(box->mlx, box->win, box->shaders.img, 0, 0);
+		my_mlx_put_image_to_window(box, &box->image, 0, 0, -1);
+		my_mlx_put_image_to_window(box, &box->shaders, 0, 0, -1);
+		draw_hud(box);
+
 	}
 	else if (box->lost)
 	{
 		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[GRIM].img, 360, 95);
+		my_mlx_put_image_to_window(box, &box->textures[GRIM], 0, 0, -1);
 		if (box->player.frame > 100)
 			exit_hook(box);
 	}
 	else if (box->win)
 	{
 		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[WIN].img, 320, 40);
+		my_mlx_put_image_to_window(box, &box->textures[WIN], 0, 0, -1);
 		if (box->player.frame > 100)
 			exit_hook(box);
 	}

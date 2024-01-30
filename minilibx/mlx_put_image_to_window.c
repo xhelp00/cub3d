@@ -1,9 +1,9 @@
 /*
 ** mlx_put_image_to_window.c for MiniLibX in raytraceur
-** 
+**
 ** Made by Charlie Root
 ** Login   <ol@epitech.net>
-** 
+**
 ** Started on  Mon Aug 14 15:55:49 2000 Charlie Root
 ** Last update Sun Oct  2 09:53:00 2005 Olivier Crouzet
 */
@@ -13,7 +13,7 @@
 #include	"mlx_int.h"
 
 int	mlx_put_image_to_window(t_xvar *xvar,t_win_list *win,t_img *img,
-									int x,int y)
+									int x,int y, int start_x, int start_y, int end_x, int end_y)
 {
 	GC		gc = (img->gc) ? img->gc : win->gc;
 	Pixmap 	target_pixmap;
@@ -32,13 +32,13 @@ int	mlx_put_image_to_window(t_xvar *xvar,t_win_list *win,t_img *img,
 	if (img->pict)
 	{
 		if (img->type == MLX_TYPE_XIMAGE)
-			XPutImage(xvar->display, img->pix, gc, img->image, 0, 0, 0, 0,
-					  img->width, img->height);
+			XPutImage(xvar->display, img->pix, gc, img->image, start_x, start_y, 0, 0,
+					  end_x, end_y);
 		else if (img->type == MLX_TYPE_SHM)
-			XShmPutImage(xvar->display, img->pix, gc, img->image, 0, 0, 0, 0,
-						 img->width, img->height, False);
+			XShmPutImage(xvar->display, img->pix, gc, img->image, start_x, start_y, 0, 0,
+						 end_x, end_y, False);
 		XRenderComposite(xvar->display, PictOpOver, img->pict, 0, target_picture,
-						 0, 0, 0, 0, x, y, img->width, img->height);
+						 start_x, start_y, 0, 0, x, y, end_x, end_y);
 	}
 	else
 	{

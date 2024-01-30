@@ -15,6 +15,8 @@ NAME = cub3d
 CFLAGS = -Wall -Wextra -Werror -g #fsanitize=address
 LIBFT = Libft
 MLX = minilibx
+CUTE_PNG = cute_png
+CUTE_SOUND = cute_sound
 UNAME_S := $(shell uname -s)
 
 SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.c movement.c sound.c items.c
@@ -36,10 +38,12 @@ all: lib $(NAME)
 lib:
 	@make -C $(LIBFT)
 	@make -C $(MLX)
+	@make -C $(CUTE_PNG)
+	@make -C $(CUTE_SOUND)
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS)
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS) cute_png/cute_png.o
 
 clean:
 	@make clean -C $(LIBFT)

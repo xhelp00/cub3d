@@ -28,6 +28,8 @@
 # include <pthread.h>
 # include "Libft/libft.h"
 # include "minilibx/mlx.h"
+# include "cute_png/cute_png.h"
+# include "cute_sound/cute_sound.h"
 # include <signal.h>
 # include <sys/wait.h>
 
@@ -157,6 +159,12 @@ typedef struct s_image
 	int				bits_pp;
 	int				line_len;
 	int				endian;
+	int				height;
+	int				width;
+	int				n_col;
+	int				n_row;
+	int				one_x;
+	int				one_y;
 	char			*name;
 }				t_image;
 
@@ -345,6 +353,11 @@ void		bubble_sort_sprites(t_box *box);
 void		redraw(t_box *box);
 int			extract_color(unsigned char *pixel);
 void		my_mlx_pyxel_put(t_image *image, int x, int y, int color);
+void		my_mlx_put_image_to_window(t_box *box, t_image *image, int x, int y, int sprite_id);
+void		new_image(void *mlx, t_image *image, int width, int height);
+void		clear_image(t_image *image);
+void		png_file_to_image(void *mlx, t_image *image, char *file);
+void		split_spritesheet(t_image *image, int n_col, int n_row, int one_x, int one_y);
 void		apply_fog(t_box *box, double dist);
 unsigned int	pixel_visibility(float fade);
 void		hit_mark(t_box *box, t_sprite *sprite);
