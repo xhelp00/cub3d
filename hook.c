@@ -14,12 +14,17 @@
 
 int	mouse_press(int keycode, int x, int y, t_box *box)
 {
-	(void)x;
-	(void)y;
-	if (keycode == 1)
+	if (keycode == 1 && !box->pause)
 		box->player.cry = 1;
-	if (keycode == 3)
+	if (keycode == 3 && !box->pause)
 		action_door(box);
+	if (x > 440 && x < 640 && y > 380 && y < 420 && keycode == 1)
+		printf("Options not supported yet tm\n");
+	else if (x > 420 && x < 660 && y > 440 && y < 470 && keycode == 1)
+		box->pause = 0;
+	else if (x > 440 && x < 640 && y > 480 && y < 520 && keycode == 1)
+		exit_hook(box);
+	// printf("X %i Y %i\n", x, y);
 	return (0);
 }
 
@@ -105,9 +110,13 @@ int	key_release(int key, t_box *box)
 {
 	if (key == 65307)
 	{
+		if (!box->pause)
+			box->pause = 1;
+		else
+			box->pause = 0;
 		//mlx_destroy_window(box->mlx, box->win);
-		exit_hook(box);
-		exit(0);
+		// exit_hook(box);
+		// exit(0);
 	}
 	if (key == 113)
 		box->info.rotate = 0;

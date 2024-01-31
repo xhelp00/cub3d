@@ -106,11 +106,11 @@ t_image	*img_resize(void *mlx_ptr, t_image *src_img, float n_times_bigger)
 	dst_y = -1;
 	while (dst_y++ < dst_img.height)
 	{
+		src_y = src_img->height * dst_y / dst_img.height;
 		dst_x = -1;
 		while (dst_x++ < dst_img.width)
 		{
 			src_x = src_img->width * dst_x / dst_img.width;
-			src_y = src_img->height * dst_y / dst_img.height;
 			pixel = &dst_img.addr[dst_y * dst_img.line_len + dst_x * (dst_img.bits_pp / 8)];
 			color = &src_img->addr[src_y * src_img->line_len + src_x * (src_img->bits_pp / 8)];
 			*(unsigned int *)pixel = *(unsigned int *)color;
@@ -238,7 +238,7 @@ void	draw_hud(t_box *box)
 		else if (box->player.hp % 2 == 1 && i == (box->player.hp / 2))
 			my_mlx_put_image_to_window(box, &box->textures[UI_HEARTS], 50 + (i * 32), 15, 1);
 		else
-				my_mlx_put_image_to_window(box, &box->textures[UI_HEARTS], 50 + (i * 32), 15, 2);
+			my_mlx_put_image_to_window(box, &box->textures[UI_HEARTS], 50 + (i * 32), 15, 2);
 	}
 }
 

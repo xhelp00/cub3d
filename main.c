@@ -153,14 +153,28 @@ void	check(t_box *box, int argc, char **argv)
 */
 int	timer(t_box *box)
 {
-	mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
-	mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	/* while (box->info.angry && !box->info.sound)
+	if (!box->pause)
 	{
-		printf("YOU ARE DEAD!!!\n");
-		exit(0);
-	}*/
-	redraw(box);
+		if (!box->mouse_hidden)
+		{
+			mlx_mouse_hide(box->mlx, box->win);
+			mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+			box->mouse_hidden = 1;
+		}
+		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+		mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+		redraw(box);
+	}
+	else
+	{
+		if (box->mouse_hidden)
+		{
+			mlx_mouse_show(box->mlx, box->win);
+			box->mouse_hidden = 0;
+		}
+		my_mlx_put_image_to_window(box, &box->textures[PAUSE], 300, 150, 0);
+		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+	}
 	return (0);
 }
 

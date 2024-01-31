@@ -22,9 +22,9 @@ void	init_textures(t_box *box)
 	int		j;
 	int		i;
 
-	box->textures = malloc(50 * sizeof(t_image));
+	box->textures = malloc(100 * sizeof(t_image));
 	i = -1;
-	while (++i < 50)
+	while (++i < 100)
 		box->textures[i].img = 0;
 	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
 	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
@@ -56,8 +56,11 @@ void	init_textures(t_box *box)
 	box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
 	box->textures[WIN].img = mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
 	box->textures[GRIM].img = mlx_xpm_file_to_image(box->mlx, "textures/grim.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[PAUSE], "textures/pausescreen.png");
+	img_resize(box->mlx, &box->textures[PAUSE], 2);
+	split_spritesheet(&box->textures[PAUSE], 1, 1, 480, 480);
 	i = -1;
-	while (++i < 50)
+	while (++i < 100)
 	{
 		if (!box->textures[i].img)
 			box->textures[i].img = mlx_xpm_file_to_image(box->mlx, "textures/grey_bricks.xpm", &k, &j);
@@ -124,6 +127,8 @@ void	init_vals(t_box *box)
 	box->hud = 1;
 	box->won = 0;
 	box->lost = 0;
+	box->pause = 0;
+	box->mouse_hidden = 1;
 	gettimeofday(&box->player.last_tear, NULL);
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));

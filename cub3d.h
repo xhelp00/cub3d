@@ -212,7 +212,9 @@ typedef struct s_sprite_data
 # define ISAAC 20
 # define LARRY_JR_HEAD 30
 # define LARRY_JR_BODY 31
+# define GRIM 39
 # define TEAR 40
+# define WIN 42
 # define KEY 43
 # define UI_PICKUPS 44
 # define UI_HEARTS 45
@@ -220,8 +222,7 @@ typedef struct s_sprite_data
 # define ITEMS 47
 # define ITEM_ALTAR 48
 # define TROPHY 49
-# define WIN 42
-# define GRIM 39
+# define PAUSE 50
 
 typedef struct s_sprite
 {
@@ -299,6 +300,8 @@ typedef struct s_box
 	int				lost;
 	int				won;
 	struct timeval	fin_time;
+	int				pause;
+	int				mouse_hidden;
 }				t_box;
 
 //shape rect used for drawing minimap
