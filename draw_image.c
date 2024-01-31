@@ -63,13 +63,14 @@ void	my_mlx_put_image_to_window(t_box *box, t_image *image, int x, int y, int sp
 
 	Creates a new mlx_image_alpha and sets its variables
 */
-void	new_image(void *mlx, t_image *image, int width, int height)
+t_image	*new_image(void *mlx, t_image *image, int width, int height)
 {
 	image->img = mlx_new_image_alpha(mlx, width, height);
 	image->width = width;
 	image->height = height;
 	image->addr = (unsigned char *)mlx_get_data_addr(image->img,
 			&image->bits_pp, &image->line_len, &image->endian);
+	return (image);
 }
 
 /*
@@ -81,6 +82,43 @@ void	new_image(void *mlx, t_image *image, int width, int height)
 void	clear_image(t_image *image)
 {
 	ft_memset(image->addr, 0, image->height * image->width * 4);
+}
+
+/*
+	img_resize
+
+	Scales image by a float multiplier
+	2 = 2x
+	0.5 = 0.5x
+*/
+t_image	*img_resize(void *mlx_ptr, t_image *src_img, float n_times_bigger)
+{
+	t_image		dst_img;
+	unsigned char *pixel;
+	unsigned char *color;
+	int			src_x;
+	int			src_y;
+	int			dst_x;
+	int			dst_y;
+
+	if (new_image(mlx_ptr, &dst_img, src_img->width * n_times_bigger, src_img->height * n_times_bigger) == NULL)
+		return (NULL);
+	dst_y = -1;
+	while (dst_y++ < dst_img.height)
+	{
+		dst_x = -1;
+		while (dst_x++ < dst_img.width)
+		{
+			src_x = src_img->width * dst_x / dst_img.width;
+			src_y = src_img->height * dst_y / dst_img.height;
+			pixel = &dst_img.addr[dst_y * dst_img.line_len + dst_x * (dst_img.bits_pp / 8)];
+			color = &src_img->addr[src_y * src_img->line_len + src_x * (src_img->bits_pp / 8)];
+			*(unsigned int *)pixel = *(unsigned int *)color;
+		}
+	}
+	mlx_destroy_image(mlx_ptr, src_img->img);
+	*src_img = dst_img;
+	return (src_img);
 }
 
 /*
@@ -98,10 +136,11 @@ void	png_file_to_image(void *mlx, t_image *image, char *file)
 	if (png_img.pix == NULL)
 		return ;
 	cp_premultiply(&png_img);
-	image->img = mlx_new_image_alpha(mlx, png_img.w, png_img.h);
+	new_image(mlx, image, png_img.w, png_img.h);
 	if (image->img == NULL)
 		return (free(png_img.pix), (void) 0);
 	mlx_img_data = (cp_pixel_t *)mlx_get_data_addr(image->img, &image->bits_pp, &image->line_len, &image->endian);
+	image->addr = (unsigned char *)mlx_get_data_addr(image->img, &image->bits_pp, &image->line_len, &image->endian);
 	i = -1;
 	while (i++ < png_img.w * png_img.h)
 	{
@@ -172,9 +211,6 @@ int	extract_color(unsigned char *pixel)
 
 void	draw_hud(t_box *box)
 {
-	//char	*nbr;
-	int		x;
-	int		y;
 	int		i;
 	t_item	*items;
 
@@ -186,73 +222,23 @@ void	draw_hud(t_box *box)
 		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 265, 2);
 		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 305, 5);
 		my_mlx_put_image_to_window(box, &box->textures[UI_STATS], 20, 350, 0);
-	}
-	y = -1;
-	while (++y < SCREENHEIGHT)
-	{
-		x = -1;
-		while (++x < SCREENWIDTH)
+		items = box->items;
+		i = -1;
+		while (items && i++ < 20)
 		{
-			// box->info.color = 0;
-			// if (box->hud)
-			// {
-			// 	if (y > 185 && y < 215 && x > 20 && x < 50)
-			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 185 - ((y - 185) / 2))]);
-			// 	else if (y > 225 && y < 255 && x > 20 && x < 50)
-			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 210 - ((y - 225) / 2))]);
-			// 	else if (y > 268 && y < 298 && x > 20 && x < 55)
-			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x + 10 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 268 - ((y - 268) / 2))]);
-			// 	else if (y > 305 && y < 335 && x > 20 && x < 50)
-			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 5 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 290 - ((y - 305) / 2))]);
-			// 	else if (y > 350 && y < 380 && x > 20 && x < 50)
-			// 		box->info.color = extract_color(&box->textures[UI_STATS].addr[(x - 20 - ((x - 20) / 2)) * 4 + box->textures[UI_STATS].line_len * (y - 350 - ((y - 350) / 2))]);
-			// }
-			// if (y > 50 && y < 80 && x > 20 && x < 50)
-			// 	box->info.color = extract_color(&box->textures[UI_PICKUPS].addr[(x - 4 - ((x - 20) / 2)) * 4 + box->textures[UI_PICKUPS].line_len * (y - 50 - ((y - 50) / 2))]);
-			// if ((box->info.color & 0x00FFFFFF) != 0)
-			// {
-			// 	my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
-			// 	// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
-			// }
-			box->info.color = 0;
-			i = -1;
-			while (++i < ((box->player.max_hp + 1) / 2))
-			{
-				if (y > 15 && y < 45 && x > 50 + (i * 32) && x < 82 + (i * 32))
-				{
-					if (i < (box->player.hp / 2))
-						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 50) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
-					else if (box->player.hp % 2 == 1 && i == (box->player.hp / 2))
-						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 34) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
-					else
-						box->info.color = extract_color(&box->textures[UI_HEARTS].addr[((x - 18) - ((x + (i * 32) - 50) / 2)) * 4 + box->textures[UI_HEARTS].line_len * (y - 15 - ((y - 15) / 2))]);
-					if ((box->info.color & 0x00FFFFFF) != 0)
-					{
-							my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
-							// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
-					}
-				}
-			}
-			if (box->hud)
-			{
-				items = box->items;
-				i = 0;
-				while (items && i < 20)
-				{
-					if (y > 650 && y < 682 && x > 20 + (i * 32) && x < 52 + (i * 32))
-					{
-						box->info.color = extract_color(&box->textures[items->data->texture].addr[((x - 20 + ((items->data->id % 20) * 32)) - (i * 32)) * 4 + box->textures[items->data->texture].line_len * (y - 650)]);
-						if ((box->info.color & 0x00FFFFFF) != 0)
-						{
-								my_mlx_pyxel_put(&box->image, x, y, 0xFF << 24 | box->info.color);
-								// my_mlx_pyxel_put(&box->shaders, x, y, pixel_visibility(1));
-						}
-					}
-					i++;
-					items = items->next;
-				}
-			}
+			my_mlx_put_image_to_window(box, &box->textures[ITEMS], 20 + (i * 32), 650, items->data->id % 20);
+			items = items->next;
 		}
+	}
+	i = -1;
+	while (++i < ((box->player.max_hp + 1) / 2))
+	{
+		if (i < (box->player.hp / 2))
+			my_mlx_put_image_to_window(box, &box->textures[UI_HEARTS], 50 + (i * 32), 15, 0);
+		else if (box->player.hp % 2 == 1 && i == (box->player.hp / 2))
+			my_mlx_put_image_to_window(box, &box->textures[UI_HEARTS], 50 + (i * 32), 15, 1);
+		else
+				my_mlx_put_image_to_window(box, &box->textures[UI_HEARTS], 50 + (i * 32), 15, 2);
 	}
 }
 
