@@ -153,81 +153,138 @@ void	check(t_box *box, int argc, char **argv)
 */
 int	timer(t_box *box)
 {
-	if (box->title_menu)
+	gettimeofday(&box->time, NULL);
+	if (!box->won && !box->lost)
 	{
-		if (box->mouse_hidden)
+		if (box->title_menu)
 		{
-			mlx_mouse_show(box->mlx, box->win);
-			box->mouse_hidden = 0;
+			if (box->mouse_hidden)
+			{
+				mlx_mouse_show(box->mlx, box->win);
+				box->mouse_hidden = 0;
+			}
+			my_mlx_put_image_to_window(box, &box->textures[TITLE_MENU], 0, 0, -1);
+			gettimeofday(&box->time, NULL);
+			if (((int)((box->time.tv_usec / 100000.0) * 4) / 10) % 2 == 1)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 400, 215, 0, 1000, 450, 450); //press start
+			else
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 400, 215, 432, 1000, 450, 450); //press start 2
+			if (((int)((box->time.tv_usec / 100000.0) * 8) / 10) % 2 == 1)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 1000, 400, 950, 1030, 200, 200); //fly
+			else
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 1000, 400, 950, 1250, 200, 200); //fly 2
+			if (((int)((box->time.tv_usec / 100000.0) * 4) / 10) / 2 == 0)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 275, -10 + ((int)((box->time.tv_usec / 100000.0) * 20) / 10), 280, 740, 800, 300); //logo going down
+			else
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 275, 10 - ((int)((box->time.tv_usec / 100000.0) * 20) / 10), 280, 740, 800, 300); //logo going up
 		}
-		my_mlx_put_image_to_window(box, &box->textures[TITLE_MENU], 0, 0, -1);
-		gettimeofday(&box->time, NULL);
-		if (((int)((box->time.tv_usec / 100000.0) * 4) / 10) % 2 == 1)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 400, 215, 0, 1000, 450, 450); //press start
-		else
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 400, 215, 432, 1000, 450, 450); //press start 2
-		if (((int)((box->time.tv_usec / 100000.0) * 8) / 10) % 2 == 1)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 1000, 400, 950, 1030, 200, 200); //fly
-		else
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 1000, 400, 950, 1250, 200, 200); //fly 2
-		if (((int)((box->time.tv_usec / 100000.0) * 4) / 10) / 2 == 0)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 275, -10 + ((int)((box->time.tv_usec / 100000.0) * 20) / 10), 280, 740, 800, 300); //logo going down
-		else
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 275, 10 - ((int)((box->time.tv_usec / 100000.0) * 20) / 10), 280, 740, 800, 300); //logo going up
-	}
-	else if (box->start_menu)
-	{
-		if (box->mouse_hidden)
+		else if (!box->pause_menu && box->options_menu)
 		{
-			mlx_mouse_show(box->mlx, box->win);
-			box->mouse_hidden = 0;
+			my_mlx_put_image_to_window(box, &box->textures[MENU_BACK], 0, 0, -1);
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 400, 100, 0, 0, 460, 480);
+			mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 500, 200, 0, 480, 100, 40); //SFX
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 500, 260, 0, 920, 100, 40); //MUSIC
+
+			if (box->options_menu_choice == 1)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 450, 200, 460, 50, 100, 100); //SFX HIGHLIGTH
+			else if (box->options_menu_choice == 2)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 450, 260, 460, 50, 100, 100); //MUSIC HIGHLIGTH
+
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 650, 200, 390, 480 + (32 * (int)(10 *  (1.0 - box->sound.sfx_volume))), 150, 32); //SFX VOLUME SLIDER
+
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU].img, 650, 260, 390, 480 + (32 * (int)(10 *  (1.0 - box->sound.music_volume))), 150, 32); //MUSIC VOLUME SLIDER
 		}
-		my_mlx_put_image_to_window(box, &box->textures[START_MENU_BACK], 0, 0, -1);
-		my_mlx_put_image_to_window(box, &box->textures[START_MENU], 0, 0, -1);
-		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 120, 80, 800, 310, 100); //NEW RUN
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 200, 80, 920, 310, 100); //CONTINUE
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 500, 280, 80, 1040, 330, 110); //CHALLANGE
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 510, 370, 80, 1160, 330, 110); //STATS
-		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 520, 440, 80, 1280, 340, 150); //OPTIONS
-		if (box->start_menu_choice == 1)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 430, 120, 20, 800, 50, 100);
-		else if (box->start_menu_choice == 2)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 440, 210, 20, 800, 50, 100);
-		else if (box->start_menu_choice == 3)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 455, 300, 20, 800, 50, 100);
-		else if (box->start_menu_choice == 4)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 470, 390, 20, 800, 50, 100);
-		else if (box->start_menu_choice == 5)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 480, 20, 800, 50, 100);
-	}
-	else if (box->pause_menu)
-	{
-		if (box->mouse_hidden)
+		else if (box->start_menu)
 		{
-			mlx_mouse_show(box->mlx, box->win);
-			box->mouse_hidden = 0;
+			if (box->mouse_hidden)
+			{
+				mlx_mouse_show(box->mlx, box->win);
+				box->mouse_hidden = 0;
+			}
+			my_mlx_put_image_to_window(box, &box->textures[MENU_BACK], 0, 0, -1);
+			my_mlx_put_image_to_window(box, &box->textures[START_MENU], 0, 0, -1);
+			mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 120, 80, 800, 310, 100); //NEW RUN
+			if (box->sprites)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 200, 80, 920, 310, 100); //CONTINUE
+			else
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 200, 420, 920, 310, 100); //CONTINUE GRAYED OUT
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 500, 280, 80, 1040, 330, 110); //CHALLANGE
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 510, 370, 80, 1160, 330, 110); //STATS
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 520, 440, 80, 1280, 340, 150); //OPTIONS
+			if (box->start_menu_choice == 1)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 430, 120, 20, 800, 50, 100);
+			else if (box->start_menu_choice == 2)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 440, 210, 20, 800, 50, 100);
+			else if (box->start_menu_choice == 3)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 455, 300, 20, 800, 50, 100);
+			else if (box->start_menu_choice == 4)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 470, 390, 20, 800, 50, 100);
+			else if (box->start_menu_choice == 5)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 480, 20, 800, 50, 100);
 		}
-		my_mlx_put_image_to_window(box, &box->textures[PAUSE_MENU], 400, 150, 0);
-		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
-		if (box->pause_menu_choice == 1)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 500, 390, 475, 5, 30, 30);
-		else if (box->pause_menu_choice == 2)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 480, 440, 475, 5, 30, 30);
-		else if (box->pause_menu_choice == 3)
-			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 505, 485, 475, 5, 30, 30);
-	}
-	else
-	{
-		if (!box->mouse_hidden)
+		else if (box->pause_menu && box->options_menu)
 		{
-			mlx_mouse_hide(box->mlx, box->win);
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 400, 100, 0, 0, 460, 480);
+			mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 500, 200, 0, 480, 100, 40); //SFX
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 500, 260, 0, 920, 100, 40); //MUSIC
+
+			if (box->options_menu_choice == 1)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 450, 200, 460, 50, 100, 100); //SFX HIGHLIGTH
+			else if (box->options_menu_choice == 2)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 450, 260, 460, 50, 100, 100); //MUSIC HIGHLIGTH
+
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 650, 200, 390, 480 + (32 * (int)(10 *  (1.0 - box->sound.sfx_volume))), 150, 32); //SFX VOLUME SLIDER
+
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[OPTIONS_MENU_DARK].img, 650, 260, 390, 480 + (32 * (int)(10 *  (1.0 - box->sound.music_volume))), 150, 32); //MUSIC VOLUME SLIDER
+		}
+		else if (box->pause_menu)
+		{
+			if (box->mouse_hidden)
+			{
+				mlx_mouse_show(box->mlx, box->win);
+				box->mouse_hidden = 0;
+			}
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 400, 150, 0, 0, 480, 480);
+			mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+			if (box->pause_menu_choice == 1)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 500, 390, 475, 5, 30, 30);
+			else if (box->pause_menu_choice == 2)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 480, 440, 475, 5, 30, 30);
+			else if (box->pause_menu_choice == 3)
+				mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 505, 485, 475, 5, 30, 30);
+		}
+		else
+		{
+			if (!box->mouse_hidden)
+			{
+				mlx_mouse_hide(box->mlx, box->win);
+				mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+				box->mouse_hidden = 1;
+			}
+			mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 			mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-			box->mouse_hidden = 1;
+
+				redraw(box);
+
 		}
-		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
-		mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-		redraw(box);
+	}
+	else if (box->lost)
+	{
+		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[GRIM].img, 400, 100, 400, 0, 512, 512); //DEATH NOTE
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[GRIM].img, 650, 300, 64, 64, 64, 64); //POOP
+		if (box->player.frame > 85)
+			exit_hook(box);
+	}
+	else if (box->win)
+	{
+		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
+		my_mlx_put_image_to_window(box, &box->textures[WIN], 400, 100, -1);
+		if (box->player.frame > 115)
+			exit_hook(box);
 	}
 	return (0);
 }
@@ -269,12 +326,10 @@ int	timer(t_box *box)
 	closedir(pdir);
 */
 
-int	main(int argc, char **argv, char **env)
+int	main(void)
 {
 	t_box			box;
 
-	(void)argc;
-	(void)argv;
 	init_vals(&box);
 	// check(&box, argc, argv);
 	box.mlx = mlx_init();
@@ -282,10 +337,11 @@ int	main(int argc, char **argv, char **env)
 	init_textures(&box);
 	new_image(box.mlx, &box.image, SCREENWIDTH, SCREENHEIGHT);
 	new_image(box.mlx, &box.shaders, SCREENWIDTH, SCREENHEIGHT);
+	init_sounds(&box);
 	// redraw(&box);
-	box.env = env;
-	if (box.music)
-		box.pid = music(env, "sounds/Isaac.mp3");
+	// box.env = env;
+	// if (box.music)
+	// 	box.pid = music(env, "sounds/Isaac.mp3");
 	// mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 	// mlx_mouse_hide(box.mlx, box.win);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);

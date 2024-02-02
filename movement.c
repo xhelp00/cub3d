@@ -23,7 +23,7 @@ void	action_door(t_box *box)
 		{
 			box->player.n_key--;
 			s->data->opening = 1;
-			box->p = music(box->env, "sounds/door.mp3");
+			sound_play(box, &box->sound.sfx[DOOR]);
 			gettimeofday(&s->data->action_time, NULL);
 		}
 		s = s->next;
@@ -132,7 +132,7 @@ void	cal_move(t_box *box)
 		{
 			gettimeofday(&box->player.last_tear, NULL);
 			sprite_append(box, box->info.pos_x, box->info.pos_y, TEAR);
-			box->p = music(box->env, "sounds/shot.mp3");
+			sound_play(box, &box->sound.sfx[SHOT]);
 		}
 	}
 
@@ -155,7 +155,7 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 	if (what == NULL)
 	{
 		who->data->hit = 1;
-		box->p = music(box->env, "sounds/splash.mp3");
+		sound_play(box, &box->sound.sfx[SPLASH]);
 		gettimeofday(&who->data->hit_time, NULL);
 	}
 	else
@@ -163,15 +163,15 @@ void	sprite_hit(t_box *box, t_sprite *who, t_sprite *what)
 		// printf("HIT SPRITE\n");
 		who->data->hit = 1;
 		gettimeofday(&who->data->hit_time, NULL);
-		box->p = music(box->env, "sounds/splash.mp3");
+		sound_play(box, &box->sound.sfx[SPLASH]);
 		what->data->hit = 1;
-		box->p = music(box->env, "sounds/splash.mp3");
+		sound_play(box, &box->sound.sfx[SPLASH]);
 		gettimeofday(&what->data->hit_time, NULL);
 		what->data->hp -= box->player.dmg;
-		box->p = music(box->env, "sounds/pain.mp3");
+		sound_play(box, &box->sound.sfx[PAIN]);
 		if (what->data->hp < 1)
 		{
-			box->p = music(box->env, "sounds/die.mp3");
+			sound_play(box, &box->sound.sfx[DIE]);
 			if (what->data->texture > DOOR && what->data->texture <= ISAAC)
 				sprite_append(box, what->data->x, what->data->y, KEY);
 			sprite_remove(box, what);
@@ -293,11 +293,11 @@ void	cal_sprite_move(t_box *box)
 					{
 						box->lost = 1;
 						printf("YOU ARE DEAD!!!\n");
-						box->p = music(box->env, "sounds/fail.mp3");
+						sound_play(box, &box->sound.sfx[FAIL]);
 						gettimeofday(&box->fin_time, NULL);
 						break;
 					}
-					box->p = music(box->env, "sounds/ow.mp3");
+					sound_play(box, &box->sound.sfx[OW]);
 				}
 				gettimeofday(&box->player.hit_time, NULL);
 			}
@@ -432,14 +432,14 @@ void	cal_sprite_move(t_box *box)
 		if (sprites->data->texture == KEY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
 		{
 			box->player.n_key++;
-			box->p = music(box->env, "sounds/key.mp3");
+			sound_play(box, &box->sound.sfx[KEY_PICKUP]);
 			sprite_remove(box, sprites);
 			break;
 		}
 		if (sprites->data->texture == TROPHY && sprites->data->dist < 0.1 && sprites->data->dist != 0)
 		{
 			printf("YOU WIN!!!\n");
-			box->p = music(box->env, "sounds/fanfare.mp3");
+			sound_play(box, &box->sound.sfx[FANFARE]);
 			sprite_remove(box, sprites);
 			box->won = 1;
 			gettimeofday(&box->fin_time, NULL);

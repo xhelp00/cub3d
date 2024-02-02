@@ -54,12 +54,17 @@ void	init_textures(t_box *box)
 	box->textures[ITEM_ALTAR].img = mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
 	box->textures[KEY].img = mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);
 	box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
-	box->textures[WIN].img = mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
-	box->textures[GRIM].img = mlx_xpm_file_to_image(box->mlx, "textures/grim.xpm", &k, &j);
+
+	// box->textures[WIN].img = mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
+	// box->textures[GRIM].img = mlx_xpm_file_to_image(box->mlx, "textures/grim.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[WIN], "textures/win.png");
+	img_resize(box->mlx, &box->textures[WIN], 4);
+
+	png_file_to_image(box->mlx, &box->textures[GRIM], "textures/deathnote.png");
+	img_resize(box->mlx, &box->textures[GRIM], 2);
 
 	png_file_to_image(box->mlx, &box->textures[PAUSE_MENU], "textures/pausescreen.png");
 	img_resize(box->mlx, &box->textures[PAUSE_MENU], 2);
-	split_spritesheet(&box->textures[PAUSE_MENU], 1, 1, 480, 480);
 
 	png_file_to_image(box->mlx, &box->textures[TITLE_MENU], "textures/titlemenu.png");
 	img_resize(box->mlx, &box->textures[TITLE_MENU], 2.7);
@@ -67,8 +72,14 @@ void	init_textures(t_box *box)
 	png_file_to_image(box->mlx, &box->textures[START_MENU], "textures/gamemenu.png");
 	img_resize(box->mlx, &box->textures[START_MENU], 2.7);
 
-	png_file_to_image(box->mlx, &box->textures[START_MENU_BACK], "textures/emptyscreen.png");
-	img_resize(box->mlx, &box->textures[START_MENU_BACK], 2.7);
+	png_file_to_image(box->mlx, &box->textures[MENU_BACK], "textures/emptyscreen.png");
+	img_resize(box->mlx, &box->textures[MENU_BACK], 2.7);
+
+	png_file_to_image(box->mlx, &box->textures[OPTIONS_MENU], "textures/optionsmenu.png");
+	img_resize(box->mlx, &box->textures[OPTIONS_MENU], 2);
+
+	png_file_to_image(box->mlx, &box->textures[OPTIONS_MENU_DARK], "textures/optionsmenudark.png");
+	img_resize(box->mlx, &box->textures[OPTIONS_MENU_DARK], 2);
 	i = -1;
 	while (++i < 100)
 	{
@@ -77,6 +88,43 @@ void	init_textures(t_box *box)
 		box->textures[i].addr = (unsigned char *)mlx_get_data_addr(box->textures[i].img,
 			&box->textures[i].bits_pp, &box->textures[i].line_len, &box->textures[i].endian);
 	}
+	box->title_menu = 1;
+	box->pause_menu = 0;
+	box->pause_menu_choice = 0;
+	box->start_menu = 0;
+	box->start_menu_choice = 0;
+	box->options_menu = 0;
+	box->options_menu_choice = 0;
+	box->mouse_hidden = 0;
+	box->sound.music_volume = 0.5;
+	box->sound.sfx_volume = 0.5;
+}
+
+void	init_sounds(t_box *box)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 50)
+		box->sound.playing[i].play = NULL;
+	box->sound.ctx = cs_make_context(0, 44100, 4096, 24, NULL);
+	cs_spawn_mix_thread(box->sound.ctx);
+	cs_thread_sleep_delay(box->sound.ctx, 10);
+	load_audio_file(&box->sound.music, "sounds/Isaac.wav");
+	load_audio_file(&box->sound.sfx[ANGRY], "sounds/angry.wav");
+	load_audio_file(&box->sound.sfx[DIE], "sounds/die.wav");
+	load_audio_file(&box->sound.sfx[DOOR], "sounds/door.wav");
+	load_audio_file(&box->sound.sfx[FAIL], "sounds/fail.wav");
+	load_audio_file(&box->sound.sfx[FANFARE], "sounds/fanfare.wav");
+	load_audio_file(&box->sound.sfx[KEY_PICKUP], "sounds/key.wav");
+	load_audio_file(&box->sound.sfx[OW], "sounds/ow.wav");
+	load_audio_file(&box->sound.sfx[PAIN], "sounds/pain.wav");
+	load_audio_file(&box->sound.sfx[SHOT], "sounds/shot.wav");
+	load_audio_file(&box->sound.sfx[SPLASH], "sounds/splash.wav");
+
+	box->sound.playing[0].play = cs_play_sound(box->sound.ctx, box->sound.music.def);
+	cs_loop_sound(box->sound.playing[0].play, 1);
+	cs_set_volume(box->sound.playing[0].play, box->sound.music_volume, box->sound.music_volume);
 }
 
 /*	Init_vals
@@ -129,7 +177,7 @@ void	init_vals(t_box *box)
 	box->player.dmg = 35;
 	box->player.cry = 0;
 	box->player.state = 0;
-	box->player.hp = 6;
+	box->player.hp = 1;
 	box->player.max_hp = 6;
 	box->player.hit = 0;
 	box->player.n_key = 0;
@@ -137,12 +185,6 @@ void	init_vals(t_box *box)
 	box->hud = 1;
 	box->won = 0;
 	box->lost = 0;
-	box->title_menu = 1;
-	box->pause_menu = 0;
-	box->pause_menu_choice = 0;
-	box->start_menu = 0;
-	box->start_menu_choice = 0;
-	box->mouse_hidden = 0;
 	gettimeofday(&box->player.last_tear, NULL);
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));
@@ -165,6 +207,55 @@ void	reset_vals(t_box *box)
 	box->info.door_dist_y = 0;
 	box->info.door_side = 0;
 	//box->info.ray = malloc(sizeof(t_ray) * SCREENWIDTH + 1);
+}
+
+int	free_sprites(t_box *box)
+{
+	t_sprite	*next;
+
+	next = box->sprites;
+	if (!next)
+		return (0);
+	while (next)
+	{
+		next = box->sprites->next;
+		free(box->sprites->data);
+		free(box->sprites);
+		box->sprites = next;
+	}
+	return (0);
+}
+
+int	free_map(t_box *box)
+{
+	int	i;
+
+	i = 0;
+	while (box->map[i])
+		free(box->map[i++]);
+	free(box->map);
+	return (0);
+}
+
+void	free_stuff(t_box *box)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 50)
+		mlx_destroy_image(box->mlx, box->textures[i].img);
+	free(box->textures);
+	if (box->sprites)
+	{
+		free_sprites(box);
+		free_map(box);
+	}
+	mlx_destroy_image(box->mlx, box->image.img);
+	// mlx_destroy_window(box->mlx, box->win);
+	mlx_destroy_display(box->mlx);
+	free(box->mlx);
+	free(box->info.ray);
+	free(box->info.zbuffer);
 }
 
 void	swap(t_sprite *x)

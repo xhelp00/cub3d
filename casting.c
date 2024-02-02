@@ -360,7 +360,7 @@ void	cast_obj(t_box *box)
 								if (!sprites->data->sound)
 								{
 									sprites->data->sound = 1;
-									box->p = music(box->env, "sounds/angry.mp3"); //not sure if this is good place to check distance - probably not
+									sound_play(box, &box->sound.sfx[ANGRY]);
 								}
 							}
 							else

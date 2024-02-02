@@ -32,6 +32,7 @@
 # include "cute_sound/cute_sound.h"
 # include <signal.h>
 # include <sys/wait.h>
+# include <stdbool.h>
 
 # define MOUSE_CONTROL 1
 # define SCREENWIDTH 1280
@@ -225,7 +226,9 @@ typedef struct s_sprite_data
 # define PAUSE_MENU 50
 # define TITLE_MENU 51
 # define START_MENU 52
-# define START_MENU_BACK 53
+# define MENU_BACK 53
+# define OPTIONS_MENU 54
+# define OPTIONS_MENU_DARK 55
 
 typedef struct s_sprite
 {
@@ -247,31 +250,22 @@ typedef struct s_item
 	struct s_item		*next;
 }				t_item;
 
-typedef struct s_player
-{
-	int				hp;
-	int				max_hp;
-	int				n_key;
-	int				speed;
-	int				range;
-	int				fire_rate;
-	int				shot_speed;
-	int				dmg;
-	int				cry;
-	int				state;
-	int				frame;
-	int				hit;
-	struct timeval	last_tear;
-	struct timeval	hit_time;
-}				t_player;
+# define ANGRY 0
+# define DIE 1
+# define DOOR 2
+# define FAIL 3
+# define FANFARE 4
+# define KEY_PICKUP 5
+# define OW 6
+# define PAIN 7
+# define SHOT 8
+# define SPLASH 9
 
-typedef struct s_mouse
+typedef struct s_track
 {
-	int		x;
-	int		y;
-	double	xdistance;
-	double	ydistance;
-}				t_mouse;
+	cs_loaded_sound_t loaded;
+	cs_play_sound_def_t def;
+}				t_track;
 
 typedef struct s_box
 {
@@ -287,7 +281,24 @@ typedef struct s_box
 	t_image			*textures;
 	t_sprite		*sprites;
 	t_item			*items;
-	t_player		player;
+	struct s_player
+	{
+		int				hp;
+		int				max_hp;
+		int				n_key;
+		int				speed;
+		int				range;
+		int				fire_rate;
+		int				shot_speed;
+		int				dmg;
+		int				cry;
+		int				state;
+		int				frame;
+		int				hit;
+		struct timeval	last_tear;
+		struct timeval	hit_time;
+	}				player;
+
 	int				n_sprites;
 	char			**map;
 	int				map_width;
@@ -295,7 +306,14 @@ typedef struct s_box
 	t_info			info;
 	struct timeval	time;
 	struct timeval	old_time;
-	t_mouse			mouse;
+	struct s_mouse
+	{
+		int		x;
+		int		y;
+		double	xdistance;
+		double	ydistance;
+	}					mouse;
+
 	char			input_buffer[6];  // to store "iddqd" + '\0'
 	int				input_index;
 	int 			god;
@@ -308,7 +326,22 @@ typedef struct s_box
 	int				pause_menu_choice;
 	int				start_menu;
 	int				start_menu_choice;
+	int				options_menu;
+	int				options_menu_choice;
 	int				mouse_hidden;
+	struct				s_sound
+	{
+		cs_context_t*	ctx;
+		t_track			music;
+		float			music_volume;
+		t_track			sfx[20];
+		float			sfx_volume;
+		struct			s_play
+		{
+			cs_playing_sound_t	*play;
+		}				playing[50];
+	}					sound;
+
 }				t_box;
 
 //shape rect used for drawing minimap
@@ -357,7 +390,11 @@ t_item		*find_item(t_box *box, int id);
 //Values.c
 void		init_vals(t_box *box);
 void		init_textures(t_box *box);
+void		init_sounds(t_box *box);
 void		reset_vals(t_box *box);
+int			free_sprites(t_box *box);
+int			free_map(t_box *box);
+void		free_stuff(t_box *box);
 void		bubble_sort_sprites(t_box *box);
 
 //Draw_image.c
@@ -392,6 +429,8 @@ void		draw_line(t_line *line, t_box *box);
 
 //Sound.c
 int			music(char **env, char *track);
+void		load_audio_file(t_track *dst, char *path);
+void		sound_play(t_box *box, t_track *sound);
 
 //testing
 void		print_map_contents(t_box *box);

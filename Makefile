@@ -23,7 +23,7 @@ SRC = main.c hook.c parser.c draw_image.c values.c casting.c minimap.c graphics.
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(UNAME_S),Linux)
-MLX_FLAGS = -lft -lmlx -lXext -lXrender -lX11 -lm
+MLX_FLAGS = -lft -lmlx -lXext -lXrender -lX11 -lm -lSDL2 -pthread
 CFLAGS += -fPIE
 LDFLAGS += -pie
 endif
@@ -43,7 +43,7 @@ lib:
 	@echo "Finished making libraries :D"
 
 $(NAME): $(OBJ)
-	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS) cute_png/cute_png.o
+	@cc $(CFLAGS) -L $(LIBFT) -L $(MLX) -o $@ $^ $(MLX_FLAGS) cute_png/cute_png.o cute_sound/cute_sound.o
 
 clean:
 	@make clean -C $(LIBFT)

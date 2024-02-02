@@ -277,29 +277,12 @@ void	redraw(t_box *box)
 	drawMinimap(box);
 	//single_square_test(box);
 
-	if (!box->won && !box->lost)
-	{
-		if (box->player.hit)
-			fill_screen_red(box);
-		my_mlx_put_image_to_window(box, &box->image, 0, 0, -1);
-		my_mlx_put_image_to_window(box, &box->shaders, 0, 0, -1);
-		draw_hud(box);
+	if (box->player.hit)
+		fill_screen_red(box);
+	my_mlx_put_image_to_window(box, &box->image, 0, 0, -1);
+	my_mlx_put_image_to_window(box, &box->shaders, 0, 0, -1);
+	draw_hud(box);
 
-	}
-	else if (box->lost)
-	{
-		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-		my_mlx_put_image_to_window(box, &box->textures[GRIM], 0, 0, -1);
-		if (box->player.frame > 100)
-			exit_hook(box);
-	}
-	else if (box->win)
-	{
-		box->player.frame = ((((box->time.tv_sec - box->fin_time.tv_sec) + ((box->time.tv_usec - box->fin_time.tv_usec) / 1000000.0)) * 10) * 16) / 10;
-		my_mlx_put_image_to_window(box, &box->textures[WIN], 0, 0, -1);
-		if (box->player.frame > 100)
-			exit_hook(box);
-	}
 
 	nbr = ft_itoa(1.0 / box->info.frame_time);
 	mlx_string_put(box->mlx, box->win, 20, 20, 0x00FFFFFF, nbr);
