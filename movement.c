@@ -232,8 +232,8 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
 			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
+				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed), (int)sprites->data->y)->data->state == OPEN))
 				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
 				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
 				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
@@ -265,8 +265,8 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
 			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
+				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed), (int)sprites->data->y)->data->state == OPEN))
 				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
 				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
 				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))
@@ -325,8 +325,8 @@ void	cal_sprite_move(t_box *box)
 				sprites->data->dir_y = box->info.old_dir_x * sin(-box->info.rot_speed * 0.5) + sprites->data->dir_y * cos(-box->info.rot_speed * 0.5);
 			}
 			if (((box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0')
-				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
-				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.move_speed), (int)sprites->data->y)->data->state == OPEN))
+				|| (box->map[(int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed)][(int)sprites->data->y] == '0' + DOOR + 1
+				&& find_door(box, (int)(sprites->data->x + sprites->data->dir_x * box->info.ene_move_speed), (int)sprites->data->y)->data->state == OPEN))
 				&& ((box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0')
 				|| (box->map[(int)(sprites->data->x)][(int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed)] == '0' + DOOR + 1
 				&& find_door(box, (int)(sprites->data->x), (int)(sprites->data->y + sprites->data->dir_y * box->info.ene_move_speed))->data->state == OPEN)))

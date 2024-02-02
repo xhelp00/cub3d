@@ -142,9 +142,9 @@ void	check(t_box *box, int argc, char **argv)
 		printf("Error\nCannot open map file.\n");
 		exit(1);
 	}
-		init_vals(box);
-		parser(box, fd);
-		close(fd);
+	init_vals(box);
+	parser(box, fd);
+	close(fd);
 }
 
 /*	Timer
@@ -153,7 +153,71 @@ void	check(t_box *box, int argc, char **argv)
 */
 int	timer(t_box *box)
 {
-	if (!box->pause)
+	if (box->title_menu)
+	{
+		if (box->mouse_hidden)
+		{
+			mlx_mouse_show(box->mlx, box->win);
+			box->mouse_hidden = 0;
+		}
+		my_mlx_put_image_to_window(box, &box->textures[TITLE_MENU], 0, 0, -1);
+		gettimeofday(&box->time, NULL);
+		if (((int)((box->time.tv_usec / 100000.0) * 4) / 10) % 2 == 1)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 400, 215, 0, 1000, 450, 450); //press start
+		else
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 400, 215, 432, 1000, 450, 450); //press start 2
+		if (((int)((box->time.tv_usec / 100000.0) * 8) / 10) % 2 == 1)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 1000, 400, 950, 1030, 200, 200); //fly
+		else
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 1000, 400, 950, 1250, 200, 200); //fly 2
+		if (((int)((box->time.tv_usec / 100000.0) * 4) / 10) / 2 == 0)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 275, -10 + ((int)((box->time.tv_usec / 100000.0) * 20) / 10), 280, 740, 800, 300); //logo going down
+		else
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[TITLE_MENU].img, 275, 10 - ((int)((box->time.tv_usec / 100000.0) * 20) / 10), 280, 740, 800, 300); //logo going up
+	}
+	else if (box->start_menu)
+	{
+		if (box->mouse_hidden)
+		{
+			mlx_mouse_show(box->mlx, box->win);
+			box->mouse_hidden = 0;
+		}
+		my_mlx_put_image_to_window(box, &box->textures[START_MENU_BACK], 0, 0, -1);
+		my_mlx_put_image_to_window(box, &box->textures[START_MENU], 0, 0, -1);
+		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 120, 80, 800, 310, 100); //NEW RUN
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 200, 80, 920, 310, 100); //CONTINUE
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 500, 280, 80, 1040, 330, 110); //CHALLANGE
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 510, 370, 80, 1160, 330, 110); //STATS
+		mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 520, 440, 80, 1280, 340, 150); //OPTIONS
+		if (box->start_menu_choice == 1)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 430, 120, 20, 800, 50, 100);
+		else if (box->start_menu_choice == 2)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 440, 210, 20, 800, 50, 100);
+		else if (box->start_menu_choice == 3)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 455, 300, 20, 800, 50, 100);
+		else if (box->start_menu_choice == 4)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 470, 390, 20, 800, 50, 100);
+		else if (box->start_menu_choice == 5)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[START_MENU].img, 480, 480, 20, 800, 50, 100);
+	}
+	else if (box->pause_menu)
+	{
+		if (box->mouse_hidden)
+		{
+			mlx_mouse_show(box->mlx, box->win);
+			box->mouse_hidden = 0;
+		}
+		my_mlx_put_image_to_window(box, &box->textures[PAUSE_MENU], 400, 150, 0);
+		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
+		if (box->pause_menu_choice == 1)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 500, 390, 475, 5, 30, 30);
+		else if (box->pause_menu_choice == 2)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 480, 440, 475, 5, 30, 30);
+		else if (box->pause_menu_choice == 3)
+			mlx_put_image_to_window(box->mlx, box->win, box->textures[PAUSE_MENU].img, 505, 485, 475, 5, 30, 30);
+	}
+	else
 	{
 		if (!box->mouse_hidden)
 		{
@@ -164,16 +228,6 @@ int	timer(t_box *box)
 		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 		mlx_mouse_move(box->mlx, box->win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
 		redraw(box);
-	}
-	else
-	{
-		if (box->mouse_hidden)
-		{
-			mlx_mouse_show(box->mlx, box->win);
-			box->mouse_hidden = 0;
-		}
-		my_mlx_put_image_to_window(box, &box->textures[PAUSE], 300, 150, 0);
-		mlx_mouse_get_pos(box->mlx, box->win, &box->mouse.x, &box->mouse.y);
 	}
 	return (0);
 }
@@ -219,23 +273,27 @@ int	main(int argc, char **argv, char **env)
 {
 	t_box			box;
 
-	check(&box, argc, argv);
+	(void)argc;
+	(void)argv;
+	init_vals(&box);
+	// check(&box, argc, argv);
 	box.mlx = mlx_init();
 	box.win = mlx_new_window(box.mlx, SCREENWIDTH, SCREENHEIGHT, "cub3d");
 	init_textures(&box);
 	new_image(box.mlx, &box.image, SCREENWIDTH, SCREENHEIGHT);
 	new_image(box.mlx, &box.shaders, SCREENWIDTH, SCREENHEIGHT);
-	redraw(&box);
+	// redraw(&box);
 	box.env = env;
 	if (box.music)
 		box.pid = music(env, "sounds/Isaac.mp3");
-	mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
-	mlx_mouse_hide(box.mlx, box.win);
+	// mlx_mouse_move(box.mlx, box.win, SCREENWIDTH / 2, SCREENHEIGHT / 2);
+	// mlx_mouse_hide(box.mlx, box.win);
 	mlx_hook(box.win, 17, 0, exit_hook, &box);
 	mlx_hook(box.win, 2, 1L << 0, key_press, &box);
 	mlx_hook(box.win, 3, 1L << 1, key_release, &box);
 	mlx_hook(box.win, 4, 1L << 2, mouse_press, &box);
 	mlx_hook(box.win, 5, 1L << 3, mouse_release, &box);
+	mlx_hook(box.win, 6, 1L << 6, mouse_move, &box);
 	mlx_loop_hook(box.mlx, timer, &box);
 	mlx_loop(box.mlx);
 	return (0);

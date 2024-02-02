@@ -56,9 +56,19 @@ void	init_textures(t_box *box)
 	box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
 	box->textures[WIN].img = mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
 	box->textures[GRIM].img = mlx_xpm_file_to_image(box->mlx, "textures/grim.xpm", &k, &j);
-	png_file_to_image(box->mlx, &box->textures[PAUSE], "textures/pausescreen.png");
-	img_resize(box->mlx, &box->textures[PAUSE], 2);
-	split_spritesheet(&box->textures[PAUSE], 1, 1, 480, 480);
+
+	png_file_to_image(box->mlx, &box->textures[PAUSE_MENU], "textures/pausescreen.png");
+	img_resize(box->mlx, &box->textures[PAUSE_MENU], 2);
+	split_spritesheet(&box->textures[PAUSE_MENU], 1, 1, 480, 480);
+
+	png_file_to_image(box->mlx, &box->textures[TITLE_MENU], "textures/titlemenu.png");
+	img_resize(box->mlx, &box->textures[TITLE_MENU], 2.7);
+
+	png_file_to_image(box->mlx, &box->textures[START_MENU], "textures/gamemenu.png");
+	img_resize(box->mlx, &box->textures[START_MENU], 2.7);
+
+	png_file_to_image(box->mlx, &box->textures[START_MENU_BACK], "textures/emptyscreen.png");
+	img_resize(box->mlx, &box->textures[START_MENU_BACK], 2.7);
 	i = -1;
 	while (++i < 100)
 	{
@@ -127,8 +137,12 @@ void	init_vals(t_box *box)
 	box->hud = 1;
 	box->won = 0;
 	box->lost = 0;
-	box->pause = 0;
-	box->mouse_hidden = 1;
+	box->title_menu = 1;
+	box->pause_menu = 0;
+	box->pause_menu_choice = 0;
+	box->start_menu = 0;
+	box->start_menu_choice = 0;
+	box->mouse_hidden = 0;
 	gettimeofday(&box->player.last_tear, NULL);
 	box->input_index = 0;
 	ft_memset(box->input_buffer, 0, sizeof(box->input_buffer));

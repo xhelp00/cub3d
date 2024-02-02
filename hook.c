@@ -12,18 +12,88 @@
 
 #include "cub3d.h"
 
+int	mouse_move(int x, int y, t_box *box)
+{
+	if (!box->start_menu && !box->title_menu && box->pause_menu)
+	{
+		if (x > 540 && x < 740 && y > 380 && y < 420)
+			box->pause_menu_choice = 1;
+		else if (x > 520 && x < 760 && y > 440 && y < 470)
+			box->pause_menu_choice = 2;
+		else if (x > 540 && x < 740 && y > 480 && y < 520)
+			box->pause_menu_choice = 3;
+		else
+			box->pause_menu_choice = 0;
+	}
+	if (box->start_menu && !box->title_menu && !box->pause_menu)
+	{
+		if (x > 490 && x < 790 && y > 130 && y < 190)
+			box->start_menu_choice = 1;
+		else if (x > 500 && x < 790 && y > 230 && y < 280)
+			box->start_menu_choice = 2;
+		else if (x > 510 && x < 820 && y > 320 && y < 370)
+			box->start_menu_choice = 3;
+		else if (x > 530 && x < 740 && y > 410 && y < 460)
+			box->start_menu_choice = 4;
+		else if (x > 540 && x < 800 && y > 500 && y < 560)
+			box->start_menu_choice = 5;
+		else
+			box->start_menu_choice = 0;
+	}
+	return (0);
+}
+
 int	mouse_press(int keycode, int x, int y, t_box *box)
 {
-	if (keycode == 1 && !box->pause)
-		box->player.cry = 1;
-	if (keycode == 3 && !box->pause)
-		action_door(box);
-	if (x > 440 && x < 640 && y > 380 && y < 420 && keycode == 1)
-		printf("Options not supported yet tm\n");
-	else if (x > 420 && x < 660 && y > 440 && y < 470 && keycode == 1)
-		box->pause = 0;
-	else if (x > 440 && x < 640 && y > 480 && y < 520 && keycode == 1)
-		exit_hook(box);
+	if (!box->start_menu && !box->title_menu && !box->pause_menu)
+	{
+		if (keycode == 1)
+			box->player.cry = 1;
+		if (keycode == 3)
+			action_door(box);
+	}
+	if (!box->start_menu && !box->title_menu && box->pause_menu)
+	{
+		if (x > 540 && x < 740 && y > 380 && y < 420 && keycode == 1)
+			printf("OPTIONS\n");
+		else if (x > 520 && x < 760 && y > 440 && y < 470 && keycode == 1)
+		{
+			box->pause_menu = 0;
+			gettimeofday(&box->time, NULL);
+		}
+		else if (x > 540 && x < 740 && y > 480 && y < 520 && keycode == 1)
+		{
+			box->pause_menu = 0;
+			box->start_menu = 1;
+		}
+	}
+	if (box->start_menu && !box->title_menu && !box->pause_menu)
+	{
+		if (x > 490 && x < 790 && y > 130 && y < 190 && keycode == 1)
+		{
+			printf("NEW RUN\n");
+			int fd;
+			fd = open("maps/hell.cub", O_RDONLY);
+			parser(box, fd);
+			close(fd);
+			box->start_menu = 0;
+			gettimeofday(&box->time, NULL);
+		}
+
+		else if (x > 500 && x < 790 && y > 230 && y < 280 && keycode == 1)
+			printf("CONTINUE\n");
+		else if (x > 510 && x < 820 && y > 320 && y < 370 && keycode == 1)
+			printf("CHALLANGES\n");
+		else if (x > 530 && x < 740 && y > 410 && y < 460 && keycode == 1)
+			printf("STATS\n");
+		else if (x > 540 && x < 800 && y > 500 && y < 560 && keycode == 1)
+			printf("OPTIONS\n");
+	}
+	if (!box->start_menu && box->title_menu && !box->pause_menu && keycode == 1)
+	{
+		box->title_menu = 0;
+		box->start_menu = 1;
+	}
 	// printf("X %i Y %i\n", x, y);
 	return (0);
 }
@@ -72,6 +142,11 @@ int	key_press(int key, t_box *box)
 		else
 			box->hud = 1;
 	}
+	if ((key == 32 || key == 65293) && box->title_menu && !box->start_menu && !box->pause_menu)
+	{
+		box->title_menu = 0;
+		box->start_menu = 1;
+	}
 
 	//IDDQD for god mode
 	if (key >= 'a' && key <= 'z')  // Assuming ASCII values
@@ -110,10 +185,20 @@ int	key_release(int key, t_box *box)
 {
 	if (key == 65307)
 	{
-		if (!box->pause)
-			box->pause = 1;
-		else
-			box->pause = 0;
+		if (!box->start_menu && !box->title_menu && !box->pause_menu)
+			box->pause_menu = 1;
+		else if (!box->start_menu && !box->title_menu && box->pause_menu)
+		{
+			box->pause_menu = 0;
+			gettimeofday(&box->time, NULL);
+		}
+		else if (box->start_menu && !box->title_menu && !box->pause_menu)
+		{
+			box->start_menu = 0;
+			box->title_menu = 1;
+		}
+		else if (!box->start_menu && box->title_menu && !box->pause_menu)
+			exit_hook(box);
 		//mlx_destroy_window(box->mlx, box->win);
 		// exit_hook(box);
 		// exit(0);

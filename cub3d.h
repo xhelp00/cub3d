@@ -222,7 +222,10 @@ typedef struct s_sprite_data
 # define ITEMS 47
 # define ITEM_ALTAR 48
 # define TROPHY 49
-# define PAUSE 50
+# define PAUSE_MENU 50
+# define TITLE_MENU 51
+# define START_MENU 52
+# define START_MENU_BACK 53
 
 typedef struct s_sprite
 {
@@ -300,7 +303,11 @@ typedef struct s_box
 	int				lost;
 	int				won;
 	struct timeval	fin_time;
-	int				pause;
+	int				title_menu;
+	int				pause_menu;
+	int				pause_menu_choice;
+	int				start_menu;
+	int				start_menu_choice;
 	int				mouse_hidden;
 }				t_box;
 
@@ -333,6 +340,7 @@ int			key_press(int key, t_box *box);
 int			key_release(int key, t_box *box);
 int			mouse_press(int keycode, int x, int y, t_box *box);
 int			mouse_release(int keycode, int x, int y, t_box *box);
+int			mouse_move(int x, int y, t_box *box);
 
 //Parser.c
 void		parser(t_box *box, int fd);
