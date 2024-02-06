@@ -177,7 +177,7 @@ void	init_vals(t_box *box)
 	box->player.dmg = 35;
 	box->player.cry = 0;
 	box->player.state = 0;
-	box->player.hp = 1;
+	box->player.hp = 6;
 	box->player.max_hp = 6;
 	box->player.hit = 0;
 	box->player.n_key = 0;

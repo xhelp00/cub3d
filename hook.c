@@ -88,7 +88,7 @@ int	mouse_press(int keycode, int x, int y, t_box *box)
 				init_vals(box);
 			}
 			int fd;
-			fd = open("maps/arena.cub", O_RDONLY);
+			fd = open("maps/hell.cub", O_RDONLY);
 			parser(box, fd);
 			close(fd);
 			box->start_menu = 0;
@@ -143,7 +143,7 @@ int	mouse_press(int keycode, int x, int y, t_box *box)
 		box->title_menu = 0;
 		box->start_menu = 1;
 	}
-	printf("X %i Y %i\n", x, y);
+	// printf("X %i Y %i\n", x, y);
 	return (0);
 }
 
