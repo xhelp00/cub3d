@@ -33,7 +33,8 @@ void	sound_play(t_box *box, t_track *sound)
 	if (i == sizeof(box->sound.playing) / sizeof(*box->sound.playing))
 		return ;
 	box->sound.playing[i].play = cs_play_sound(box->sound.ctx, sound->def);
-	cs_set_volume(box->sound.playing[i].play, box->sound.sfx_volume, box->sound.sfx_volume);
+	if (box->sound.playing[i].play != NULL)
+		cs_set_volume(box->sound.playing[i].play, box->sound.sfx_volume, box->sound.sfx_volume);
 }
 
 int music(char **env, char *track)
