@@ -13,77 +13,77 @@
 
 #include "cub3d.h"
 
-void	menu(t_box *box)
-{
-	int		choice;
+// void	menu(t_box *box)
+// {
+// 	int		choice;
 
-	do
-	{
-		printf("                                                     \n");
-		printf("                       _|         _|_|_|     _|_|_|  \n");
-		printf("   _|_|_|   _|    _|   _|_|_|           _|   _|    _|\n");
-		printf(" _|         _|    _|   _|    _|     _|_|     _|    _|\n");
-		printf(" _|         _|    _|   _|    _|         _|   _|    _|\n");
-		printf("   _|_|_|     _|_|_|   _|_|_|     _|_|_|     _|_|_|  \n");
-		printf("                                                     \n");
-		printf("    42 project presented by jbartosi & phelebra      \n");
-		printf("                                                     \n");
-		printf("        ██╗███████╗ █████╗  █████╗  ██████╗          \n");
-		printf("        ██║██╔════╝██╔══██╗██╔══██╗██╔════╝          \n");
-		printf("        ██║███████╗███████║███████║██║               \n");
-		printf("        ██║╚════██║██╔══██║██╔══██║██║               \n");
-		printf("        ██║███████║██║  ██║██║  ██║╚██████╗          \n");
-		printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
-		printf("                                                     \n");
-		printf("Terminal Menu:\n");
-		printf("1. Choose map hell\n");
-		printf("2. Choose map arena\n");
-		printf("3. Choose map exampleTexture\n");
-		printf("4. Exit\n");
-		printf("5. Toggle Music On/Off\n");
-        printf("Enter your choice (1-4): ");
+// 	do
+// 	{
+// 		printf("                                                     \n");
+// 		printf("                       _|         _|_|_|     _|_|_|  \n");
+// 		printf("   _|_|_|   _|    _|   _|_|_|           _|   _|    _|\n");
+// 		printf(" _|         _|    _|   _|    _|     _|_|     _|    _|\n");
+// 		printf(" _|         _|    _|   _|    _|         _|   _|    _|\n");
+// 		printf("   _|_|_|     _|_|_|   _|_|_|     _|_|_|     _|_|_|  \n");
+// 		printf("                                                     \n");
+// 		printf("    42 project presented by jbartosi & phelebra      \n");
+// 		printf("                                                     \n");
+// 		printf("        ██╗███████╗ █████╗  █████╗  ██████╗          \n");
+// 		printf("        ██║██╔════╝██╔══██╗██╔══██╗██╔════╝          \n");
+// 		printf("        ██║███████╗███████║███████║██║               \n");
+// 		printf("        ██║╚════██║██╔══██║██╔══██║██║               \n");
+// 		printf("        ██║███████║██║  ██║██║  ██║╚██████╗          \n");
+// 		printf("        ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝     v1.0 \n");
+// 		printf("                                                     \n");
+// 		printf("Terminal Menu:\n");
+// 		printf("1. Choose map hell\n");
+// 		printf("2. Choose map arena\n");
+// 		printf("3. Choose map exampleTexture\n");
+// 		printf("4. Exit\n");
+// 		printf("5. Toggle Music On/Off\n");
+//         printf("Enter your choice (1-4): ");
 
-        if (scanf("%d", &choice) != 1)
-        {
-            // Clear the input buffer if scanf() failed
-            while (getchar() != '\n');
-            continue; // Continue to the next iteration to re-display the menu
-        }
+//         if (scanf("%d", &choice) != 1)
+//         {
+//             // Clear the input buffer if scanf() failed
+//             while (getchar() != '\n');
+//             continue; // Continue to the next iteration to re-display the menu
+//         }
 
-        switch(choice)
-        {
-            case 1:
-                box->map_filename = "maps/hell.cub";
-                return;
-			case 2:
-                box->map_filename = "maps/arena.cub";
-                return;
-            case 3:
-                box->map_filename = "maps/exampleTexture.cub";
-                return;
-            case 4:
-                printf("Exiting...\n");
-                exit(0);
-                break;
-            case 5:
-                if (box->music)
-                {
-                    // Stop the music. You need a function to handle this.
-                    box->music = 0;
-                    printf("Music turned off.\n");
-                }
-                else
-                {
-                    // Start the music
-                    box->music = 1;
-                    printf("Music turned on.\n");
-                }
-                break;
-            default:
-                printf("Invalid choice. Please enter a number between 1 and 4.\n");
-        }
-    } while(1); // Infinite loop, since we handle exit explicitly with options.
-}
+//         switch(choice)
+//         {
+//             case 1:
+//                 box->map_filename = "maps/hell.cub";
+//                 return;
+// 			case 2:
+//                 box->map_filename = "maps/arena.cub";
+//                 return;
+//             case 3:
+//                 box->map_filename = "maps/exampleTexture.cub";
+//                 return;
+//             case 4:
+//                 printf("Exiting...\n");
+//                 exit(0);
+//                 break;
+//             case 5:
+//                 if (box->music)
+//                 {
+//                     // Stop the music. You need a function to handle this.
+//                     box->music = 0;
+//                     printf("Music turned off.\n");
+//                 }
+//                 else
+//                 {
+//                     // Start the music
+//                     box->music = 1;
+//                     printf("Music turned on.\n");
+//                 }
+//                 break;
+//             default:
+//                 printf("Invalid choice. Please enter a number between 1 and 4.\n");
+//         }
+//     } while(1); // Infinite loop, since we handle exit explicitly with options.
+// }
 
 
 /* Count_sprites
@@ -107,45 +107,45 @@ int	count_sprites(t_box *box)
 	return (counter);
 }
 
-/*	Check
+// /*	Check
 
-	Basic function for checking inputs
-*/
-void	check(t_box *box, int argc, char **argv)
-{
-	int	fd;
-	char* map_path;
+// 	Basic function for checking inputs
+// */
+// void	check(t_box *box, int argc, char **argv)
+// {
+// 	int	fd;
+// 	char* map_path;
 
-	if (argc == 1)
-	{
-		menu(box);
-		if (!box->map_filename)
-		{
-			printf("Error\nNo map selected.\n");
-			exit(1);
-		}
-		map_path = box->map_filename;
-	}
-	else if (argc == 2)
-	{
-		map_path = argv[1];
-	}
-	else
-	{
-		printf("Error\nInvalid number of arguments.\n");
-		exit(1);
-	}
+// 	if (argc == 1)
+// 	{
+// 		menu(box);
+// 		if (!box->map_filename)
+// 		{
+// 			printf("Error\nNo map selected.\n");
+// 			exit(1);
+// 		}
+// 		map_path = box->map_filename;
+// 	}
+// 	else if (argc == 2)
+// 	{
+// 		map_path = argv[1];
+// 	}
+// 	else
+// 	{
+// 		printf("Error\nInvalid number of arguments.\n");
+// 		exit(1);
+// 	}
 
-	fd = open(map_path, O_RDONLY);
-	if (fd == -1)
-	{
-		printf("Error\nCannot open map file.\n");
-		exit(1);
-	}
-	init_vals(box);
-	parser(box, fd);
-	close(fd);
-}
+// 	fd = open(map_path, O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		printf("Error\nCannot open map file.\n");
+// 		exit(1);
+// 	}
+// 	init_vals(box);
+// 	parser(box, fd);
+// 	close(fd);
+// }
 
 /*	Timer
 

@@ -620,7 +620,7 @@ void	cast_obj(t_box *box)
 					}
 					else
 						box->info.color = 0;
-					if ((box->info.color & 0x00FFFFFF) != 0)
+					if ((box->info.color & 0xFFFFFFFF) != 0)
 					{
 						hit_mark(box, sprites);
 						// apply_fog(box, sprites->data->dist);

@@ -37,29 +37,29 @@ void	sound_play(t_box *box, t_track *sound)
 		cs_set_volume(box->sound.playing[i].play, box->sound.sfx_volume, box->sound.sfx_volume);
 }
 
-int music(char **env, char *track)
-{
+// int music(char **env, char *track)
+// {
 
-	char *player;
+// 	char *player;
 
-	#ifdef __linux__
-		player = "/usr/bin/mpg123";
-	#elif __APPLE__
-		player = "/Users/helebrant/.brew/bin/mpg123";
-	#endif
+// 	#ifdef __linux__
+// 		player = "/usr/bin/mpg123";
+// 	#elif __APPLE__
+// 		player = "/Users/helebrant/.brew/bin/mpg123";
+// 	#endif
 
-	pid_t	pid;
-	char	*argv[4];
+// 	pid_t	pid;
+// 	char	*argv[4];
 
-	pid = fork();
-	argv[0] = player;
-	argv[1] = "-q";
-	argv[2] = track;
-	argv[3] = NULL;
-	if (pid == 0)
-	{
-		execve(argv[0], argv, env);
-		exit(0);
-	}
-	return (pid);
-}
+// 	pid = fork();
+// 	argv[0] = player;
+// 	argv[1] = "-q";
+// 	argv[2] = track;
+// 	argv[3] = NULL;
+// 	if (pid == 0)
+// 	{
+// 		execve(argv[0], argv, env);
+// 		exit(0);
+// 	}
+// 	return (pid);
+// }

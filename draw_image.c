@@ -134,13 +134,13 @@ void	png_file_to_image(void *mlx, t_image *image, char *file)
 
 	png_img = cp_load_png(file);
 	if (png_img.pix == NULL)
-		return ;
+		return printf("ERROR LOADING IMAGE %s\n", file), (void) 0;
 	cp_premultiply(&png_img);
 	new_image(mlx, image, png_img.w, png_img.h);
 	if (image->img == NULL)
 		return (free(png_img.pix), (void) 0);
 	mlx_img_data = (cp_pixel_t *)mlx_get_data_addr(image->img, &image->bits_pp, &image->line_len, &image->endian);
-	image->addr = (unsigned char *)mlx_get_data_addr(image->img, &image->bits_pp, &image->line_len, &image->endian);
+	// image->addr = (unsigned char *)mlx_get_data_addr(image->img, &image->bits_pp, &image->line_len, &image->endian);
 	i = -1;
 	while (i++ < png_img.w * png_img.h)
 	{

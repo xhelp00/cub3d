@@ -206,7 +206,10 @@ typedef struct s_sprite_data
 }				t_sprite_data;
 
 //Texture numbers
+# define WALL 0
+# define FLOOR 1
 # define DOOR 2
+# define BRICKS 7
 # define BABY 10
 # define NERVE_ENDING 11
 # define LEECH 12
@@ -250,6 +253,7 @@ typedef struct s_item
 	struct s_item		*next;
 }				t_item;
 
+//Sound tracks
 # define ANGRY 0
 # define DIE 1
 # define DOOR 2

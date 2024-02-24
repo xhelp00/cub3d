@@ -567,7 +567,7 @@ int cp_inflate(void* in, int in_bytes, void* out, int out_bytes)
 
 	s->final_word_available = last_bytes ? 1 : 0;
 	s->final_word = 0;
-	for(int i = 0; i < last_bytes; i++) 
+	for(int i = 0; i < last_bytes; i++)
 		s->final_word |= ((uint8_t*)in)[in_bytes - last_bytes+i] << (i * 8);
 
 	s->count = first_bytes * 8;
@@ -1084,6 +1084,8 @@ cp_image_t cp_load_png(const char *file_name)
 	if (!data) return img;
 	img = cp_load_png_mem(data, len);
 	CUTE_PNG_FREE(data);
+	if (img.pix == NULL)
+		printf("ERROR LOADING IMAGE WITH REASON OF %s\n", cp_error_reason);
 	return img;
 }
 
@@ -1493,7 +1495,7 @@ cp_image_t cp_make_atlas(int atlas_width, int atlas_height, const cp_image_t* pn
 		int height = png->h;
 		cp_atlas_node_t *best_fit = cp_best_fit(sp, png, nodes);
 		if (CUTE_PNG_ATLAS_MUST_FIT) CUTE_PNG_CHECK(best_fit, "Not enough room to place image in atlas.");
-		else if (!best_fit) 
+		else if (!best_fit)
 		{
 			image->fit = 0;
 			continue;
@@ -1560,7 +1562,7 @@ cp_image_t cp_make_atlas(int atlas_width, int atlas_height, const cp_image_t* pn
 	atlas_image_size = atlas_width * atlas_height * sizeof(cp_pixel_t);
 	atlas_pixels = CUTE_PNG_ALLOC(atlas_image_size);
 	CUTE_PNG_CHECK(atlas_pixels, "out of mem");
-	
+
 	for(int i = 0; i < atlas_image_size; i += sizeof(cp_pixel_t)) {
 		cp_write_pixel((char*)atlas_pixels + i, CUTE_PNG_ATLAS_EMPTY_COLOR);
 	}
@@ -1700,20 +1702,20 @@ cp_err:
 	------------------------------------------------------------------------------
 	ALTERNATIVE B - Public Domain (www.unlicense.org)
 	This is free and unencumbered software released into the public domain.
-	Anyone is free to copy, modify, publish, use, compile, sell, or distribute this 
-	software, either in source code form or as a compiled binary, for any purpose, 
+	Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
+	software, either in source code form or as a compiled binary, for any purpose,
 	commercial or non-commercial, and by any means.
-	In jurisdictions that recognize copyright laws, the author or authors of this 
-	software dedicate any and all copyright interest in the software to the public 
-	domain. We make this dedication for the benefit of the public at large and to 
-	the detriment of our heirs and successors. We intend this dedication to be an 
-	overt act of relinquishment in perpetuity of all present and future rights to 
+	In jurisdictions that recognize copyright laws, the author or authors of this
+	software dedicate any and all copyright interest in the software to the public
+	domain. We make this dedication for the benefit of the public at large and to
+	the detriment of our heirs and successors. We intend this dedication to be an
+	overt act of relinquishment in perpetuity of all present and future rights to
 	this software under copyright law.
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-	AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
-	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	------------------------------------------------------------------------------
 */

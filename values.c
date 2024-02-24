@@ -18,24 +18,32 @@
 */
 void	init_textures(t_box *box)
 {
-	int		k;
-	int		j;
 	int		i;
 
 	box->textures = malloc(100 * sizeof(t_image));
 	i = -1;
 	while (++i < 100)
-		box->textures[i].img = 0;
-	box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
-	box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
+		box->textures[i].img = NULL;
+	png_file_to_image(box->mlx, &box->textures[WALL], "textures/wall.png");
+	png_file_to_image(box->mlx, &box->textures[FLOOR], "textures/floor.png");
+	png_file_to_image(box->mlx, &box->textures[BRICKS], "textures/grey_bricks.png");
+	png_file_to_image(box->mlx, &box->textures[DOOR], "textures/bars.png");
+	// box->textures[0].img = mlx_xpm_file_to_image(box->mlx, "textures/wall.xpm", &k, &j);
+	// box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/floor.xpm", &k, &j);
 	// box->textures[1].img = mlx_xpm_file_to_image(box->mlx, "textures/blackhole.xpm", &k, &j);
-	box->textures[DOOR].img = mlx_xpm_file_to_image(box->mlx, "textures/bars.xpm", &k, &j);
-	box->textures[BABY].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
-	box->textures[NERVE_ENDING].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
-	box->textures[LEECH].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
-	box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
-	box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
-	box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
+	// box->textures[DOOR].img = mlx_xpm_file_to_image(box->mlx, "textures/bars.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[BABY], "textures/baby.png");
+	png_file_to_image(box->mlx, &box->textures[NERVE_ENDING], "textures/nerve_ending.png");
+	png_file_to_image(box->mlx, &box->textures[LEECH], "textures/leech.png");
+	png_file_to_image(box->mlx, &box->textures[ISAAC], "textures/isaac.png");
+	png_file_to_image(box->mlx, &box->textures[TEAR], "textures/tear.png");
+	png_file_to_image(box->mlx, &box->textures[LARRY_JR_HEAD], "textures/larry_jr.png");
+	// box->textures[BABY].img = mlx_xpm_file_to_image(box->mlx, "textures/baby.xpm", &k, &j);
+	// box->textures[NERVE_ENDING].img = mlx_xpm_file_to_image(box->mlx, "textures/nerve_ending.xpm", &k, &j);
+	// box->textures[LEECH].img = mlx_xpm_file_to_image(box->mlx, "textures/leech.xpm", &k, &j);
+	// box->textures[ISAAC].img = mlx_xpm_file_to_image(box->mlx, "textures/isaac.xpm", &k, &j);
+	// box->textures[TEAR].img = mlx_xpm_file_to_image(box->mlx, "textures/tear.xpm", &k, &j);
+	// box->textures[LARRY_JR_HEAD].img = mlx_xpm_file_to_image(box->mlx, "textures/larry_jr.xpm", &k, &j);
 	// box->textures[UI_PICKUPS].img = mlx_xpm_file_to_image(box->mlx, "textures/ui_pickups.xpm", &k, &j);
 	png_file_to_image(box->mlx, &box->textures[UI_PICKUPS], "textures/ui_pickups.png");
 	img_resize(box->mlx, &box->textures[UI_PICKUPS], 2);
@@ -51,9 +59,12 @@ void	init_textures(t_box *box)
 	// box->textures[ITEMS].img = mlx_xpm_file_to_image(box->mlx, "textures/items.xpm", &k, &j);
 	png_file_to_image(box->mlx, &box->textures[ITEMS], "textures/items.png");
 	split_spritesheet(&box->textures[ITEMS], 20, 28, 32, 32);
-	box->textures[ITEM_ALTAR].img = mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
-	box->textures[KEY].img = mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);
-	box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
+	png_file_to_image(box->mlx, &box->textures[ITEM_ALTAR], "textures/item_altar.png");
+	png_file_to_image(box->mlx, &box->textures[KEY], "textures/pickup_key.png");
+	png_file_to_image(box->mlx, &box->textures[TROPHY], "textures/trophy.png");
+	// box->textures[ITEM_ALTAR].img = mlx_xpm_file_to_image(box->mlx, "textures/item_altar.xpm", &k, &j);
+	// box->textures[KEY].img = mlx_xpm_file_to_image(box->mlx, "textures/pickup_key.xpm", &k, &j);
+	// box->textures[TROPHY].img = mlx_xpm_file_to_image(box->mlx, "textures/trophy.xpm", &k, &j);
 
 	// box->textures[WIN].img = mlx_xpm_file_to_image(box->mlx, "textures/win.xpm", &k, &j);
 	// box->textures[GRIM].img = mlx_xpm_file_to_image(box->mlx, "textures/grim.xpm", &k, &j);
@@ -82,12 +93,12 @@ void	init_textures(t_box *box)
 	img_resize(box->mlx, &box->textures[OPTIONS_MENU_DARK], 2);
 	i = -1;
 	while (++i < 100)
-	{
-		if (!box->textures[i].img)
-			box->textures[i].img = mlx_xpm_file_to_image(box->mlx, "textures/grey_bricks.xpm", &k, &j);
-		box->textures[i].addr = (unsigned char *)mlx_get_data_addr(box->textures[i].img,
-			&box->textures[i].bits_pp, &box->textures[i].line_len, &box->textures[i].endian);
-	}
+		if (box->textures[i].img == NULL){
+			png_file_to_image(box->mlx, &box->textures[i], "textures/missing.png");
+			img_resize(box->mlx, &box->textures[i], 0.5);
+		}
+		// box->textures[i].addr = (unsigned char *)mlx_get_data_addr(box->textures[i].img,
+			// &box->textures[i].bits_pp, &box->textures[i].line_len, &box->textures[i].endian);
 	box->title_menu = 1;
 	box->pause_menu = 0;
 	box->pause_menu_choice = 0;
@@ -107,7 +118,7 @@ void	init_sounds(t_box *box)
 	i = -1;
 	while (++i < 50)
 		box->sound.playing[i].play = NULL;
-	box->sound.ctx = cs_make_context(0, 44100, 4096, 24, NULL);
+	box->sound.ctx = cs_make_context(0, 44100, 4096, 24, "cub3d");
 	cs_spawn_mix_thread(box->sound.ctx);
 	cs_thread_sleep_delay(box->sound.ctx, 10);
 	load_audio_file(&box->sound.music, "sounds/Isaac.wav");
@@ -242,8 +253,14 @@ void	free_stuff(t_box *box)
 	int	i;
 
 	i = -1;
-	while (++i < 50)
+	while (++i < 100)
 		mlx_destroy_image(box->mlx, box->textures[i].img);
+	i = -1;
+	while (++i < 10)
+		cs_free_sound(&box->sound.sfx[i].loaded);
+	cs_free_sound(&box->sound.music.loaded);
+	cs_shutdown_context(box->sound.ctx);
+	// pthread_join(box->sound.ctx->thread, NULL);
 	free(box->textures);
 	if (box->sprites)
 	{
